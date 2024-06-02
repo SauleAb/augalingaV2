@@ -88,6 +88,14 @@
               "target": "Package",
               "version": "[8.0.5, )",
               "autoReferenced": true
+            },
+            "Syncfusion.Blazor.Schedule": {
+              "target": "Package",
+              "version": "[25.2.6, )"
+            },
+            "Syncfusion.Blazor.Themes": {
+              "target": "Package",
+              "version": "[25.2.6, )"
             }
           },
           "imports": [
@@ -135,6 +143,14 @@
               "target": "Package",
               "version": "[8.0.5, )",
               "autoReferenced": true
+            },
+            "Syncfusion.Blazor.Schedule": {
+              "target": "Package",
+              "version": "[25.2.6, )"
+            },
+            "Syncfusion.Blazor.Themes": {
+              "target": "Package",
+              "version": "[25.2.6, )"
             }
           },
           "imports": [
@@ -182,6 +198,14 @@
               "target": "Package",
               "version": "[8.0.5, )",
               "autoReferenced": true
+            },
+            "Syncfusion.Blazor.Schedule": {
+              "target": "Package",
+              "version": "[25.2.6, )"
+            },
+            "Syncfusion.Blazor.Themes": {
+              "target": "Package",
+              "version": "[25.2.6, )"
             }
           },
           "imports": [
@@ -224,6 +248,14 @@
             "Microsoft.Maui.Controls.Compatibility": {
               "target": "Package",
               "version": "[8.0.40, )"
+            },
+            "Syncfusion.Blazor.Schedule": {
+              "target": "Package",
+              "version": "[25.2.6, )"
+            },
+            "Syncfusion.Blazor.Themes": {
+              "target": "Package",
+              "version": "[25.2.6, )"
             }
           },
           "imports": [

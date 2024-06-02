@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Syncfusion.Blazor;
 
 namespace augalinga.ApplicationLayer
 {
@@ -15,9 +16,11 @@ namespace augalinga.ApplicationLayer
                 });
 
             builder.Services.AddMauiBlazorWebView();
+            builder.Services.AddSyncfusionBlazor();
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NBaF5cXmZCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdnWXlecnRQQmdfV0x0XEM=");
 
 #if DEBUG
-    		builder.Services.AddBlazorWebViewDeveloperTools();
+            builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();
 #endif
 
