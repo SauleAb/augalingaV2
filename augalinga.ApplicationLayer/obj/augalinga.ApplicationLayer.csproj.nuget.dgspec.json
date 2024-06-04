@@ -205,6 +205,10 @@
               "version": "[8.0.5, )",
               "autoReferenced": true
             },
+            "Syncfusion.Blazor.Grid": {
+              "target": "Package",
+              "version": "[25.2.7, )"
+            },
             "Syncfusion.Blazor.Schedule": {
               "target": "Package",
               "version": "[25.2.6, )"
@@ -259,6 +263,10 @@
               "target": "Package",
               "version": "[8.0.5, )",
               "autoReferenced": true
+            },
+            "Syncfusion.Blazor.Grid": {
+              "target": "Package",
+              "version": "[25.2.7, )"
             },
             "Syncfusion.Blazor.Schedule": {
               "target": "Package",
@@ -315,6 +323,10 @@
               "version": "[8.0.5, )",
               "autoReferenced": true
             },
+            "Syncfusion.Blazor.Grid": {
+              "target": "Package",
+              "version": "[25.2.7, )"
+            },
             "Syncfusion.Blazor.Schedule": {
               "target": "Package",
               "version": "[25.2.6, )"
@@ -364,6 +376,10 @@
             "Microsoft.Maui.Controls.Compatibility": {
               "target": "Package",
               "version": "[8.0.40, )"
+            },
+            "Syncfusion.Blazor.Grid": {
+              "target": "Package",
+              "version": "[25.2.7, )"
             },
             "Syncfusion.Blazor.Schedule": {
               "target": "Package",

@@ -1,14 +1,10 @@
 ﻿using augalinga.Data.Access;
 using augalinga.Data.Entities;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace augalinga.ApplicationLayer.Components
+namespace augalinga.ApplicationLayer.Components.ViewModels
 {
     public class ProjectsViewModel : INotifyPropertyChanged
     {
