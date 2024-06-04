@@ -1,61 +1,76 @@
 ﻿@page "/projects"
+@using System.ComponentModel
+@using System.Collections.ObjectModel
+@using augalinga.Data.Access
+@using augalinga.Data.Entities
 
-<h1>Projects</h1>
+<style>
+    .header {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        background-color: #f8f9fa;
+    }
 
-<p>This component demonstrates showing data.</p>
+    .btn-plus {
+        position: absolute;
+        left: 20px;
+        border-radius: 50%;
+        height: 40px;
+        width: 40px;
+        font-size: 24px;
+        background-color: darkolivegreen;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
 
-@if (forecasts == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
-            {
-                <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+    .container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap:wrap;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .project-button {
+        display: block;
+        width: 100%;
+        max-width: 400px;
+        margin: 10px 20px;
+        padding: 40px;
+        background-color: #518478; 
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 18px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+    }
+
+        .project-button:hover {
+            background-color: #405955;
+            color: white;
+        }
+</style>
+
+<div class="header">
+    <button class="btn-plus">+</button>
+    <h1>Projects</h1>
+</div>
+<div class="container">
+    @foreach (Project project in viewModel.Projects)
+    {
+        <NavLink class="project-button" href="projectMenu">
+            @project.Name
+        </NavLink>
+    }
+</div>
 
 @code {
-    private WeatherForecast[]? forecasts;
-
-    protected override async Task OnInitializedAsync()
-    {
-        // Simulate asynchronous loading to demonstrate a loading indicator
-        await Task.Delay(500);
-
-        var startDate = DateOnly.FromDateTime(DateTime.Now);
-        var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
-        forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        {
-            Date = startDate.AddDays(index),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = summaries[Random.Shared.Next(summaries.Length)]
-        }).ToArray();
-    }
-
-    private class WeatherForecast
-    {
-        public DateOnly Date { get; set; }
-        public int TemperatureC { get; set; }
-        public string? Summary { get; set; }
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-    }
+    ProjectsViewModel viewModel = new ProjectsViewModel();
 }

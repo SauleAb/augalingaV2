@@ -1,16 +1,70 @@
 ﻿@page "/contacts"
 
-<h1>Contacts</h1>
+<style>
+    .header {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        background-color: #f8f9fa;
+    }
 
-<p role="status">Current count: @currentCount</p>
+    .btn-plus {
+        position: absolute;
+        left: 20px;
+        border-radius: 50%;
+        height: 40px;
+        width: 40px;
+        font-size: 24px;
+        background-color: darkolivegreen;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+    .container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .contact-button {
+        display: block;
+        width: 100%;
+        max-width: 400px;
+        margin: 10px 20px;
+        padding: 40px;
+        background-color: #518478;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 18px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+    }
+
+        .contact-button:hover {
+            background-color: #405955;
+            color: white;
+        }
+</style>
+
+<div class="header">
+    <button class="btn-plus">+</button>
+    <h1>Contacts</h1>
+</div>
+<div class="container">
+    <button class="contact-button">Nurseries</button>
+    <button class="contact-button">Transport</button>
+    <button class="contact-button">Manufacture</button>
+    <button class="contact-button">Colleagues</button>
+</div>
+
 
 @code {
-    private int currentCount = 0;
-
-    private void IncrementCount()
-    {
-        currentCount++;
-    }
 }

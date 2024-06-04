@@ -1,0 +1,98 @@
+﻿@page "/projectMenu"
+
+<h1>Project</h1>
+
+<div class="row">
+    <div class="column">
+<NavLink>
+    <span>
+    <img src="../Resources/Images/contacts.png"/>
+    <label>Contacts</label>
+    </span>
+</NavLink>
+<NavLink>
+    <span>
+        <img src="../Resources/Images/photos.png" />
+        <label>Photos</label>
+    </span>
+</NavLink>
+<NavLink>
+    <span>
+        <img src="../Resources/Images/documents.png" />
+        <label>Documents</label>
+    </span>
+</NavLink>
+</div>
+<div class="column">
+<NavLink>
+    <span>
+        <img src="../Resources/Images/orders.png" />
+        <label>Orders</label>
+    </span>
+</NavLink>
+<NavLink>
+    <span>
+    <img src="../Resources/Images/drafts.png"/>
+    <label>Drafts</label>
+    </span>
+</NavLink>
+<NavLink>
+    <span>
+        <img src="../Resources/Images/finances.png" />
+        <label>Finances</label>
+    </span>
+</NavLink>
+</div>
+</div>
+
+@code {
+
+}
+
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .column {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        align-items: center;
+    }
+
+        .column span {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .column img {
+            max-width: 200px;
+        }
+
+        .column label {
+            font-size: 14px;
+            margin-left: 10px;
+        }
+</style>

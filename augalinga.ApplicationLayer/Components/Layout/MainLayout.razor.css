@@ -2,11 +2,11 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    background-image: url(../../Resources/Images/calendar_background.png);
 }
 
 main {
     flex: 1;
-    background-image: url(../../Resources/Images/calendar_background.png);
 }
 
 .sidebar {
