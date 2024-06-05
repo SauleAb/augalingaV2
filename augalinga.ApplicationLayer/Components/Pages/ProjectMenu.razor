@@ -1,52 +1,68 @@
-﻿@page "/projectMenu"
+﻿@page "/projectMenu/{projectName}"
+@using System.ComponentModel
+@using System.Collections.ObjectModel
+@using augalinga.ApplicationLayer.Components.ViewModels
+@using augalinga.Data.Access
+@using augalinga.Data.Entities
+@inject NavigationManager Navigation
 
-<h1>Project</h1>
+
+<div class="header">
+    <button @onclick="GoBack" class="back-button">Back</button>
+    <h1>@projectName</h1>
+</div>
 
 <div class="row">
     <div class="column">
-<NavLink href="projectContacts">
-    <span>
-    <img src="../Resources/Images/contacts.png"/>
-    <label>Contacts</label>
-    </span>
-</NavLink>
-<NavLink>
-    <span>
-        <img src="../Resources/Images/photos.png" />
-        <label>Photos</label>
-    </span>
-</NavLink>
-<NavLink>
-    <span>
-        <img src="../Resources/Images/documents.png" />
-        <label>Documents</label>
-    </span>
-</NavLink>
-</div>
-<div class="column">
-<NavLink>
-    <span>
-        <img src="../Resources/Images/orders.png" />
-        <label>Orders</label>
-    </span>
-</NavLink>
-<NavLink>
-    <span>
-    <img src="../Resources/Images/drafts.png"/>
-    <label>Drafts</label>
-    </span>
-</NavLink>
-<NavLink>
-    <span>
-        <img src="../Resources/Images/finances.png" />
-        <label>Finances</label>
-    </span>
-</NavLink>
-</div>
+        <NavLink href="@($"projectContacts/{projectName}")">
+            <span>
+                <img src="../Resources/Images/contacts.png"/>
+                <label>Contacts</label>
+            </span>
+        </NavLink>
+        <NavLink href="@($"projectPhotos/{projectName}")">
+            <span>
+                <img src="../Resources/Images/photos.png" />
+                <label>Photos</label>
+            </span>
+        </NavLink>
+        <NavLink href="@($"projectDocuments/{projectName}")">
+            <span>
+                <img src="../Resources/Images/documents.png" />
+                <label>Documents</label>
+            </span>
+        </NavLink>
+    </div>
+    <div class="column">
+        <NavLink href="@($"projectOrders/{projectName}")">
+            <span>
+                <img src="../Resources/Images/orders.png" />
+                <label>Orders</label>
+            </span>
+        </NavLink>
+        <NavLink href="@($"projectDrafts/{projectName}")">
+            <span>
+                <img src="../Resources/Images/drafts.png"/>
+                <label>Drafts</label>
+            </span>
+        </NavLink>
+        <NavLink href="@($"projectFinances/{projectName}")">
+            <span>
+                <img src="../Resources/Images/finances.png" />
+                <label>Finances</label>
+            </span>
+        </NavLink>
+    </div>
 </div>
 
 @code {
+    [Parameter]
+    public string projectName { get; set; }
 
+    private void GoBack()
+    {
+        Navigation.NavigateTo($"/projects");
+    }
 }
 
 <style>
@@ -80,19 +96,41 @@
         align-items: center;
     }
 
-        .column span {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+    .column span {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 20px;
+    }
 
-        .column img {
-            max-width: 200px;
-        }
+    .column img {
+        max-width: 200px;
+    }
 
-        .column label {
-            font-size: 14px;
-            margin-left: 10px;
-        }
+    .column label {
+        font-size: 14px;
+        margin-left: 10px;
+    }
+    
+    .back-button {
+        background-color: #518478;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-bottom: 20px;
+    }
+
+    .back-button:hover {
+        background-color: #405955;
+    }
+
+    .header {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 10px;
+    }
 </style>

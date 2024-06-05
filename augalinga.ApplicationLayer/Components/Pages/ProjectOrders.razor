@@ -1,4 +1,6 @@
-﻿@page "/projectContacts/{projectName}"
+﻿@page "/projectOrders/{projectName}"
+
+
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Grids
 @using augalinga.ApplicationLayer.Components.ViewModels
@@ -7,27 +9,21 @@
 
 <div class="header">
     <button @onclick="GoBack" class="back-button">Back</button>
-    <h1>@projectName Contacts</h1>
+    <h1>@projectName Orders</h1>
 </div>
 
-<SfGrid DataSource="@contactsViewModel.Contacts" AllowPaging="true" AllowFiltering="true">
-    <GridColumns>
-        <GridColumn Field=@nameof(Contact.Name) HeaderText="Name" Width="120"></GridColumn>
-        <GridColumn Field=@nameof(Contact.Number) HeaderText="Number" Width="120"></GridColumn>
-        <GridColumn Field=@nameof(Contact.Address) HeaderText="Address" Width="120"></GridColumn>
-        <GridColumn Field=@nameof(Contact.Notes) HeaderText="Notes" Width="120"></GridColumn>
-    </GridColumns>
+<SfGrid DataSource="@ordersViewModel.Orders" AllowPaging="true">
 </SfGrid>
 
 @code {
     [Parameter]
     public string projectName { get; set; }
 
-    ContactsViewModel contactsViewModel;
+    OrdersViewModel ordersViewModel;
 
     protected override void OnInitialized()
     {
-        contactsViewModel = new ContactsViewModel(projectName);
+        ordersViewModel = new OrdersViewModel(projectName);
     }
 
     private void GoBack()

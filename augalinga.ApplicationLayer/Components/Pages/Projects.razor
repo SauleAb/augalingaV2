@@ -66,7 +66,7 @@
 <div class="container">
     @foreach (Project project in viewModel.Projects)
     {
-        <NavLink class="project-button" href="projectMenu">
+        <NavLink class="project-button" href="@($"projectMenu/{project.Name}")">
             @project.Name
         </NavLink>
     }

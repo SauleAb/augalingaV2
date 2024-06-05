@@ -1,0 +1,21 @@
+﻿@page "/contactsPage/{contactsCategory}"
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Grids
+@using augalinga.ApplicationLayer.Components.ViewModels
+@using augalinga.Data.Entities
+
+<h1>@contactsCategory</h1>
+
+<SfGrid DataSource="@contactsViewModel.Contacts" />
+
+@code {
+    [Parameter]
+    public string contactsCategory { get; set; }
+
+    ContactsViewModel contactsViewModel;
+
+    protected override void OnInitialized()
+    {
+        contactsViewModel = new ContactsViewModel(contactsCategory);
+    }
+}
