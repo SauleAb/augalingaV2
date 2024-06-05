@@ -183,6 +183,14 @@
         "net8.0-android34.0": {
           "targetAlias": "net8.0-android",
           "dependencies": {
+            "AWSSDK.S3": {
+              "target": "Package",
+              "version": "[3.7.308.9, )"
+            },
+            "Microsoft.AspNetCore.Components.Forms": {
+              "target": "Package",
+              "version": "[8.0.6, )"
+            },
             "Microsoft.AspNetCore.Components.WebView.Maui": {
               "target": "Package",
               "version": "[8.0.40, )"
@@ -206,6 +214,10 @@
               "autoReferenced": true
             },
             "Syncfusion.Blazor.Grid": {
+              "target": "Package",
+              "version": "[25.2.7, )"
+            },
+            "Syncfusion.Blazor.Popups": {
               "target": "Package",
               "version": "[25.2.7, )"
             },
@@ -242,6 +254,14 @@
         "net8.0-ios17.2": {
           "targetAlias": "net8.0-ios",
           "dependencies": {
+            "AWSSDK.S3": {
+              "target": "Package",
+              "version": "[3.7.308.9, )"
+            },
+            "Microsoft.AspNetCore.Components.Forms": {
+              "target": "Package",
+              "version": "[8.0.6, )"
+            },
             "Microsoft.AspNetCore.Components.WebView.Maui": {
               "target": "Package",
               "version": "[8.0.40, )"
@@ -265,6 +285,10 @@
               "autoReferenced": true
             },
             "Syncfusion.Blazor.Grid": {
+              "target": "Package",
+              "version": "[25.2.7, )"
+            },
+            "Syncfusion.Blazor.Popups": {
               "target": "Package",
               "version": "[25.2.7, )"
             },
@@ -301,6 +325,14 @@
         "net8.0-maccatalyst17.2": {
           "targetAlias": "net8.0-maccatalyst",
           "dependencies": {
+            "AWSSDK.S3": {
+              "target": "Package",
+              "version": "[3.7.308.9, )"
+            },
+            "Microsoft.AspNetCore.Components.Forms": {
+              "target": "Package",
+              "version": "[8.0.6, )"
+            },
             "Microsoft.AspNetCore.Components.WebView.Maui": {
               "target": "Package",
               "version": "[8.0.40, )"
@@ -324,6 +356,10 @@
               "autoReferenced": true
             },
             "Syncfusion.Blazor.Grid": {
+              "target": "Package",
+              "version": "[25.2.7, )"
+            },
+            "Syncfusion.Blazor.Popups": {
               "target": "Package",
               "version": "[25.2.7, )"
             },
@@ -361,6 +397,14 @@
         "net8.0-windows10.0.19041": {
           "targetAlias": "net8.0-windows10.0.19041.0",
           "dependencies": {
+            "AWSSDK.S3": {
+              "target": "Package",
+              "version": "[3.7.308.9, )"
+            },
+            "Microsoft.AspNetCore.Components.Forms": {
+              "target": "Package",
+              "version": "[8.0.6, )"
+            },
             "Microsoft.AspNetCore.Components.WebView.Maui": {
               "target": "Package",
               "version": "[8.0.40, )"
@@ -378,6 +422,10 @@
               "version": "[8.0.40, )"
             },
             "Syncfusion.Blazor.Grid": {
+              "target": "Package",
+              "version": "[25.2.7, )"
+            },
+            "Syncfusion.Blazor.Popups": {
               "target": "Package",
               "version": "[25.2.7, )"
             },

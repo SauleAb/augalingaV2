@@ -2,31 +2,130 @@
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Grids
 @using augalinga.ApplicationLayer.Components.ViewModels
+@using augalinga.Data.Access
 @using augalinga.Data.Entities
+@using Syncfusion.Blazor.Popups
 @inject NavigationManager Navigation
+@using Amazon;
+@using Amazon.S3;
+@using Amazon.S3.Model;
+@using Syncfusion.Blazor.Inputs
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.Maui.Controls
+@using System.Text.Json
 
 <div class="header">
     <button @onclick="GoBack" class="back-button">Back</button>
     <h1>@projectName Documents</h1>
+    <button @onclick="OpenDialog" class="add-button">Add</button>
 </div>
 
 <SfGrid DataSource="@documentsViewModel.Documents" AllowPaging="true">
 </SfGrid>
+
+<SfDialog Width="500px" IsModal="true" ShowCloseIcon="true" @bind-Visible="Visibility" Header="Upload Document">
+    <DialogTemplates>
+        <Header> Dialog </Header>
+        <Content>
+            <div class="form-group">
+                <label for="fileInput">Select file:</label>
+                <InputFile id="fileInput" OnChange="HandleFileSelect" multiple />
+                <ul>
+                    @if (selectedFiles.Any())
+                    {
+                        @foreach (var file in selectedFiles)
+                        {
+                            <li>@file.Name</li>
+                        }
+                    }
+                </ul>
+            </div>
+            <button type="button" class="btn btn-primary" @onclick="UploadFiles">Upload</button>
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger">@errorMessage</div>
+            }
+        </Content>
+    </DialogTemplates>
+</SfDialog>
 
 @code {
     [Parameter]
     public string projectName { get; set; }
 
     DocumentsViewModel documentsViewModel;
+    SfDialog documentDialog;
+    string bucket = "augalinga-app";
+    string folder = "documents/";
+    IAmazonS3 s3Client = new AmazonS3Client(RegionEndpoint.EUNorth1);
+    public DataContext context { get; set; } = new DataContext();
+    private List<IBrowserFile> selectedFiles = new List<IBrowserFile>();
+    private string errorMessage;
 
     protected override void OnInitialized()
     {
         documentsViewModel = new DocumentsViewModel(projectName);
     }
 
+    private bool Visibility { get; set; } = false;
+    private void OpenDialog()
+    {
+        this.Visibility = true;
+        errorMessage = string.Empty;
+    }
+
     private void GoBack()
     {
         Navigation.NavigateTo($"/projectMenu/{projectName}");
+    }
+
+    private void HandleFileSelect(InputFileChangeEventArgs e)
+    {
+        selectedFiles = e.GetMultipleFiles().ToList();
+    }
+
+    private async Task UploadFiles()
+    {
+        errorMessage = string.Empty;
+        try
+        {
+            foreach (var file in selectedFiles)
+            {
+                string objectKey = $"{projectName}/{folder}{file.Name}";
+
+                const long maxFileSize = 1073741824; // 1 GB
+                using var stream = file.OpenReadStream(maxFileSize);
+                var request = new PutObjectRequest
+                    {
+                        BucketName = bucket,
+                        Key = objectKey,
+                        InputStream = stream
+                    };
+                await s3Client.PutObjectAsync(request);
+
+                var newDocument = new Document
+                    {
+                        Project = projectName,
+                        Link = $"https://{bucket}.s3.amazonaws.com/{objectKey}",
+                        Name = file.Name
+                    };
+                documentsViewModel.AddDocumentToCollection(newDocument);
+                await context.Documents.AddAsync(newDocument);
+                await context.SaveChangesAsync();
+            }
+            Visibility = false;
+            selectedFiles.Clear();
+        }
+        catch (AmazonS3Exception s3Ex)
+        {
+            errorMessage = $"S3 Error: {s3Ex.Message}";
+            Console.WriteLine($"S3 Error: {s3Ex}");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred: {ex.Message}";
+            Console.WriteLine($"General Error: {ex}");
+        }
     }
 }
 
@@ -42,9 +141,9 @@
         margin-bottom: 20px;
     }
 
-    .back-button:hover {
-        background-color: #405955;
-    }
+        .back-button:hover {
+            background-color: #405955;
+        }
 
     .header {
         display: flex;
@@ -52,5 +151,31 @@
         align-items: center;
         justify-content: space-between;
         padding: 10px;
+    }
+
+    .add-button {
+        background-color: #518478;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+        .add-button:hover {
+            background-color: #405955;
+        }
+
+    .alert {
+        margin-top: 20px;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
     }
 </style>

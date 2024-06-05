@@ -125,15 +125,23 @@
   </ImportGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0-android' AND '$(ExcludeRestorePackageImports)' != 'true' ">
     <PkgMicrosoft_NET_ILLink_Tasks Condition=" '$(PkgMicrosoft_NET_ILLink_Tasks)' == '' ">C:\Users\ThinkPad\.nuget\packages\microsoft.net.illink.tasks\8.0.5</PkgMicrosoft_NET_ILLink_Tasks>
+    <PkgAWSSDK_Core Condition=" '$(PkgAWSSDK_Core)' == '' ">C:\Users\ThinkPad\.nuget\packages\awssdk.core\3.7.304.11</PkgAWSSDK_Core>
+    <PkgAWSSDK_S3 Condition=" '$(PkgAWSSDK_S3)' == '' ">C:\Users\ThinkPad\.nuget\packages\awssdk.s3\3.7.308.9</PkgAWSSDK_S3>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0-ios' AND '$(ExcludeRestorePackageImports)' != 'true' ">
     <PkgMicrosoft_NET_ILLink_Tasks Condition=" '$(PkgMicrosoft_NET_ILLink_Tasks)' == '' ">C:\Users\ThinkPad\.nuget\packages\microsoft.net.illink.tasks\8.0.5</PkgMicrosoft_NET_ILLink_Tasks>
+    <PkgAWSSDK_Core Condition=" '$(PkgAWSSDK_Core)' == '' ">C:\Users\ThinkPad\.nuget\packages\awssdk.core\3.7.304.11</PkgAWSSDK_Core>
+    <PkgAWSSDK_S3 Condition=" '$(PkgAWSSDK_S3)' == '' ">C:\Users\ThinkPad\.nuget\packages\awssdk.s3\3.7.308.9</PkgAWSSDK_S3>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0-maccatalyst' AND '$(ExcludeRestorePackageImports)' != 'true' ">
     <PkgMicrosoft_NET_ILLink_Tasks Condition=" '$(PkgMicrosoft_NET_ILLink_Tasks)' == '' ">C:\Users\ThinkPad\.nuget\packages\microsoft.net.illink.tasks\8.0.5</PkgMicrosoft_NET_ILLink_Tasks>
+    <PkgAWSSDK_Core Condition=" '$(PkgAWSSDK_Core)' == '' ">C:\Users\ThinkPad\.nuget\packages\awssdk.core\3.7.304.11</PkgAWSSDK_Core>
+    <PkgAWSSDK_S3 Condition=" '$(PkgAWSSDK_S3)' == '' ">C:\Users\ThinkPad\.nuget\packages\awssdk.s3\3.7.308.9</PkgAWSSDK_S3>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0-windows10.0.19041.0' AND '$(ExcludeRestorePackageImports)' != 'true' ">
     <PkgMicrosoft_WindowsAppSDK Condition=" '$(PkgMicrosoft_WindowsAppSDK)' == '' ">C:\Users\ThinkPad\.nuget\packages\microsoft.windowsappsdk\1.5.240311000</PkgMicrosoft_WindowsAppSDK>
     <PkgMicrosoft_Web_WebView2 Condition=" '$(PkgMicrosoft_Web_WebView2)' == '' ">C:\Users\ThinkPad\.nuget\packages\microsoft.web.webview2\1.0.864.35</PkgMicrosoft_Web_WebView2>
+    <PkgAWSSDK_Core Condition=" '$(PkgAWSSDK_Core)' == '' ">C:\Users\ThinkPad\.nuget\packages\awssdk.core\3.7.304.11</PkgAWSSDK_Core>
+    <PkgAWSSDK_S3 Condition=" '$(PkgAWSSDK_S3)' == '' ">C:\Users\ThinkPad\.nuget\packages\awssdk.s3\3.7.308.9</PkgAWSSDK_S3>
   </PropertyGroup>
 </Project>
