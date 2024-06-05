@@ -20,7 +20,11 @@
     <button @onclick="OpenDialog" class="add-button">Add</button>
 </div>
 
-<SfGrid DataSource="@documentsViewModel.Documents" AllowPaging="true">
+<SfGrid DataSource="@documentsViewModel.Documents" AllowPaging="true" AllowSelection="true" @ref="documentsDataGrid" OnRowSelected="OnRowSelected">
+    <GridColumns>
+        <GridColumn Field=@nameof(Document.Name) HeaderText="Name"></GridColumn>
+        <GridColumn Field=@nameof(Document.Link) HeaderText="Link"></GridColumn>
+    </GridColumns>
 </SfGrid>
 
 <SfDialog Width="500px" IsModal="true" ShowCloseIcon="true" @bind-Visible="Visibility" Header="Upload Document">
@@ -40,7 +44,9 @@
                     }
                 </ul>
             </div>
-            <button type="button" class="btn btn-primary" @onclick="UploadFiles">Upload</button>
+            <div class="footer">
+                <button disabled="@(!IsRowSelected)" @onclick="DeleteFile" class="delete-button">Delete</button>
+            </div>
             @if (!string.IsNullOrEmpty(errorMessage))
             {
                 <div class="alert alert-danger">@errorMessage</div>
@@ -48,6 +54,10 @@
         </Content>
     </DialogTemplates>
 </SfDialog>
+
+<div class="footer">
+    <button disabled="@(!IsRowSelected)" @onclick="async () => await DeleteFile()" class="delete-button">Delete</button>
+</div>
 
 @code {
     [Parameter]
@@ -61,6 +71,9 @@
     public DataContext context { get; set; } = new DataContext();
     private List<IBrowserFile> selectedFiles = new List<IBrowserFile>();
     private string errorMessage;
+    private Document selectedDocument;
+    SfGrid<Document> documentsDataGrid { get; set; }
+    private bool IsRowSelected { get; set; } = false;
 
     protected override void OnInitialized()
     {
@@ -77,6 +90,30 @@
     private void GoBack()
     {
         Navigation.NavigateTo($"/projectMenu/{projectName}");
+    }
+
+    private void OnRowSelected(RowSelectEventArgs<Document> args)
+    {
+        selectedDocument = args.Data as Document;
+        IsRowSelected = selectedDocument != null;
+    }
+
+    private async Task DeleteFile()
+    {
+        if (selectedDocument != null)
+        {
+            string link = selectedDocument.Link;
+            documentsViewModel.RemoveDocument(link);
+            context.Documents.Remove(selectedDocument);
+            await context.SaveChangesAsync();
+            await s3Client.DeleteObjectAsync(new DeleteObjectRequest
+                {
+                    BucketName = bucket,
+                    Key = $"{projectName}/{folder}{selectedDocument.Name}"
+                });
+            selectedDocument = null;
+            IsRowSelected = false;
+        }
     }
 
     private void HandleFileSelect(InputFileChangeEventArgs e)
@@ -167,15 +204,4 @@
             background-color: #405955;
         }
 
-    .alert {
-        margin-top: 20px;
-        padding: 10px;
-        border-radius: 5px;
-    }
-
-    .alert-danger {
-        background-color: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-    }
 </style>
