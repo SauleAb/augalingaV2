@@ -20,6 +20,19 @@
     background-color: rgba(0,0,0,0.4);
 }
 
+.nav-image-container {
+    margin-top: auto;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.nav-image {
+    max-height: 300px;
+    position: relative;
+    left: -10%; 
+}
+
 .navbar-brand {
     font-size: 1.1rem;
 }
@@ -80,6 +93,8 @@
 
 .nav-scrollable {
     display: none;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .navbar-toggler:checked ~ .nav-scrollable {

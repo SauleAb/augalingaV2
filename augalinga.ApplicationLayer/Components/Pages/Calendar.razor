@@ -1,20 +1,92 @@
 ﻿@page "/"
+@using Syncfusion.Blazor.Schedule
+@using augalinga.ApplicationLayer.Components.ViewModels
+@using augalinga.Data.Entities
+@using augalinga.Data.Access
 @code {
-    public class AppointmentData
+    public DataContext dbContext { get; set; } = new DataContext();
+    CalendarViewModel calendarViewModel { get; set; } = new CalendarViewModel();
+
+    public async void OnActionCompleted(ActionEventArgs<Meeting> args)
     {
-        public int Id { get; set; }
-        public string Subject { get; set; }
-        public string Location { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
-        public string Description { get; set; }
-        public bool IsAllDay { get; set; }
-        public string RecurrenceRule { get; set; }
-        public string RecurrenceException { get; set; }
-        public Nullable<int> RecurrenceID { get; set; }
+        if (args.ActionType == ActionType.EventCreate)
+        {
+            if (args.AddedRecords != null)
+            {
+                foreach (var addedEvent in args.AddedRecords)
+                {
+                    if (addedEvent.Notes == null)
+                    {
+                        addedEvent.Notes = "";
+                    }
+                    Meeting meeting = new Meeting
+                        {
+                            From = addedEvent.From,
+                            To = addedEvent.To,
+                            EventName = addedEvent.EventName,
+                            IsAllDay = addedEvent.IsAllDay,
+                            Notes = addedEvent.Notes,
+                            Background = "#1A9BAB",
+                            Employee = "Baronaite"
+                        };
+                    dbContext.Meetings.Add(meeting);
+                    calendarViewModel.AddEventToCollection(meeting);
+                }
+            }
+        }
+
+        if (args.ActionType == ActionType.EventChange)
+        {
+            if (args.ChangedRecords != null)
+            {
+                foreach (var editedEvent in args.ChangedRecords)
+                {
+                    var existingEvent = calendarViewModel.Events.FirstOrDefault(e => e.Id == editedEvent.Id);
+                    if (existingEvent != null)
+                    {
+                        existingEvent.From = editedEvent.From;
+                        existingEvent.To = editedEvent.To;
+                        existingEvent.IsAllDay = editedEvent.IsAllDay;
+                        existingEvent.EventName = editedEvent.EventName;
+                        existingEvent.Notes = editedEvent.Notes;
+
+                        dbContext.Meetings.Update(existingEvent);
+                    }
+                }
+            }
+        }
+
+        if (args.ActionType == ActionType.EventRemove)
+        {
+            if (args.DeletedRecords != null)
+            {
+                foreach (var deletedEvent in args.DeletedRecords)
+                {
+                    var eventToRemove = dbContext.Meetings.FirstOrDefault(e => e.Id == deletedEvent.Id);
+                    if (eventToRemove != null)
+                    {
+                        dbContext.Meetings.Remove(eventToRemove);
+                        calendarViewModel.Events.Remove(eventToRemove);
+                    }
+                }
+            }
+        }
+        await dbContext.SaveChangesAsync();
+
     }
 }
-<SfSchedule TValue=AppointmentData>
+
+<SfSchedule TValue="Meeting">
+    <ScheduleEvents TValue="Meeting" ActionCompleted="OnActionCompleted"></ScheduleEvents>
+    <ScheduleEventSettings DataSource="@calendarViewModel.Events">
+        <ScheduleField Id="Id">
+            <FieldSubject Name="EventName"></FieldSubject>
+            <FieldDescription Name="Notes"></FieldDescription>
+            <FieldIsAllDay Name="IsAllDay"></FieldIsAllDay>
+            <FieldStartTime Name="From"></FieldStartTime>
+            <FieldEndTime Name="To"></FieldEndTime>
+        </ScheduleField>
+    </ScheduleEventSettings>
     <ScheduleViews>
         <ScheduleView Option="View.Day"></ScheduleView>
         <ScheduleView Option="View.Week"></ScheduleView>

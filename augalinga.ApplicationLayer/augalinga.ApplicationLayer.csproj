@@ -48,7 +48,6 @@
 
         <!-- Images -->
         <MauiImage Include="Resources\Images\*" />
-        <MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
 
         <!-- Custom Fonts -->
         <MauiFont Include="Resources\Fonts\*" />
@@ -58,7 +57,26 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Content Remove="wwwroot\calendar_background.png" />
+      <Content Remove="wwwroot\contacts.png" />
+      <Content Remove="wwwroot\documents.png" />
+      <Content Remove="wwwroot\dotnet_bot.svg" />
+      <Content Remove="wwwroot\drafts.png" />
+      <Content Remove="wwwroot\finances.png" />
+      <Content Remove="wwwroot\ginkmedis.png" />
+      <Content Remove="wwwroot\orders.png" />
+      <Content Remove="wwwroot\photos.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <MauiImage Include="wwwroot\dotnet_bot.svg">
+        <BaseSize>168,208</BaseSize>
+      </MauiImage>
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="AWSSDK.S3" Version="3.7.308.9" />
+        <PackageReference Include="Blazored.Modal" Version="7.3.1" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Forms" Version="8.0.6" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.40" />
         <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.40" />
@@ -87,6 +105,10 @@
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Resources\Images\" />
     </ItemGroup>
 
 </Project>

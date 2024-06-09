@@ -19,13 +19,13 @@ public class CalendarViewModel : INotifyPropertyChanged
     }
     public CalendarViewModel()
     {
-
+        LoadEvents(true, true, true);
     }
 
-    public CalendarViewModel(bool baronaite, bool gudaityte, bool both)
-    {
-        LoadEvents(baronaite, gudaityte, both);
-    }
+    // public CalendarViewModel(bool baronaite, bool gudaityte, bool both)
+    // {
+    //     LoadEvents(baronaite, gudaityte, both);
+    // }
 
     public void LoadEvents(bool baronaite, bool gudaityte, bool both)
     {

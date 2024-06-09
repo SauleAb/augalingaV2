@@ -14,43 +14,31 @@
 
 <div class="row">
     <div class="column">
-        <NavLink href="@($"projectContacts/{projectName}")">
-            <span>
-                <img src="../Resources/Images/contacts.png"/>
-                <label>Contacts</label>
-            </span>
+        <NavLink class="card" href="@($"projectContacts/{projectName}")">
+            <img src="../images/contacts.png" />
+            <h2>Contacts</h2>
         </NavLink>
-        <NavLink href="@($"projectPhotos/{projectName}")">
-            <span>
-                <img src="../Resources/Images/photos.png" />
-                <label>Photos</label>
-            </span>
+        <NavLink class="card" href="@($"projectPhotos/{projectName}")">
+            <img src="../images/photos.png" />
+            <h2>Photos</h2>
         </NavLink>
-        <NavLink href="@($"projectDocuments/{projectName}")">
-            <span>
-                <img src="../Resources/Images/documents.png" />
-                <label>Documents</label>
-            </span>
+        <NavLink class="card" href="@($"projectDocuments/{projectName}")">
+            <img src="../images/documents.png" />
+            <h2>Documents</h2>
         </NavLink>
     </div>
     <div class="column">
-        <NavLink href="@($"projectOrders/{projectName}")">
-            <span>
-                <img src="../Resources/Images/orders.png" />
-                <label>Orders</label>
-            </span>
+        <NavLink class="card" href="@($"projectOrders/{projectName}")">
+            <img src="../images/orders.png" />
+            <h2>Orders</h2>
         </NavLink>
-        <NavLink href="@($"projectDrafts/{projectName}")">
-            <span>
-                <img src="../Resources/Images/drafts.png"/>
-                <label>Drafts</label>
-            </span>
+        <NavLink class="card" href="@($"projectDrafts/{projectName}")">
+            <img src="../images/drafts.png" />
+            <h2>Drafts</h2>
         </NavLink>
-        <NavLink href="@($"projectFinances/{projectName}")">
-            <span>
-                <img src="../Resources/Images/finances.png" />
-                <label>Finances</label>
-            </span>
+        <NavLink class="card" href="@($"projectFinances/{projectName}")">
+            <img src="../images/finances.png" />
+            <h2>Finances</h2>
         </NavLink>
     </div>
 </div>
@@ -75,43 +63,52 @@
         text-align: center;
     }
 
-    .container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-
     .row {
         display: flex;
+        flex-direction: row;
         flex-wrap: wrap;
-        justify-content: space-between;
+        justify-content: space-around;
     }
 
     .column {
         display: flex;
         flex-direction: column;
-        flex: 1;
         align-items: center;
+        flex: 1;
     }
 
-    .column span {
+    .card {
         display: flex;
         flex-direction: row;
         align-items: center;
+        justify-content: center;
+        width: 450px;
+        height: 150px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        text-align: center;
         margin-bottom: 20px;
+        text-decoration: none;
+        color: inherit;
+        background-color: white;
     }
 
-    .column img {
-        max-width: 200px;
-    }
+        .card img {
+            max-width: 100px;
+            max-height: 100px;
+            margin-bottom: 10px;
+        }
 
-    .column label {
-        font-size: 14px;
-        margin-left: 10px;
-    }
-    
+        .card h2 {
+            font-size: 1.5rem;
+            margin: 0;
+            width: 70%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
     .back-button {
         background-color: #518478;
         color: white;
@@ -123,9 +120,9 @@
         margin-bottom: 20px;
     }
 
-    .back-button:hover {
-        background-color: #405955;
-    }
+        .back-button:hover {
+            background-color: #405955;
+        }
 
     .header {
         display: flex;
@@ -134,3 +131,4 @@
         padding: 10px;
     }
 </style>
+
