@@ -5,6 +5,28 @@
 @using augalinga.Data.Access
 @using augalinga.Data.Entities
 
+<div class="header">
+    <button class="btn-plus">+</button>
+    <h1>Projects</h1>
+</div>
+<div class="container">
+    @foreach (Project project in viewModel.Projects)
+    {
+        <NavLink href="@($"projectMenu/{project.Name}")">
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="../images/calendar_background.png" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">@project.Name</h5>
+                </div>
+            </div>
+        </NavLink>
+    }
+</div>
+
+@code {
+    ProjectsViewModel viewModel = new ProjectsViewModel();
+}
+
 <style>
     .header {
         position: relative;
@@ -36,42 +58,24 @@
         justify-content: center;
         padding: 20px;
     }
-
-    .project-button {
-        display: block;
-        width: 100%;
-        max-width: 400px;
-        margin: 10px 20px;
-        padding: 40px;
-        background-color: #518478; 
-        color: white;
-        border: none;
-        border-radius: 10px;
-        font-size: 18px;
-        cursor: pointer;
-        text-align: center;
-        text-decoration: none;
+    .card {
+        margin: 20px;
+        text-decoration: none
     }
 
-        .project-button:hover {
-            background-color: #405955;
-            color: white;
+    .card-title {
+        text-decoration: none;
+        padding: 10px;
+    }
+
+    .card a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+        .card a:hover {
+            text-decoration: none;
+            color: inherit;
         }
 </style>
 
-<div class="header">
-    <button class="btn-plus">+</button>
-    <h1>Projects</h1>
-</div>
-<div class="container">
-    @foreach (Project project in viewModel.Projects)
-    {
-        <NavLink class="project-button" href="@($"projectMenu/{project.Name}")">
-            @project.Name
-        </NavLink>
-    }
-</div>
-
-@code {
-    ProjectsViewModel viewModel = new ProjectsViewModel();
-}

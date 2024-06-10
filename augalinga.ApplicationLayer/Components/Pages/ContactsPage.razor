@@ -3,8 +3,12 @@
 @using Syncfusion.Blazor.Grids
 @using augalinga.ApplicationLayer.Components.ViewModels
 @using augalinga.Data.Entities
+@inject NavigationManager Navigation
 
-<h1>@contactsCategory</h1>
+<div class="header">
+    <button @onclick="GoBack" class="back-button">Back</button>
+    <h1>@contactsCategory</h1>
+</div>
 
 <SfGrid DataSource="@contactsViewModel.Contacts" />
 
@@ -18,4 +22,36 @@
     {
         contactsViewModel = new ContactsViewModel(contactsCategory);
     }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo($"/contacts");
+    }
 }
+
+<style>
+
+    .header {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        background-color: #f8f9fa;
+    }
+
+    .back-button {
+        background-color: #518478;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-bottom: 20px;
+    }
+
+        .back-button:hover {
+            background-color: #405955;
+        }
+</style>

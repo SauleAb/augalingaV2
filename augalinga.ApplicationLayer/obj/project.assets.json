@@ -92258,6 +92258,7 @@
       "Microsoft.Maui.Controls >= 8.0.40",
       "Microsoft.Maui.Controls.Compatibility >= 8.0.40",
       "Microsoft.NET.ILLink.Tasks >= 8.0.5",
+      "Syncfusion.Blazor.Buttons >= 25.2.7",
       "Syncfusion.Blazor.Grid >= 25.2.7",
       "Syncfusion.Blazor.Popups >= 25.2.7",
       "Syncfusion.Blazor.Schedule >= 25.2.6",
@@ -92273,6 +92274,7 @@
       "Microsoft.Maui.Controls >= 8.0.40",
       "Microsoft.Maui.Controls.Compatibility >= 8.0.40",
       "Microsoft.NET.ILLink.Tasks >= 8.0.5",
+      "Syncfusion.Blazor.Buttons >= 25.2.7",
       "Syncfusion.Blazor.Grid >= 25.2.7",
       "Syncfusion.Blazor.Popups >= 25.2.7",
       "Syncfusion.Blazor.Schedule >= 25.2.6",
@@ -92288,6 +92290,7 @@
       "Microsoft.Maui.Controls >= 8.0.40",
       "Microsoft.Maui.Controls.Compatibility >= 8.0.40",
       "Microsoft.NET.ILLink.Tasks >= 8.0.5",
+      "Syncfusion.Blazor.Buttons >= 25.2.7",
       "Syncfusion.Blazor.Grid >= 25.2.7",
       "Syncfusion.Blazor.Popups >= 25.2.7",
       "Syncfusion.Blazor.Schedule >= 25.2.6",
@@ -92302,6 +92305,7 @@
       "Microsoft.Extensions.Logging.Debug >= 8.0.0",
       "Microsoft.Maui.Controls >= 8.0.40",
       "Microsoft.Maui.Controls.Compatibility >= 8.0.40",
+      "Syncfusion.Blazor.Buttons >= 25.2.7",
       "Syncfusion.Blazor.Grid >= 25.2.7",
       "Syncfusion.Blazor.Popups >= 25.2.7",
       "Syncfusion.Blazor.Schedule >= 25.2.6",
@@ -92426,6 +92430,10 @@
             "version": "[8.0.5, )",
             "autoReferenced": true
           },
+          "Syncfusion.Blazor.Buttons": {
+            "target": "Package",
+            "version": "[25.2.7, )"
+          },
           "Syncfusion.Blazor.Grid": {
             "target": "Package",
             "version": "[25.2.7, )"
@@ -92500,6 +92508,10 @@
             "target": "Package",
             "version": "[8.0.5, )",
             "autoReferenced": true
+          },
+          "Syncfusion.Blazor.Buttons": {
+            "target": "Package",
+            "version": "[25.2.7, )"
           },
           "Syncfusion.Blazor.Grid": {
             "target": "Package",
@@ -92576,6 +92588,10 @@
             "version": "[8.0.5, )",
             "autoReferenced": true
           },
+          "Syncfusion.Blazor.Buttons": {
+            "target": "Package",
+            "version": "[25.2.7, )"
+          },
           "Syncfusion.Blazor.Grid": {
             "target": "Package",
             "version": "[25.2.7, )"
@@ -92645,6 +92661,10 @@
           "Microsoft.Maui.Controls.Compatibility": {
             "target": "Package",
             "version": "[8.0.40, )"
+          },
+          "Syncfusion.Blazor.Buttons": {
+            "target": "Package",
+            "version": "[25.2.7, )"
           },
           "Syncfusion.Blazor.Grid": {
             "target": "Package",

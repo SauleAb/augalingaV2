@@ -1,5 +1,47 @@
 ﻿@page "/contacts"
 
+<div class="header">
+    <button class="btn-plus">+</button>
+    <h1>Contacts</h1>
+</div>
+<div class="container">
+    <NavLink href="contactsPage/Nurseries">
+        <div class="card">
+            <img class="card-img-top" src="../images/nurseries.png" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Nurseries</h5>
+            </div>
+        </div>
+    </NavLink>
+    <NavLink href="contactsPage/Transport">
+        <div class="card">
+            <img class="card-img-top" src="../images/transport.png" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Transport</h5>
+            </div>
+        </div>
+    </NavLink>
+    <NavLink href="contactsPage/Manufacture">
+        <div class="card">
+            <img class="card-img-top" src="../images/manufacture.png" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Manufacture</h5>
+            </div>
+        </div>
+    </NavLink>
+    <NavLink href="contactsPage/Colleagues">
+        <div class="card">
+            <img class="card-img-top" src="../images/colleagues.png" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Colleagues</h5>
+            </div>
+        </div>
+    </NavLink>
+</div>
+
+@code {
+}
+
 <style>
     .header {
         position: relative;
@@ -24,47 +66,45 @@
     }
 
     .container {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: center;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        justify-items: center;
         padding: 20px;
     }
 
-    .contact-button {
-        display: block;
-        width: 100%;
-        max-width: 400px;
-        margin: 10px 20px;
-        padding: 40px;
-        background-color: #518478;
-        color: white;
-        border: none;
-        border-radius: 10px;
-        font-size: 18px;
-        cursor: pointer;
-        text-align: center;
+    .card {
+        width: 18rem;
         text-decoration: none;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
-        .contact-button:hover {
-            background-color: #405955;
-            color: white;
+        .card img {
+            width: 100%;
+            height: auto;
+        }
+
+    .card-body {
+        padding: 10px;
+        text-align: center;
+    }
+
+    .card-title {
+        margin: 0;
+        font-size: 1.25rem;
+        color: #333;
+    }
+
+    .card a {
+        text-decoration: none;
+        color: black;
+    }
+
+        .card a:hover {
+            text-decoration: none;
+            color: black;
         }
 </style>
-
-<div class="header">
-    <button class="btn-plus">+</button>
-    <h1>Contacts</h1>
-</div>
-<div class="container">
-    <NavLink href="contactsPage/Nurseries"><button class="contact-button">Nurseries</button></NavLink>
-    <NavLink href="contactsPage/Transport"><button class="contact-button">Transport</button></NavLink>
-    <NavLink href="contactsPage/Manufacture"><button class="contact-button">Manufacture</button></NavLink>
-    <NavLink href="contactsPage/Colleagues"><button class="contact-button">Colleagues</button></NavLink>
-</div>
-
-
-@code {
-}
