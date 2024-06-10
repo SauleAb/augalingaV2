@@ -9,24 +9,20 @@
 @code {
     public DataContext dbContext { get; set; } = new DataContext();
     CalendarViewModel calendarViewModel { get; set; } = new CalendarViewModel();
-    private string selectedEmployee;
-    private bool isAllDayChecked = false;
     public List<string> CustomClass = new List<string>() { "custom-class" };
 
 
     public void OnEventRendered(EventRenderedArgs<Meeting> args)
     {
-        isAllDayChecked = args.Data.IsAllDay;
-        selectedEmployee = args.Data.Employee;
-        if (selectedEmployee == "Baronaite")
+        if (args.Data.Employee == "Baronaite")
         {
             args.CssClasses = new List<string> { "baronaite-background" };
         }
-        else if (selectedEmployee == "Gudaityte")
+        else if (args.Data.Employee == "Gudaityte")
         {
             args.CssClasses = new List<string> { "gudaityte-background" };
         }
-        else if (selectedEmployee == "Both")
+        else if (args.Data.Employee == "Both")
         {
             args.CssClasses = new List<string> { "both-background" };
         }
@@ -36,9 +32,9 @@
         }
     }
 
-    private string GetSelectedColor()
+    private string GetSelectedColor(string employee)
     {
-        return selectedEmployee switch
+        return employee switch
         {
             "Baronaite" => "#FFFFD700", // Yellow
             "Gudaityte" => "#1A9BAB",   // Electric
@@ -59,12 +55,6 @@
                     {
                         addedEvent.Notes = "";
                     }
-                    addedEvent.Background = GetSelectedColor();
-                    addedEvent.Employee = selectedEmployee;
-                    if (isAllDayChecked)
-                    {
-                        addedEvent.IsAllDay = true;
-                    }
                     Meeting meeting = new Meeting
                         {
                             From = addedEvent.From,
@@ -72,8 +62,8 @@
                             EventName = addedEvent.EventName,
                             IsAllDay = addedEvent.IsAllDay,
                             Notes = addedEvent.Notes,
-                            Background = addedEvent.Background,
-                            Employee = addedEvent.Employee
+                            Employee = addedEvent.Employee,
+                            Background = GetSelectedColor(addedEvent.Employee)
                         };
                     dbContext.Meetings.Add(meeting);
                 }
@@ -91,16 +81,6 @@
                     {
                         editedEvent.Notes = "";
                     }
-                    editedEvent.Background = GetSelectedColor();
-                    editedEvent.Employee = selectedEmployee;
-                    if(isAllDayChecked)
-                    {
-                        editedEvent.IsAllDay = true;
-                    }
-                    else
-                    {
-                        editedEvent.IsAllDay = false;
-                    }
                     if (existingEvent != null)
                     {
                         existingEvent.From = editedEvent.From;
@@ -108,8 +88,8 @@
                         existingEvent.IsAllDay = editedEvent.IsAllDay;
                         existingEvent.EventName = editedEvent.EventName;
                         existingEvent.Notes = editedEvent.Notes;
-                        existingEvent.Background = GetSelectedColor();
-                        existingEvent.Employee = selectedEmployee;
+                        existingEvent.Employee = editedEvent.Employee;
+                        existingEvent.Background = GetSelectedColor(editedEvent.Employee);
 
                         dbContext.Meetings.Update(existingEvent);
                     }
@@ -179,15 +159,15 @@
                     <tr>
                         <td class="e-textlabel">All day</td>
                         <td colspan="4">
-                            <SfCheckBox @bind-Checked="@isAllDayChecked"></SfCheckBox>
+                            <SfCheckBox @bind-Checked="(context as Meeting).IsAllDay"></SfCheckBox>
                         </td>
                     </tr>
                     <tr>
                         <td class="e-textlabel">For</td>
                         <td colspan="4">
-                            <SfRadioButton Label="Baronaite" Value="Baronaite" Name="Employee" @bind-Checked="selectedEmployee"></SfRadioButton>
-                            <SfRadioButton Label="Gudaityte" Value="Gudaityte" Name="Employee" @bind-Checked="selectedEmployee"></SfRadioButton>
-                            <SfRadioButton Label="Both" Value="Both" Name="Employee" @bind-Checked="selectedEmployee"></SfRadioButton>
+                            <SfRadioButton Label="Baronaite" Value="Baronaite" Name="Employee" @bind-Checked="(context as Meeting).Employee"></SfRadioButton>
+                            <SfRadioButton Label="Gudaityte" Value="Gudaityte" Name="Employee" @bind-Checked="(context as Meeting).Employee"></SfRadioButton>
+                            <SfRadioButton Label="Both" Value="Both" Name="Employee" @bind-Checked="(context as Meeting).Employee"></SfRadioButton>
                         </td>
                     </tr>
                     <tr>
