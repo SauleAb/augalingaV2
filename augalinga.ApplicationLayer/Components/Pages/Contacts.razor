@@ -1,8 +1,14 @@
 ﻿@page "/contacts"
+@inject NavigationManager Navigation
 
 <div class="header">
-    <button class="btn-plus">+</button>
+    <div style="flex: 1">
+        <button @onclick="GoBack" class="back-button"><img src="../images/back.png" /></button>
+    </div>
     <h1>Contacts</h1>
+    <div style="flex: 1; display: flex; justify-content: flex-end;">
+        <button class="add-button"><img src="../images/add.png" /></button>
+    </div>
 </div>
 <div class="container">
     <NavLink href="contactsPage/Nurseries">
@@ -40,9 +46,16 @@
 </div>
 
 @code {
+    private void GoBack()
+    {
+        Navigation.NavigateTo($"/");
+    }
 }
 
 <style>
+
+    
+
     .header {
         position: relative;
         display: flex;
@@ -50,19 +63,6 @@
         align-items: center;
         padding: 20px;
         background-color: #f8f9fa;
-    }
-
-    .btn-plus {
-        position: absolute;
-        left: 20px;
-        border-radius: 50%;
-        height: 40px;
-        width: 40px;
-        font-size: 24px;
-        background-color: darkolivegreen;
-        color: white;
-        border: none;
-        cursor: pointer;
     }
 
     .container {

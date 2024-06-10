@@ -7,9 +7,13 @@
 @inject NavigationManager Navigation
 
 <div class="header">
-    <button @onclick="GoBack" class="back-button">Back</button>
+    <div style="flex: 1">
+        <button @onclick="GoBack" class="back-button"><img src="../images/back.png" /></button>
+    </div>
     <h1>@projectName Drafts</h1>
-    <button class="add-button" data-toggle="modal" data-target="#exampleModalLong">Add</button>
+    <div style="flex: 1; display: flex; justify-content: flex-end;">
+        <button class="add-button"><img src="../images/add.png" /></button>
+    </div>
 </div>
 
 <SfGrid DataSource="@draftsViewModel.Drafts" AllowPaging="true">
@@ -53,20 +57,6 @@
 }
 
 <style>
-    .back-button {
-        background-color: #518478;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        margin-bottom: 20px;
-    }
-
-    .back-button:hover {
-        background-color: #405955;
-    }
 
     .header {
         display: flex;

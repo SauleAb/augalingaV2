@@ -6,8 +6,13 @@
 @inject NavigationManager Navigation
 
 <div class="header">
-    <button @onclick="GoBack" class="back-button">Back</button>
+    <div style="flex: 1">
+        <button @onclick="GoBack" class="back-button"><img src="../images/back.png" /></button>
+    </div>
     <h1>@contactsCategory</h1>
+    <div style="flex: 1; display: flex; justify-content: flex-end;">
+        <button class="add-button"><img src="../images/add.png" /></button>
+    </div>
 </div>
 
 <SfGrid DataSource="@contactsViewModel.Contacts" />
@@ -39,19 +44,4 @@
         padding: 20px;
         background-color: #f8f9fa;
     }
-
-    .back-button {
-        background-color: #518478;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        margin-bottom: 20px;
-    }
-
-        .back-button:hover {
-            background-color: #405955;
-        }
 </style>
