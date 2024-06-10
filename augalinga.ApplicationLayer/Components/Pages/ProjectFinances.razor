@@ -6,6 +6,8 @@
 @using augalinga.Data.Entities
 @inject IJSRuntime JS
 @inject NavigationManager Navigation
+@using augalinga.Data.Entities
+@using augalinga.Data.Access
 
 <div class="header">
     <div class="header">
@@ -14,7 +16,7 @@
         </div>
         <h1>@projectName Finances</h1>
         <div style="flex: 1; display: flex; justify-content: flex-end;">
-            <button class="button" style="margin: 10px; width: 50px; height: 50px; border-radius: 25px;">+</button> <!--@onclick="OpenModal()"-->
+            <button class="button" @onclick="OpenModal" style="margin: 10px; width: 50px; height: 50px; border-radius: 25px;">+</button>
         </div>
     </div>
 </div>
@@ -23,15 +25,15 @@
     <div class="row">
         <div class="card">
             <div class="label">Income</div>
-            <div class="amount">2587€</div>
+            <div class="amount">@income€</div>
         </div>
         <div class="card">
             <div class="label">Outcome</div>
-            <div class="amount">1400€</div>
+            <div class="amount">@outcome€</div>
         </div>
         <div class="card">
             <div class="label">Total</div>
-            <div class="amount">1187€</div>
+            <div class="amount">@total€</div>
         </div>
     </div>
     <SfGrid DataSource="@expensesViewModel.Expenses" AllowPaging="true" AllowSelection="true" OnRowSelected="OnRowSelected">
@@ -39,14 +41,42 @@
     <button onclick="DeleteButton_Clicked()" class="delete-button">Delete</button>
 </div>
 
-<div class="modal show" tabindex="-1" style="display:block;">
+
+<div class="modal show" style="display:none;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Select Delivery Date</h5>
+                <h5 class="modal-title">Add a transaction</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="expenseName">Expense Name</label>
+                            <input type="text" class="form-control" id="expenseName" @bind="expense.Transaction" required/>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="expenseAmount">Amount</label>
+                            <input type="number" class="form-control" id="expenseAmount" @bind="expense.Amount" required/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                     <label>Type</label>
+                     <div>
+                         <label>
+                             <input type="radio" name="expenseType" value="Income" @onchange="HandleTypeChange" /> Income
+                         </label>
+                     </div>
+                     <div>
+                         <label>
+                             <input type="radio" name="expenseType" value="Outcome" @onchange="HandleTypeChange" /> Outcome
+                         </label>
+                     </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" @onclick="AddFinance">Submit</button>
@@ -55,15 +85,33 @@
     </div>
 </div>
 
+
+
 @code {
     [Parameter]
     public string projectName { get; set; }
-
+    Expense expense = new Expense();
+    private DataContext dbContext { get; set; } = new DataContext();
     ExpensesViewModel expensesViewModel;
+    private decimal income;
+    private decimal outcome;
+    private decimal total;
+
+
+
+    private string selectedType;
+
+    private void HandleTypeChange(ChangeEventArgs e)
+    {
+        selectedType = e.Value.ToString();
+    }
 
     protected override void OnInitialized()
     {
         expensesViewModel = new ExpensesViewModel(projectName);
+        income = expensesViewModel.GetIncome();
+        outcome = expensesViewModel.GetOutcome();
+        total = expensesViewModel.GetTotal();
     }
 
     private void GoBack()
@@ -71,13 +119,34 @@
         Navigation.NavigateTo($"/projectMenu/{projectName}");
     }
 
-    private async Task AddFinance()
-    {
-    }
-
-    private async Task OpenModal()
+    public async Task OpenModal()
     {
         await JS.InvokeVoidAsync("showModal");        
+    }
+
+    private async Task AddFinance()
+    {
+        expense.Project = projectName;
+        expense.Date = DateOnly.FromDateTime(DateTime.Today);
+        if(selectedType == "Outcome")
+        {
+            expense.Type = "-";
+        }
+        else
+        {
+            expense.Type = "+";
+        }
+        dbContext.Expenses.Add(expense);
+        await dbContext.SaveChangesAsync();
+        expensesViewModel.Expenses.Add(expense);
+        expense = new Expense();
+        await HideModal();
+    }
+
+    public async Task HideModal()
+    {
+        Console.WriteLine("HideModal method called.");
+        await JS.InvokeVoidAsync("hideModal");
     }
 
 }
@@ -191,3 +260,20 @@
     }
 }
 </style>
+
+    <script>
+        ﻿window.showModal = () => {
+    const modal = document.querySelector('.modal');
+    console.log("SUP");
+    if (modal) {
+        modal.style.display = 'block';
+    }
+};
+
+window.hideModal = () => {
+    const modal = document.querySelector('.modal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+};
+    </script>
