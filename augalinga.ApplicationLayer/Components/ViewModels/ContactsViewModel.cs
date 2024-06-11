@@ -14,6 +14,11 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
             LoadContacts(_category);
         }
 
+        public ContactsViewModel()
+        {
+            LoadContacts();
+        }
+
         private ObservableCollection<Contact> _contacts;
         public ObservableCollection<Contact> Contacts
         {
@@ -54,6 +59,16 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
                 var contacts = dbContext.Contacts
                     .Where(c => c.Category == category)
                     .ToList();
+
+                Contacts = new ObservableCollection<Contact>(contacts);
+            }
+        }
+
+        private void LoadContacts()
+        {
+            using (var dbContext = new DataContext())
+            {
+                var contacts = dbContext.Contacts.ToList();
 
                 Contacts = new ObservableCollection<Contact>(contacts);
             }

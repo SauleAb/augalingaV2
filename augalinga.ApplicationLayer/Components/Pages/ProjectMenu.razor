@@ -16,7 +16,6 @@
         <button class="add-button"><img src="../images/add.png" /></button>
     </div>
 </div>
-
 <div class="row">
     <div class="column">
         <NavLink class="card" href="@($"projectContacts/{projectName}")">
@@ -59,7 +58,6 @@
 }
 
 <style>
-
     .row {
         display: flex;
         flex-direction: row;
@@ -80,8 +78,8 @@
         flex-direction: row;
         align-items: center;
         justify-content: center;
-        width: 450px;
-        height: 150px;
+        height: 22vh;
+        min-width: 35vw;
         border: 1px solid #ccc;
         border-radius: 10px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -90,24 +88,47 @@
         text-decoration: none;
         color: inherit;
         background-color: white;
+        transition: transform 0.3s ease; \\
     }
 
-    .card:hover {
-         color: lightgray;
+        .card:hover {
+            transform: scale(1.05);
+            color: lightgray;
         }
 
         .card img {
-            max-width: 100px;
-            max-height: 100px;
+            width: 18%;
+            height: auto;
             margin-bottom: 10px;
         }
 
         .card h2 {
-            font-size: 1.5rem;
+            font-size: 2vw;
             margin: 0;
             width: 70%;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
         }
+
+    @@media screen and (max-width: 768px) {
+        .column {
+            flex: auto;
+            justify-content: center;
+        }
+
+        .card {
+            width: 90%;
+            flex-direction: column;
+            height: 150px;
+        }
+
+            .card h2 {
+                font-size: 4vw;
+            }
+
+            .card img {
+                width: 25%;
+            }
+    }
 </style>

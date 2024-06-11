@@ -1,7 +1,16 @@
 ﻿
 html, body {
-    font-family: 'Meraki', sans-serif;
+    font-family: Garamond;
 }
+
+.nav-item .nav-link {
+    font-size: 1.5rem; 
+    text-decoration: none; 
+}
+
+    .navbar-title {
+        margin-left: 10px;
+    }
 
 
 a, .btn-link {

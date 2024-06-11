@@ -18,7 +18,19 @@
 </div>
 
 <SfGrid DataSource="@contactsViewModel.Contacts">
-
+    <GridColumns>
+        <GridColumn Field="@nameof(Contact.Name)" HeaderText="Name" Width="140"></GridColumn>
+        <GridColumn Field="@nameof(Contact.Number)" HeaderText="Number" Width="150"></GridColumn>
+        <GridColumn Field="@nameof(Contact.Address)" HeaderText="Address" Width="150"></GridColumn>
+        <GridColumn Field="@nameof(Contact.Notes)" HeaderText="Notes" Width="150"></GridColumn>
+        <GridColumn Width="50">
+            <Template>
+                <div class="delete-icon-container">
+                    <img src="../images/delete.png" height="20px" @onclick="(() => DeleteContact(context as Contact))" style="cursor: pointer;" />
+                </div>
+            </Template>
+        </GridColumn>
+    </GridColumns>
 </SfGrid>
 
 <div class="modal show" style="display:none;">
@@ -84,12 +96,27 @@
         Navigation.NavigateTo($"/contacts");
     }
 
+    private async Task DeleteContact(Contact contact)
+    {
+        dbContext.Contacts.Remove(contact);
+        await dbContext.SaveChangesAsync();
+        contactsViewModel.Contacts.Remove(contact);
+    }
+
     private async void AddContact()
     {
         contact.Category = contactsCategory;
+        if(contact.Notes == null)
+        {
+            contact.Notes = "";
+        }
+        if (contact.Address == null)
+        {
+            contact.Address = "";
+        }
         dbContext.Contacts.Add(contact);
         await dbContext.SaveChangesAsync();
-        contactsViewModel.AddContactToCollection(contact);
+        contactsViewModel.Contacts.Add(contact);
         HideModal();
     }
 

@@ -49,7 +49,7 @@
                 </ul>
             </div>
             <div class="footer">
-                <button disabled="@(!IsRowSelected)" @onclick="DeleteFile" class="delete-button">Delete</button>
+                <button @onclick="UploadFiles" class="upload-button">Upload</button>
             </div>
             @if (!string.IsNullOrEmpty(errorMessage))
             {

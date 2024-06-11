@@ -18,7 +18,7 @@
 <div class="container">
     @foreach (Project project in viewModel.Projects)
     {
-        <NavLink href="@($"projectMenu/{project.Name}")">
+        <NavLink href="@($"projectMenu/{project.Name}")" style="text-decoration: none;">
             <div class="card" style="width: 18rem;">
                 <img class="card-img-top" src="../images/calendar_background.png" alt="Card image cap">
                 <div class="card-body">
@@ -42,34 +42,49 @@
     .container {
         display: flex;
         flex-direction: row;
-        flex-wrap:wrap;
-        align-items: center;
+        flex-wrap: wrap;
         justify-content: center;
         padding: 20px;
     }
+
     .card {
-        margin: 20px;
-        text-decoration: none
+        margin: 10px;
+        text-decoration: none;
+        color: black;
+        transition: transform 0.3s ease;
     }
 
+        .card:hover {
+            transform: scale(1.05);
+        }
+
     .card-title {
-        text-decoration: none;
         padding: 10px;
+        font-size: 2rem;
+        text-align: center;
+        color: black;
     }
 
     .card a {
         text-decoration: none;
-        color: inherit;
+        color: black;
     }
 
         .card a:hover {
             text-decoration: none;
-            color: inherit;
+            color: black;
         }
 
-        .card h5 {
-            text-decoration: none;
-            color: inherit
-        }
+    .card h5 {
+        text-decoration: none;
+        color: black;
+    }
+
+    .card a:link .card-title,
+    .card a:visited .card-title,
+    .card a:hover .card-title,
+    .card a:active .card-title {
+        text-decoration: none;
+        color: black;
+    }
 </style>
-
