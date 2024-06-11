@@ -59,19 +59,18 @@
                 <div class="row">
                     <div class="col">
                         <div class="form-group">
-                            <label for="expenseName">Expense Name</label>
+                            <label for="expenseName">Transaction name:</label>
                             <input type="text" class="form-control" id="expenseName" @bind="expense.Transaction" required />
                         </div>
                     </div>
                     <div class="col">
                         <div class="form-group">
-                            <label for="expenseAmount">Amount</label>
+                            <label for="expenseAmount">Amount:</label>
                             <input type="number" class="form-control" id="expenseAmount" @bind="expense.Amount" required />
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>Type</label>
+                <div class="form-group row-display">
                     <div>
                         <label>
                             <input type="radio" name="expenseType" value="Income" @onchange="HandleTypeChange" /> Income
@@ -163,25 +162,10 @@
 }
 
 <style>
-    .header {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        padding: 10px;
-    }
-
     .container {
         display: flex;
         flex-direction: column;
         height: 100%;
-    }
-
-    .header {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 70px;
     }
 
     .title {
@@ -234,6 +218,13 @@
         margin: 10px;
         width: 50px;
         height: 50px;
+    }
+
+    .row-display {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin-top: 20px;
     }
 
     @@media only screen and (max-width: 600px) {

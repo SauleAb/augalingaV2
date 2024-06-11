@@ -10,39 +10,42 @@
         <button class="add-button"><img src="../images/add.png" /></button>
     </div>
 </div>
-<div class="container">
-    <NavLink href="contactsPage/Nurseries">
-        <div class="card">
-            <img class="card-img-top" src="../images/nurseries.png" alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">Nurseries</h5>
+
+<div class="main-wrapper">
+    <div class="container">
+        <NavLink href="contactsPage/Nurseries">
+            <div class="card">
+                <img class="card-img-top" src="../images/nurseries.png" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Nurseries</h5>
+                </div>
             </div>
-        </div>
-    </NavLink>
-    <NavLink href="contactsPage/Transport">
-        <div class="card">
-            <img class="card-img-top" src="../images/transport.png" alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">Transport</h5>
+        </NavLink>
+        <NavLink href="contactsPage/Transport">
+            <div class="card">
+                <img class="card-img-top" src="../images/transport.png" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Transport</h5>
+                </div>
             </div>
-        </div>
-    </NavLink>
-    <NavLink href="contactsPage/Manufacture">
-        <div class="card">
-            <img class="card-img-top" src="../images/manufacture.png" alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">Manufacture</h5>
+        </NavLink>
+        <NavLink href="contactsPage/Manufacture">
+            <div class="card">
+                <img class="card-img-top" src="../images/manufacture.png" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Manufacture</h5>
+                </div>
             </div>
-        </div>
-    </NavLink>
-    <NavLink href="contactsPage/Colleagues">
-        <div class="card">
-            <img class="card-img-top" src="../images/colleagues.png" alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">Colleagues</h5>
+        </NavLink>
+        <NavLink href="contactsPage/Colleagues">
+            <div class="card">
+                <img class="card-img-top" src="../images/colleagues.png" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Colleagues</h5>
+                </div>
             </div>
-        </div>
-    </NavLink>
+        </NavLink>
+    </div>
 </div>
 
 @code {
@@ -51,26 +54,27 @@
         Navigation.NavigateTo($"/");
     }
 }
-
 <style>
+    body, html {
+        height: 100%;
+        margin: 0;
+    }
 
-    
-
-    .header {
-        position: relative;
+    .main-wrapper {
         display: flex;
         justify-content: center;
         align-items: center;
+        box-sizing: border-box;
         padding: 20px;
-        background-color: #f8f9fa;
     }
 
     .container {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 20px;
         justify-items: center;
-        padding: 20px;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .card {
@@ -80,7 +84,12 @@
         border-radius: 10px;
         overflow: hidden;
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
     }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
 
         .card img {
             width: 100%;

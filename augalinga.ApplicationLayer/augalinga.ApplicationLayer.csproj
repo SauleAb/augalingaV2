@@ -64,6 +64,7 @@
       <Content Remove="wwwroot\drafts.png" />
       <Content Remove="wwwroot\finances.png" />
       <Content Remove="wwwroot\ginkmedis.png" />
+      <Content Remove="wwwroot\Meraki.ttf" />
       <Content Remove="wwwroot\orders.png" />
       <Content Remove="wwwroot\photos.png" />
     </ItemGroup>
@@ -110,6 +111,18 @@
 
     <ItemGroup>
       <Folder Include="Resources\Images\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <MauiFont Include="wwwroot\Meraki.ttf">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </MauiFont>
+    </ItemGroup>
+
+    <ItemGroup>
+      <MauiFont Update="Resources\Fonts\Meraki.ttf">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </MauiFont>
     </ItemGroup>
 
 </Project>

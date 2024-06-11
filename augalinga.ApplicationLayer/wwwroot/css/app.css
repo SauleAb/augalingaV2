@@ -1,6 +1,8 @@
-﻿html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+﻿
+html, body {
+    font-family: 'Meraki', sans-serif;
 }
+
 
 a, .btn-link {
     color: #006bb7;
@@ -86,6 +88,18 @@ h1:focus {
             width: 40px;
         }
 
+.header {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid black;
+}
+
+h1 {
+    text-align: center;
+}
 
 .add-button {
     background-color: transparent;

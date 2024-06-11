@@ -3,7 +3,9 @@
 @using Syncfusion.Blazor.Grids
 @using augalinga.ApplicationLayer.Components.ViewModels
 @using augalinga.Data.Entities
+@using augalinga.Data.Access
 @inject NavigationManager Navigation
+@inject IJSRuntime JS
 
 <div class="header">
     <div style="flex: 1">
@@ -11,37 +13,112 @@
     </div>
     <h1>@contactsCategory</h1>
     <div style="flex: 1; display: flex; justify-content: flex-end;">
-        <button class="add-button"><img src="../images/add.png" /></button>
+        <button class="add-button" @onclick="OpenModal"><img src="../images/add.png" /></button>
     </div>
 </div>
 
-<SfGrid DataSource="@contactsViewModel.Contacts" />
+<SfGrid DataSource="@contactsViewModel.Contacts">
 
+</SfGrid>
+
+<div class="modal show" style="display:none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add a transaction</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="HideModal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="contactName">Name:</label>
+                            <input type="text" class="form-control" id="contactName" @bind="contact.Name" required />
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="contactNumber">Number:</label>
+                            <input type="text" class="form-control" id="contactNumber" inputmode="tel" @bind="contact.Number" required/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="contactAddress">Address:</label>
+                            <input type="text" class="form-control" id="contactAddress" @bind="contact.Address" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="contactNotes">Notes:</label>
+                            <input type="text" multiple="true" class="form-control" id="contactNotes" @bind="contact.Notes" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" @onclick="AddContact">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
 @code {
     [Parameter]
     public string contactsCategory { get; set; }
 
     ContactsViewModel contactsViewModel;
-
+    private DataContext dbContext { get; set; } = new DataContext();
+    Contact contact = new Contact();
     protected override void OnInitialized()
     {
         contactsViewModel = new ContactsViewModel(contactsCategory);
+        contact.Number = "+370";
     }
 
     private void GoBack()
     {
         Navigation.NavigateTo($"/contacts");
     }
+
+    private async void AddContact()
+    {
+        contact.Category = contactsCategory;
+        dbContext.Contacts.Add(contact);
+        await dbContext.SaveChangesAsync();
+        contactsViewModel.AddContactToCollection(contact);
+        HideModal();
+    }
+
+    public async Task OpenModal()
+    {
+        await JS.InvokeVoidAsync("showModal");
+    }
+
+    public async Task HideModal()
+    {
+        await JS.InvokeVoidAsync("hideModal");
+    }
 }
 
 <style>
-
-    .header {
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-        background-color: #f8f9fa;
-    }
 </style>
+
+<script>
+    window.showModal = () => {
+        const modal = document.querySelector('.modal');
+        if (modal) {
+            modal.style.display = 'block';
+        }
+    };
+
+    window.hideModal = () => {
+        const modal = document.querySelector('.modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    };
+</script>
