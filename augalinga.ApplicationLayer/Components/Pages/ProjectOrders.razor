@@ -1,11 +1,20 @@
 ﻿@page "/projectOrders/{projectName}"
-
-
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Grids
 @using augalinga.ApplicationLayer.Components.ViewModels
+@using augalinga.Data.Access
 @using augalinga.Data.Entities
+@using Syncfusion.Blazor.Popups
 @inject NavigationManager Navigation
+@using Amazon;
+@using Amazon.S3;
+@using Amazon.S3.Model;
+@using Syncfusion.Blazor.Inputs
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.Maui.Controls
+@using System.Text.Json
+@inject IJSRuntime JS
+
 
 <div class="header">
     <div style="flex: 1">
@@ -13,29 +22,166 @@
     </div>
     <h1>@projectName Orders</h1>
     <div style="flex: 1; display: flex; justify-content: flex-end;">
-        <button class="add-button"><img src="../images/add.png" /></button>
+        <button class="add-button" @onclick="OpenModal"><img src="../images/add.png" /></button>
     </div>
 </div>
 
-<SfGrid DataSource="@ordersViewModel.Orders" AllowPaging="true">
+<SfGrid DataSource="@ordersViewModel.Orders" AllowPaging="true" AllowSelection="true" @ref="ordersGrid">
+    <GridColumns>
+        <GridColumn Field=@nameof(Order.Name) HeaderText="Name"></GridColumn>
+        <GridColumn Field=@nameof(Order.Link) HeaderText="Link"></GridColumn>
+        <GridColumn Width="50">
+            <Template>
+                <img src="../images/delete.png" height="20px" @onclick="(() => DeleteOrder(context as Order))" style="cursor: pointer;" />
+            </Template>
+        </GridColumn>
+    </GridColumns>
 </SfGrid>
+
+
+<div class="modal show" style="display:none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add orders</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="HideModal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="fileInput">Select file:</label>
+                    <InputFile id="fileInput" OnChange="HandleFileSelect" multiple />
+                    <ul>
+                        @if (selectedFiles.Any())
+                        {
+                            @foreach (var file in selectedFiles)
+                            {
+                                <li>@file.Name</li>
+                            }
+                        }
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @onclick="UploadFiles">Submit</button>
+                </div>
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="alert alert-danger">@errorMessage</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
     [Parameter]
     public string projectName { get; set; }
 
     OrdersViewModel ordersViewModel;
+    string bucket = "augalinga-app";
+    string folder = "orders/";
+    IAmazonS3 s3Client = new AmazonS3Client(RegionEndpoint.EUNorth1);
+    public DataContext dbContext { get; set; } = new DataContext();
+    private List<IBrowserFile> selectedFiles = new List<IBrowserFile>();
+    private string errorMessage;
+    private SfGrid<Order> ordersGrid;
 
     protected override void OnInitialized()
     {
         ordersViewModel = new OrdersViewModel(projectName);
     }
 
+    public async Task HideModal()
+    {
+        await JS.InvokeVoidAsync("hideModal");
+    }
+
+    public async Task OpenModal()
+    {
+        await JS.InvokeVoidAsync("showModal");
+    }
+
+
     private void GoBack()
     {
         Navigation.NavigateTo($"/projectMenu/{projectName}");
     }
+
+    private void HandleFileSelect(InputFileChangeEventArgs e)
+    {
+        selectedFiles = e.GetMultipleFiles().ToList();
+    }
+
+    private async Task UploadFiles()
+    {
+        errorMessage = string.Empty;
+        try
+        {
+            foreach (var file in selectedFiles)
+            {
+                string objectKey = $"{projectName}/{folder}{file.Name}";
+
+                const long maxFileSize = 1073741824; // 1 GB
+                using var stream = file.OpenReadStream(maxFileSize);
+                var request = new PutObjectRequest
+                    {
+                        BucketName = bucket,
+                        Key = objectKey,
+                        InputStream = stream
+                    };
+                await s3Client.PutObjectAsync(request);
+
+                var order = new Order
+                    {
+                        Project = projectName,
+                        Link = $"https://{bucket}.s3.amazonaws.com/{objectKey}",
+                        Name = file.Name
+                    };
+                await dbContext.Orders.AddAsync(order);
+                await dbContext.SaveChangesAsync();
+                ordersViewModel.AddOrderToCollection(order);
+            }
+
+            await Task.Delay(800);
+            await ordersGrid.Refresh();
+            StateHasChanged();
+
+            selectedFiles.Clear();
+            await HideModal();
+        }
+        catch (AmazonS3Exception s3Ex)
+        {
+            errorMessage = $"S3 Error: {s3Ex.Message}";
+            Console.WriteLine($"S3 Error: {s3Ex}");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred: {ex.Message}";
+            Console.WriteLine($"General Error: {ex}");
+        }
+    }
+    private async Task DeleteOrder(Order order)
+    {
+        dbContext.Orders.Remove(order);
+        await dbContext.SaveChangesAsync();
+        await Models.S3Bucket.DeleteObject(s3Client, bucket, order.Link);
+        ordersViewModel.Orders.Remove(order);
+    }
 }
+<script>
+    window.showModal = () => {
+        const modal = document.querySelector('.modal');
+        if (modal) {
+            modal.style.display = 'block';
+        }
+    };
+
+    window.hideModal = () => {
+        const modal = document.querySelector('.modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    };
+</script>
 
 <style>
 </style>

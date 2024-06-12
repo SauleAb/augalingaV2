@@ -1,10 +1,20 @@
 ﻿@page "/projectDrafts/{projectName}"
-
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Grids
 @using augalinga.ApplicationLayer.Components.ViewModels
+@using augalinga.Data.Access
 @using augalinga.Data.Entities
+@using Syncfusion.Blazor.Popups
 @inject NavigationManager Navigation
+@using Amazon;
+@using Amazon.S3;
+@using Amazon.S3.Model;
+@using Syncfusion.Blazor.Inputs
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.Maui.Controls
+@using System.Text.Json
+@inject IJSRuntime JS
+
 
 <div class="header">
     <div style="flex: 1">
@@ -12,28 +22,51 @@
     </div>
     <h1>@projectName Drafts</h1>
     <div style="flex: 1; display: flex; justify-content: flex-end;">
-        <button class="add-button"><img src="../images/add.png" /></button>
+        <button class="add-button" @onclick="OpenModal"><img src="../images/add.png" /></button>
     </div>
 </div>
 
-<SfGrid DataSource="@draftsViewModel.Drafts" AllowPaging="true">
+<SfGrid DataSource="@draftsViewModel.Drafts" AllowPaging="true" AllowSelection="true" @ref="draftsGrid">
+    <GridColumns>
+        <GridColumn Field=@nameof(Draft.Name) HeaderText="Name"></GridColumn>
+        <GridColumn Field=@nameof(Draft.Link) HeaderText="Link"></GridColumn>
+        <GridColumn Width="50">
+            <Template>
+                <img src="../images/delete.png" height="20px" @onclick="(() => DeleteDraft(context as Draft))" style="cursor: pointer;" />
+            </Template>
+        </GridColumn>
+    </GridColumns>
 </SfGrid>
 
-<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+
+<div class="modal show" style="display:none;">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title">Add drafts</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="HideModal"></button>
             </div>
             <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <div class="form-group">
+                    <label for="fileInput">Select file:</label>
+                    <InputFile id="fileInput" OnChange="HandleFileSelect" multiple />
+                    <ul>
+                        @if (selectedFiles.Any())
+                        {
+                            @foreach (var file in selectedFiles)
+                            {
+                                <li>@file.Name</li>
+                            }
+                        }
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @onclick="UploadFiles">Submit</button>
+                </div>
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="alert alert-danger">@errorMessage</div>
+                }
             </div>
         </div>
     </div>
@@ -44,17 +77,109 @@
     public string projectName { get; set; }
 
     DraftsViewModel draftsViewModel;
+    string bucket = "augalinga-app";
+    string folder = "drafts/";
+    IAmazonS3 s3Client = new AmazonS3Client(RegionEndpoint.EUNorth1);
+    public DataContext dbContext { get; set; } = new DataContext();
+    private List<IBrowserFile> selectedFiles = new List<IBrowserFile>();
+    private string errorMessage;
+    private SfGrid<Draft> draftsGrid;
 
     protected override void OnInitialized()
     {
         draftsViewModel = new DraftsViewModel(projectName);
     }
 
+    public async Task HideModal()
+    {
+        await JS.InvokeVoidAsync("hideModal");
+    }
+
+    public async Task OpenModal()
+    {
+        await JS.InvokeVoidAsync("showModal");
+    }
+
+
     private void GoBack()
     {
         Navigation.NavigateTo($"/projectMenu/{projectName}");
     }
+
+    private void HandleFileSelect(InputFileChangeEventArgs e)
+    {
+        selectedFiles = e.GetMultipleFiles().ToList();
+    }
+
+    private async Task UploadFiles()
+    {
+        errorMessage = string.Empty;
+        try
+        {
+            foreach (var file in selectedFiles)
+            {
+                string objectKey = $"{projectName}/{folder}{file.Name}";
+
+                const long maxFileSize = 1073741824; // 1 GB
+                using var stream = file.OpenReadStream(maxFileSize);
+                var request = new PutObjectRequest
+                    {
+                        BucketName = bucket,
+                        Key = objectKey,
+                        InputStream = stream
+                    };
+                await s3Client.PutObjectAsync(request);
+
+                var draft = new Draft
+                    {
+                        Project = projectName,
+                        Link = $"https://{bucket}.s3.amazonaws.com/{objectKey}",
+                        Name = file.Name
+                    };
+                await dbContext.Drafts.AddAsync(draft);
+                await dbContext.SaveChangesAsync();
+                draftsViewModel.AddDraftToCollection(draft);
+            }
+            await Task.Delay(800);
+            await draftsGrid.Refresh();
+            StateHasChanged();
+            selectedFiles.Clear();
+            await HideModal();
+        }
+        catch (AmazonS3Exception s3Ex)
+        {
+            errorMessage = $"S3 Error: {s3Ex.Message}";
+            Console.WriteLine($"S3 Error: {s3Ex}");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred: {ex.Message}";
+            Console.WriteLine($"General Error: {ex}");
+        }
+    }
+    private async Task DeleteDraft(Draft draft)
+    {
+        dbContext.Drafts.Remove(draft);
+        await dbContext.SaveChangesAsync();
+        await Models.S3Bucket.DeleteObject(s3Client, bucket, draft.Link);
+        draftsViewModel.Drafts.Remove(draft);
+    }
 }
+<script>
+    window.showModal = () => {
+        const modal = document.querySelector('.modal');
+        if (modal) {
+            modal.style.display = 'block';
+        }
+    };
+
+    window.hideModal = () => {
+        const modal = document.querySelector('.modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    };
+</script>
 
 <style>
 </style>
