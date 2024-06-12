@@ -1,4 +1,5 @@
-﻿using Amazon.S3;
+﻿using Amazon;
+using Amazon.S3;
 using Amazon.S3.Model;
 using System.Collections.ObjectModel;
 
@@ -41,7 +42,7 @@ namespace augalinga.ApplicationLayer.Components.Models
                     var request = new PutObjectRequest
                     {
                         BucketName = bucketName,
-                        Key = fileResult.FileName, // Use file name as the key
+                        Key = fileResult.FileName,
                         FilePath = fileResult.FullPath,
                     };
 
@@ -63,15 +64,18 @@ namespace augalinga.ApplicationLayer.Components.Models
             }
         }
 
-        public static async Task<bool> GetBucketPhotosAsync(IAmazonS3 client, string bucketName, ObservableCollection<byte[]> imageBytes)
+        public static async Task<List<string>> ListPhotosAsync(IAmazonS3 client, string bucketName, string projectName, string category)
         {
+            var urls = new List<string>();
+
             try
             {
                 var request = new ListObjectsV2Request
                 {
                     BucketName = bucketName,
-                    MaxKeys = 5,
+                    Prefix = $"{projectName}/photos/{category}/"
                 };
+
                 ListObjectsV2Response response;
 
                 do
@@ -80,33 +84,84 @@ namespace augalinga.ApplicationLayer.Components.Models
 
                     foreach (S3Object obj in response.S3Objects)
                     {
-                        GetObjectRequest getObjectRequest = new GetObjectRequest
-                        {
-                            BucketName = bucketName,
-                            Key = obj.Key
-                        };
+                        string key = obj.Key;
+                        string url = GetPreSignedURL(client, bucketName, key);
 
-                        using (GetObjectResponse getObjectResponse = await client.GetObjectAsync(getObjectRequest))
-                        using (Stream responseStream = getObjectResponse.ResponseStream)
-                        using (MemoryStream memoryStream = new MemoryStream())
-                        {
-                            await responseStream.CopyToAsync(memoryStream);
-                            byte[] bytes = memoryStream.ToArray();
-
-                            imageBytes.Add(bytes);
-                        }
+                        urls.Add(url);
                     }
 
                     request.ContinuationToken = response.NextContinuationToken;
                 }
                 while (response.IsTruncated);
-
-                return true;
             }
             catch (AmazonS3Exception ex)
             {
-                Console.WriteLine($"Error encountered on server. Message: '{ex.Message}' while getting list of objects.");
-                return false;
+                Console.WriteLine($"Error encountered on server. Message: '{ex.Message}' while listing photos.");
+            }
+
+            return urls;
+        }
+
+        private static string GetPreSignedURL(IAmazonS3 client, string bucketName, string key)
+        {
+            var request = new GetPreSignedUrlRequest
+            {
+                BucketName = bucketName,
+                Key = key,
+                Expires = DateTime.UtcNow.AddMinutes(60)
+            };
+            return client.GetPreSignedURL(request);
+        }
+            public static async Task<string> DownloadPhotoAsync(IAmazonS3 client, string bucketName, string keyName, string localFilePath)
+        {
+            try
+            {
+                GetObjectRequest request = new GetObjectRequest
+                {
+                    BucketName = bucketName,
+                    Key = keyName
+                };
+
+                using (GetObjectResponse response = await client.GetObjectAsync(request))
+                using (Stream responseStream = response.ResponseStream)
+                {
+                    string directoryPath = Path.GetDirectoryName(localFilePath);
+                    if (!Directory.Exists(directoryPath))
+                    {
+                        Directory.CreateDirectory(directoryPath);
+                    }
+
+                    using (FileStream fileStream = new FileStream(localFilePath, FileMode.Create, FileAccess.Write))
+                    {
+                        await responseStream.CopyToAsync(fileStream);
+                    }
+
+                    return localFilePath;
+                }
+            }
+            catch (AmazonS3Exception e)
+            {
+                Console.WriteLine($"Error encountered on server. Message:'{e.Message}' when downloading photo");
+                throw;
+            }
+        }
+
+        public static async Task DeletePhotoAsync(IAmazonS3 client, string bucketName, string keyName)
+        {
+            try
+            {
+                var deleteObjectRequest = new DeleteObjectRequest
+                {
+                    BucketName = bucketName,
+                    Key = keyName,
+                };
+
+                await client.DeleteObjectAsync(deleteObjectRequest);
+            }
+            catch (AmazonS3Exception ex)
+            {
+                Console.WriteLine($"Error encountered on server. Message:'{ex.Message}' when deleting a photo.");
+                throw;
             }
         }
 

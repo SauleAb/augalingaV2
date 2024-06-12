@@ -16,6 +16,12 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
             LoadPhotos(_projectName, _category);
         }
 
+        public PhotosViewModel(string projectName)
+        {
+            _projectName = projectName;
+            LoadAllPhotos(_projectName);
+        }
+
         private ObservableCollection<Photo> _photos;
         public ObservableCollection<Photo> Photos
         {
@@ -45,6 +51,18 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
             {
                 var photos = context.Photos
                     .Where(photo => photo.Project == projectName && photo.Category == category)
+                    .ToList();
+
+                Photos = new ObservableCollection<Photo>(photos);
+            }
+        }
+
+        private void LoadAllPhotos(string projectName)
+        {
+            using (var context = new DataContext())
+            {
+                var photos = context.Photos
+                    .Where(photo => photo.Project == projectName)
                     .ToList();
 
                 Photos = new ObservableCollection<Photo>(photos);

@@ -21,7 +21,7 @@
     </div>
 </div>
 
-<SfGrid DataSource="@contactsViewModel.Contacts" AllowPaging="true" AllowFiltering="true">
+<SfGrid DataSource="@contactsViewModel.Contacts" AllowPaging="true">
     <GridColumns>
         <GridColumn Field=@nameof(Contact.Name) HeaderText="Name"></GridColumn>
         <GridColumn Field=@nameof(Contact.Number) HeaderText="Number"></GridColumn>
@@ -119,7 +119,7 @@
         dbContext.Contacts.Add(contact);
         await dbContext.SaveChangesAsync();
         contactsViewModel.Contacts.Add(contact);
-        HideModal();
+        await HideModal();
     }
 
     public async Task OpenModal()

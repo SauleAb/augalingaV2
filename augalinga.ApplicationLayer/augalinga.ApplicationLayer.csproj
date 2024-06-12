@@ -78,14 +78,14 @@
     <ItemGroup>
         <PackageReference Include="AWSSDK.S3" Version="3.7.308.9" />
         <PackageReference Include="Blazored.Modal" Version="7.3.1" />
+        <PackageReference Include="BootstrapBlazor" Version="8.6.2" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Forms" Version="8.0.6" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.40" />
         <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.40" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.40" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
-        <PackageReference Include="Syncfusion.Blazor.Buttons" Version="25.2.7" />
-        <PackageReference Include="Syncfusion.Blazor.Grid" Version="25.2.7" />
-        <PackageReference Include="Syncfusion.Blazor.Popups" Version="25.2.7" />
+        <PackageReference Include="Syncfusion.Blazor.Grid" Version="26.1.35" />
+        <PackageReference Include="Syncfusion.Blazor.Navigations" Version="26.1.35" />
         <PackageReference Include="Syncfusion.Blazor.Schedule" Version="25.2.6" />
         <PackageReference Include="Syncfusion.Blazor.Themes" Version="25.2.6" />
     </ItemGroup>

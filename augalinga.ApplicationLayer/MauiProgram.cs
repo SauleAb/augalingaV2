@@ -18,7 +18,7 @@ namespace augalinga.ApplicationLayer
 
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddSyncfusionBlazor();
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NBaF5cXmZCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdnWXlecnRQQmdfV0x0XEM=");
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NCaF5cXmZCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdnWXlfcnRcR2RfUUx2V0s=");
 
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();

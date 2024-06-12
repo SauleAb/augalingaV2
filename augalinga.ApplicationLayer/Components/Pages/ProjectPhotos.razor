@@ -1,11 +1,17 @@
 ﻿@page "/projectPhotos/{projectName}"
 
-
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Grids
 @using augalinga.ApplicationLayer.Components.ViewModels
+@using augalinga.Data.Access
 @using augalinga.Data.Entities
+@using augalinga.ApplicationLayer.Components.Models
 @inject NavigationManager Navigation
+@using Amazon.S3
+@using Amazon.S3.Model
+@using Amazon
+@inject IJSRuntime JS
+@using Syncfusion.Blazor.Navigations
 
 <div class="header">
     <div style="flex: 1">
@@ -13,29 +19,385 @@
     </div>
     <h1>@projectName Photos</h1>
     <div style="flex: 1; display: flex; justify-content: flex-end;">
-        <button class="add-button"><img src="../images/add.png" /></button>
+        <button class="add-button" @onclick="OpenModal"><img src="../images/add.png" /></button>
     </div>
 </div>
 
-<SfGrid DataSource="@photosViewModel.Photos" AllowPaging="true">
-</SfGrid>
+<nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="nav-before-tab" data-bs-toggle="tab" data-bs-target="#nav-before" type="button" role="tab" aria-controls="nav-before" aria-selected="true" @onclick="ActivateBeforeTab">Before</button>
+        <button class="nav-link" id="nav-after-tab" data-bs-toggle="tab" data-bs-target="#nav-after" type="button" role="tab" aria-controls="nav-after" aria-selected="false" @onclick="ActivateAfterTab">After</button>
+        <button class="nav-link" id="nav-general-tab" data-bs-toggle="tab" data-bs-target="#nav-general" type="button" role="tab" aria-controls="nav-general" aria-selected="false" @onclick="ActivateGeneralTab">General</button>
+    </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-before" role="tabpanel" aria-labelledby="nav-before-tab">
+        @if (beforePhotos != null)
+        {
+            foreach (var url in beforePhotos)
+            {
+                <img src="@url" width="300" height="200" style="margin: 5px;" @onclick="() => OnPhotoClicked(url)" />
+            }
+        }
+    </div>
+    <div class="tab-pane fade" id="nav-after" role="tabpanel" aria-labelledby="nav-after-tab">
+        @if (afterPhotos != null)
+        {
+            foreach (var url in afterPhotos)
+            {
+                <img src="@url" width="300" height="200" style="margin: 5px;" @onclick="() => OnPhotoClicked(url)" />
+            }
+        }
+    </div>
+    <div class="tab-pane fade" id="nav-general" role="tabpanel" aria-labelledby="nav-general-tab">
+        @if (generalPhotos != null)
+        {
+            foreach (var url in generalPhotos)
+            {
+                <img src="@url" width="300" height="200" style="margin: 5px;" @onclick="() => OnPhotoClicked(url)" />
+            }
+        }
+    </div>
+</div>
+
+<div class="modal show" style="display:none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add photos</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="HideModal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="category">Choose a category:</label>
+                    <select name="categories" id="categories" @bind="category" @oninput="@HandleCategorySelect">
+                        <option value="before">Before</option>
+                        <option value="after">After</option>
+                        <option value="general">General</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="fileInput">Select file:</label>
+                    <InputFile id="fileInput" OnChange="HandleFileSelect" multiple accept="image/*" />
+                    <ul>
+                        @if (selectedFiles.Any())
+                        {
+                            @foreach (var file in selectedFiles)
+                            {
+                                <li>@file.Name</li>
+                            }
+                        }
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @onclick="UploadFiles">Submit</button>
+                </div>
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="alert alert-danger">@errorMessage</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="modal" style="background-color: rgba(0, 0, 0, 0.5); display: @((selectedPhotoIndex != -1) ? "block" : "none")">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 50vw; max-height: 50vh;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="CloseBiggerView"></button>
+            </div>
+            <div class="control-container">
+                <SfCarousel @bind-SelectedIndex="@selectedPhotoIndex">
+                    @if (isBeforeTabActive)
+                    {
+                        @foreach (var url in beforePhotos)
+                        {
+                            <CarouselItem>
+                                <figure class="img-container">
+                                    <img src="@url" alt="Before Photo" style="height:100%;width:100%;" />
+                                </figure>
+                            </CarouselItem>
+                        }
+                    }
+                    else
+                    {
+                        @foreach (var url in afterPhotos)
+                        {
+                            <CarouselItem>
+                                <figure class="img-container">
+                                    <img src="@url" alt="After Photo" style="height:100%;width:100%;" />
+                                </figure>
+                            </CarouselItem>
+                        }
+                    }
+                </SfCarousel>
+            </div>
+        </div>
+    </div>
+</div>-->
 
 @code {
     [Parameter]
     public string projectName { get; set; }
-
     PhotosViewModel photosViewModel;
+    private List<string> beforePhotos = new List<string>();
+    private List<string> afterPhotos = new List<string>();
+    private List<string> generalPhotos = new List<string>();
+    private List<IBrowserFile> selectedFiles = new List<IBrowserFile>();
+    string bucket = "augalinga-app";
+    string folder = "photos";
+    string category = "before";
+    IAmazonS3 s3Client = new AmazonS3Client(RegionEndpoint.EUNorth1);
+    public DataContext dbContext { get; set; } = new DataContext();
+    private string errorMessage;
+    private bool isBeforeTabActive = true;
+    private bool isAfterTabActive = true;
+    private bool isGeneralTabActive = true;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        photosViewModel = new PhotosViewModel(projectName, "after"); //for now
+        try
+        {
+            photosViewModel = new PhotosViewModel(projectName);
+            await LoadPhotos();
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex, "An error occurred while initializing");
+        }
+    }
+
+    private void ActivateBeforeTab()
+    {
+        isBeforeTabActive = true;
+        isAfterTabActive = false;
+        isGeneralTabActive = false;
+    }
+
+    private void ActivateAfterTab()
+    {
+        isBeforeTabActive = false;
+        isAfterTabActive = true;
+        isGeneralTabActive = false;
+    }
+    private void ActivateGeneralTab()
+    {
+        isBeforeTabActive = false;
+        isAfterTabActive = false;
+        isGeneralTabActive = true;
+    }
+
+    private async Task LoadPhotos()
+    {
+        try
+        {
+            beforePhotos = await augalinga.ApplicationLayer.Components.Models.S3Bucket.ListPhotosAsync(s3Client, bucket, projectName, "before");
+            afterPhotos = await augalinga.ApplicationLayer.Components.Models.S3Bucket.ListPhotosAsync(s3Client, bucket, projectName, "after");
+            generalPhotos = await augalinga.ApplicationLayer.Components.Models.S3Bucket.ListPhotosAsync(s3Client, bucket, projectName, "general");
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex, "An error occurred while loading photos");
+        }
+    }
+
+    public async Task HideModal()
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("hideModal");
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex, "An error occurred while hiding the modal");
+        }
+    }
+
+    public async Task OpenModal()
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("showModal");
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex, "An error occurred while opening the modal");
+        }
     }
 
     private void GoBack()
     {
-        Navigation.NavigateTo($"/projectMenu/{projectName}");
+        try
+        {
+            Navigation.NavigateTo($"/projectMenu/{projectName}");
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex, "An error occurred while navigating");
+        }
+    }
+
+    private void HandleCategorySelect(Microsoft.AspNetCore.Components.ChangeEventArgs e)
+    {
+        category = e.Value.ToString();
+    }
+
+    private void HandleFileSelect(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            selectedFiles = e.GetMultipleFiles().ToList();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred while selecting files: {ex.Message}";
+            Console.WriteLine($"File Selection Error: {ex}");
+        }
+    }
+
+    private async Task UploadFiles()
+    {
+        errorMessage = string.Empty;
+        try
+        {
+            foreach (var file in selectedFiles)
+            {
+                string objectKey = $"{projectName}/{folder}/{category}/{file.Name}";
+
+                const long maxFileSize = 2L * 1024 * 1024 * 1024; // 2GB
+                using var stream = file.OpenReadStream(maxFileSize);
+                var request = new PutObjectRequest
+                {
+                    BucketName = bucket,
+                    Key = objectKey,
+                    InputStream = stream
+                };
+                await s3Client.PutObjectAsync(request);
+            }
+            selectedFiles.Clear();
+            ReloadPage();
+            await HideModal();
+        }
+        catch (AmazonS3Exception s3Ex)
+        {
+            HandleException(s3Ex, "S3 Error");
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex, "An error occurred");
+        }
+    }
+
+    private void HandleException(Exception ex, string errorMessagePrefix)
+    {
+        errorMessage = $"{errorMessagePrefix}: {ex.Message}";
+        Console.WriteLine($"{errorMessagePrefix}: {ex}");
+    }
+
+    private void ReloadPage()
+    {
+        var uri = Navigation.ToAbsoluteUri($"/projectPhotos/{projectName}");
+        Navigation.NavigateTo(uri.ToString(), true);
+    }
+
+    private int selectedPhotoIndex = -1;
+
+    private void OnPhotoClicked(string url)
+    {
+        selectedPhotoIndex = beforePhotos.IndexOf(url);
+        OpenBiggerView(selectedPhotoIndex);
+    }
+
+    private void CloseBiggerView()
+    {
+        selectedPhotoIndex = -1;
+    }
+
+    private void OpenBiggerView(int photoIndex)
+    {
+        if (photoIndex >= 0 && photoIndex < beforePhotos.Count)
+        {
+            selectedPhotoIndex = photoIndex;
+        }
+        else
+        {
+            selectedPhotoIndex = -1;
+        }
+    }
+
+    private void NextPhoto()
+    {
+        if (selectedPhotoIndex < (beforePhotos?.Count ?? 0) - 1)
+        {
+            selectedPhotoIndex++;
+        }
+        else
+        {
+            selectedPhotoIndex = 0;
+        }
+    }
+
+    private void PreviousPhoto()
+    {
+        if (selectedPhotoIndex > 0)
+        {
+            selectedPhotoIndex--;
+        }
+        else
+        {
+            selectedPhotoIndex = beforePhotos.Count - 1;
+        }
     }
 }
 
 <style>
+    .header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .back-button, .add-button {
+        border: none;
+        background: none;
+    }
+
+    .control-container {
+        background-color: #e5e5e5;
+        height: 300px;
+        margin: 0 auto;
+        width: 500px;
+    }
+
+    .e-carousel .e-carousel-items .e-carousel-item .img-container {
+        height: 100%;
+    }
+
+    .e-carousel .e-carousel-items .e-carousel-item .img-caption {
+        bottom: 4em;
+        color: #fff;
+        font-size: 12pt;
+        height: 2em;
+        position: relative;
+        padding: 0.3em 1em;
+        text-align: center;
+        width: 100%;
+    }
 </style>
+
+<script>
+    window.showModal = () => {
+        const modal = document.querySelector('.modal');
+        if (modal) {
+            modal.style.display = 'block';
+        }
+    };
+
+    window.hideModal = () => {
+        const modal = document.querySelector('.modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    };
+</script>

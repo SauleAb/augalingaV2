@@ -117,7 +117,7 @@
         dbContext.Contacts.Add(contact);
         await dbContext.SaveChangesAsync();
         contactsViewModel.Contacts.Add(contact);
-        HideModal();
+        await HideModal();
     }
 
     public async Task OpenModal()
