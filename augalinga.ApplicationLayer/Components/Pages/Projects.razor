@@ -5,14 +5,15 @@
 @using augalinga.Data.Access
 @using augalinga.Data.Entities
 @inject NavigationManager Navigation
+@inject IJSRuntime JS
 
 <div class="header">
     <div style="flex: 1">
-        <button @onclick="GoBack" class="back-button"><img src="../images/back.png" /></button>
+        <button @onclick="GoBack" class="back-button"><i class="bi bi-arrow-left h2"></i></button>
     </div>
     <h1>Projects</h1>
     <div style="flex: 1; display: flex; justify-content: flex-end;">
-        <button class="add-button"><img src="../images/add.png" /></button>
+        <button class="add-button" @onclick="OpenModal"><i class="bi bi-plus-lg h2"></i></button>
     </div>
 </div>
 <div class="container">
@@ -29,12 +30,57 @@
     }
 </div>
 
+<div class="modal show" style="display:none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add a project</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="HideModal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="expenseName">Project name:</label>
+                            <input type="text" class="form-control" id="expenseName" @bind="project.Name" required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" @onclick="AddProject">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @code {
     ProjectsViewModel viewModel = new ProjectsViewModel();
+    Project project = new Project();
+    private DataContext dbContext { get; set; } = new DataContext();
 
     private void GoBack()
     {
         Navigation.NavigateTo($"/");
+    }
+
+    public async Task OpenModal()
+    {
+        await JS.InvokeVoidAsync("showModal");
+    }
+
+    private async Task AddProject()
+    {
+        dbContext.Projects.Add(project);
+        await dbContext.SaveChangesAsync();
+        viewModel.Projects.Add(project);
+
+        await HideModal();
+    }
+
+    public async Task HideModal()
+    {
+        await JS.InvokeVoidAsync("hideModal");
     }
 }
 
@@ -88,3 +134,19 @@
         color: black;
     }
 </style>
+
+<script>
+    window.showModal = () => {
+        const modal = document.querySelector('.modal');
+        if (modal) {
+            modal.style.display = 'block';
+        }
+    };
+
+    window.hideModal = () => {
+        const modal = document.querySelector('.modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    };
+</script>

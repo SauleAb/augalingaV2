@@ -5,43 +5,43 @@
 @using augalinga.Data.Access
 @using augalinga.Data.Entities
 @inject NavigationManager Navigation
-
+@using Microsoft.EntityFrameworkCore
 
 <div class="header">
     <div style="flex: 1">
-        <button @onclick="GoBack" class="back-button"><img src="../images/back.png" /></button>
+        <button @onclick="GoBack" class="back-button"><i class="bi bi-arrow-left h2"></i></button>
     </div>
     <h1>@projectName</h1>
     <div style="flex: 1; display: flex; justify-content: flex-end;">
-        <button class="add-button"><img src="../images/add.png" /></button>
+        <button class="delete-button" @onclick="DeleteProject"><i class="bi bi-trash3 h2"></i></button>
     </div>
 </div>
 <div class="row">
     <div class="column">
         <NavLink class="card" href="@($"projectContacts/{projectName}")">
-            <img src="../images/contacts.png" />
+            <img src="../images/contacts.svg" />
             <h2>Contacts</h2>
         </NavLink>
         <NavLink class="card" href="@($"projectPhotos/{projectName}")">
-            <img src="../images/photos.png" />
+            <img src="../images/photos.svg" />
             <h2>Photos</h2>
         </NavLink>
         <NavLink class="card" href="@($"projectDocuments/{projectName}")">
-            <img src="../images/documents.png" />
+            <img src="../images/documents.svg" />
             <h2>Documents</h2>
         </NavLink>
     </div>
     <div class="column">
         <NavLink class="card" href="@($"projectOrders/{projectName}")">
-            <img src="../images/orders.png" />
+            <img src="../images/orders.svg" />
             <h2>Orders</h2>
         </NavLink>
         <NavLink class="card" href="@($"projectDrafts/{projectName}")">
-            <img src="../images/drafts.png" />
+            <img src="../images/drafts.svg" />
             <h2>Drafts</h2>
         </NavLink>
         <NavLink class="card" href="@($"projectFinances/{projectName}")">
-            <img src="../images/finances.png" />
+            <img src="../images/finances.svg" />
             <h2>Finances</h2>
         </NavLink>
     </div>
@@ -50,85 +50,103 @@
 @code {
     [Parameter]
     public string projectName { get; set; }
+    private DataContext dbContext { get; set; } = new DataContext();
+    private Project projectToDelete;
+
+    protected override async Task OnInitializedAsync()
+    {
+        projectToDelete = await dbContext.Projects.FirstOrDefaultAsync(p => p.Name == projectName);
+    }
 
     private void GoBack()
     {
-        Navigation.NavigateTo($"/projects");
+        Navigation.NavigateTo("/projects");
+    }
+
+    private async Task DeleteProject()
+    {
+        if (projectToDelete != null)
+        {
+            dbContext.Projects.Remove(projectToDelete);
+            await dbContext.SaveChangesAsync();
+            GoBack();
+        }
     }
 }
 
 <style>
-    .row {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: space-around;
-        margin-top: 20px;
-    }
 
+.row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 22vh;
+    width: 35vw; /* Set a consistent width */
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: inherit;
+    background-color: white;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    color: lightgray;
+}
+
+.card img {
+    width: 20%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.card h2 {
+    font-size: 2vw;
+    margin: 0;
+    width: 70%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+@@media screen and (max-width: 768px) {
     .column {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        flex: 1;
+        flex: auto;
+        justify-content: center;
     }
 
     .card {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        height: 22vh;
-        min-width: 35vw;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        margin-bottom: 20px;
-        text-decoration: none;
-        color: inherit;
-        background-color: white;
-        transition: transform 0.3s ease; \\
+        width: 90%; /* Adjusted for smaller screens */
+        flex-direction: column;
+        height: 150px;
     }
 
-        .card:hover {
-            transform: scale(1.05);
-            color: lightgray;
-        }
-
-        .card img {
-            width: 18%;
-            height: auto;
-            margin-bottom: 10px;
-        }
-
-        .card h2 {
-            font-size: 2vw;
-            margin: 0;
-            width: 70%;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
-
-    @@media screen and (max-width: 768px) {
-        .column {
-            flex: auto;
-            justify-content: center;
-        }
-
-        .card {
-            width: 90%;
-            flex-direction: column;
-            height: 150px;
-        }
-
-            .card h2 {
-                font-size: 4vw;
-            }
-
-            .card img {
-                width: 25%;
-            }
+    .card h2 {
+        font-size: 4vw;
     }
+
+    .card img {
+        width: 25%;
+    }
+}
 </style>
