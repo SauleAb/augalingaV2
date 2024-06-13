@@ -15,23 +15,23 @@
 
 <div class="header">
     <div style="flex: 1">
-        <button @onclick="GoBack" class="back-button"><img src="../images/back.png" /></button>
+        <button @onclick="GoBack" class="back-button"><i class="bi bi-arrow-left h2"></i></button>
     </div>
     <h1>@projectName Photos</h1>
     <div style="flex: 1; display: flex; justify-content: flex-end;">
-        <button class="add-button" @onclick="OpenModal"><img src="../images/add.png" /></button>
+        <button class="add-button" @onclick="OpenModal"><i class="bi bi-plus-lg h2"></i></button>
     </div>
 </div>
 
 <nav>
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <button class="nav-link active" id="nav-before-tab" data-bs-toggle="tab" data-bs-target="#nav-before" type="button" role="tab" aria-controls="nav-before" aria-selected="true" @onclick="ActivateBeforeTab">Before</button>
-        <button class="nav-link" id="nav-after-tab" data-bs-toggle="tab" data-bs-target="#nav-after" type="button" role="tab" aria-controls="nav-after" aria-selected="false" @onclick="ActivateAfterTab">After</button>
-        <button class="nav-link" id="nav-general-tab" data-bs-toggle="tab" data-bs-target="#nav-general" type="button" role="tab" aria-controls="nav-general" aria-selected="false" @onclick="ActivateGeneralTab">General</button>
+        <button class="nav-link @(isBeforeTabActive ? "active" : "")" id="nav-before-tab" data-bs-toggle="tab" data-bs-target="#nav-before" type="button" role="tab" aria-controls="nav-before" aria-selected="@(isBeforeTabActive)" @onclick="ActivateBeforeTab">Before</button>
+        <button class="nav-link @(isAfterTabActive ? "active" : "")" id="nav-after-tab" data-bs-toggle="tab" data-bs-target="#nav-after" type="button" role="tab" aria-controls="nav-after" aria-selected="@(isAfterTabActive)" @onclick="ActivateAfterTab">After</button>
+        <button class="nav-link @(isGeneralTabActive ? "active" : "")" id="nav-general-tab" data-bs-toggle="tab" data-bs-target="#nav-general" type="button" role="tab" aria-controls="nav-general" aria-selected="@(isGeneralTabActive)" @onclick="ActivateGeneralTab">General</button>
     </div>
 </nav>
 <div class="tab-content" id="nav-tabContent">
-    <div class="tab-pane fade show active" id="nav-before" role="tabpanel" aria-labelledby="nav-before-tab">
+    <div class="tab-pane fade @(isBeforeTabActive ? "show active" : "")" id="nav-before" role="tabpanel" aria-labelledby="nav-before-tab">
         @if (beforePhotos != null)
         {
             foreach (var url in beforePhotos)
@@ -40,7 +40,7 @@
             }
         }
     </div>
-    <div class="tab-pane fade" id="nav-after" role="tabpanel" aria-labelledby="nav-after-tab">
+    <div class="tab-pane fade @(isAfterTabActive ? "show active" : "")" id="nav-after" role="tabpanel" aria-labelledby="nav-after-tab">
         @if (afterPhotos != null)
         {
             foreach (var url in afterPhotos)
@@ -49,7 +49,7 @@
             }
         }
     </div>
-    <div class="tab-pane fade" id="nav-general" role="tabpanel" aria-labelledby="nav-general-tab">
+    <div class="tab-pane fade @(isGeneralTabActive ? "show active" : "")" id="nav-general" role="tabpanel" aria-labelledby="nav-general-tab">
         @if (generalPhotos != null)
         {
             foreach (var url in generalPhotos)
@@ -60,49 +60,8 @@
     </div>
 </div>
 
-<div class="modal show" style="display:none;">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add photos</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="HideModal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="category">Choose a category:</label>
-                    <select name="categories" id="categories" @bind="category" @oninput="@HandleCategorySelect">
-                        <option value="before">Before</option>
-                        <option value="after">After</option>
-                        <option value="general">General</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="fileInput">Select file:</label>
-                    <InputFile id="fileInput" OnChange="HandleFileSelect" multiple accept="image/*" />
-                    <ul>
-                        @if (selectedFiles.Any())
-                        {
-                            @foreach (var file in selectedFiles)
-                            {
-                                <li>@file.Name</li>
-                            }
-                        }
-                    </ul>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" @onclick="UploadFiles">Submit</button>
-                </div>
-                @if (!string.IsNullOrEmpty(errorMessage))
-                {
-                    <div class="alert alert-danger">@errorMessage</div>
-                }
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--<div class="modal" style="background-color: rgba(0, 0, 0, 0.5); display: @((selectedPhotoIndex != -1) ? "block" : "none")">
-    <div class="modal-dialog modal-dialog-centered" style="max-width: 50vw; max-height: 50vh;">
+<div class="modal" style="display:@(isModalVisible ? "block" : "none"); background-color: rgba(0, 0, 0, 0.5);">
+    <div class="modal-dialog modal-dialog-centered" style="min-width: 70vw; min-height:60vh;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="CloseBiggerView"></button>
@@ -111,7 +70,7 @@
                 <SfCarousel @bind-SelectedIndex="@selectedPhotoIndex">
                     @if (isBeforeTabActive)
                     {
-                        @foreach (var url in beforePhotos)
+                        foreach (var url in beforePhotos)
                         {
                             <CarouselItem>
                                 <figure class="img-container">
@@ -120,9 +79,9 @@
                             </CarouselItem>
                         }
                     }
-                    else
+                    @if (isAfterTabActive)
                     {
-                        @foreach (var url in afterPhotos)
+                        foreach (var url in afterPhotos)
                         {
                             <CarouselItem>
                                 <figure class="img-container">
@@ -131,11 +90,24 @@
                             </CarouselItem>
                         }
                     }
+                    @if (isGeneralTabActive)
+                    {
+                        foreach (var url in generalPhotos)
+                        {
+                            <CarouselItem>
+                                <figure class="img-container">
+                                    <img src="@url" alt="General Photo" style="height:100%;width:100%;" />
+                                </figure>
+                            </CarouselItem>
+                        }
+                    }
                 </SfCarousel>
+            </div>
+            <div class="modal-footer">
             </div>
         </div>
     </div>
-</div>-->
+</div>
 
 @code {
     [Parameter]
@@ -152,8 +124,10 @@
     public DataContext dbContext { get; set; } = new DataContext();
     private string errorMessage;
     private bool isBeforeTabActive = true;
-    private bool isAfterTabActive = true;
-    private bool isGeneralTabActive = true;
+    private bool isAfterTabActive = false;
+    private bool isGeneralTabActive = false;
+    private bool isModalVisible = false;
+    private int selectedPhotoIndex = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -173,6 +147,7 @@
         isBeforeTabActive = true;
         isAfterTabActive = false;
         isGeneralTabActive = false;
+        selectedPhotoIndex = 0; // Reset index on tab change
     }
 
     private void ActivateAfterTab()
@@ -180,12 +155,15 @@
         isBeforeTabActive = false;
         isAfterTabActive = true;
         isGeneralTabActive = false;
+        selectedPhotoIndex = 0; // Reset index on tab change
     }
+
     private void ActivateGeneralTab()
     {
         isBeforeTabActive = false;
         isAfterTabActive = false;
         isGeneralTabActive = true;
+        selectedPhotoIndex = 0; // Reset index on tab change
     }
 
     private async Task LoadPhotos()
@@ -268,11 +246,11 @@
                 const long maxFileSize = 2L * 1024 * 1024 * 1024; // 2GB
                 using var stream = file.OpenReadStream(maxFileSize);
                 var request = new PutObjectRequest
-                {
-                    BucketName = bucket,
-                    Key = objectKey,
-                    InputStream = stream
-                };
+                    {
+                        BucketName = bucket,
+                        Key = objectKey,
+                        InputStream = stream
+                    };
                 await s3Client.PutObjectAsync(request);
             }
             selectedFiles.Clear();
@@ -301,29 +279,33 @@
         Navigation.NavigateTo(uri.ToString(), true);
     }
 
-    private int selectedPhotoIndex = -1;
-
     private void OnPhotoClicked(string url)
     {
-        selectedPhotoIndex = beforePhotos.IndexOf(url);
+        if (isBeforeTabActive)
+        {
+            selectedPhotoIndex = beforePhotos.IndexOf(url);
+        }
+        else if (isAfterTabActive)
+        {
+            selectedPhotoIndex = afterPhotos.IndexOf(url);
+        }
+        else if (isGeneralTabActive)
+        {
+            selectedPhotoIndex = generalPhotos.IndexOf(url);
+        }
         OpenBiggerView(selectedPhotoIndex);
     }
 
     private void CloseBiggerView()
     {
         selectedPhotoIndex = -1;
+        isModalVisible = false;
     }
 
     private void OpenBiggerView(int photoIndex)
     {
-        if (photoIndex >= 0 && photoIndex < beforePhotos.Count)
-        {
-            selectedPhotoIndex = photoIndex;
-        }
-        else
-        {
-            selectedPhotoIndex = -1;
-        }
+        isModalVisible = true;
+        selectedPhotoIndex = photoIndex;
     }
 
     private void NextPhoto()
@@ -364,10 +346,15 @@
     }
 
     .control-container {
-        background-color: #e5e5e5;
-        height: 300px;
+        background-color: transparent;
+        height: 500px;
         margin: 0 auto;
-        width: 500px;
+        width: 800px;
+        border: none;
+    }
+
+    .tab-content img {
+        cursor: pointer;
     }
 
     .e-carousel .e-carousel-items .e-carousel-item .img-container {
@@ -380,10 +367,27 @@
         font-size: 12pt;
         height: 2em;
         position: relative;
-        padding: 0.3em 1em;
         text-align: center;
         width: 100%;
     }
+
+    .modal-content {
+        background-color: transparent;
+        border:none;
+        color: white;
+    }
+
+    .modal-header {
+        border:none;
+    }
+
+    .modal-footer {
+        border:none;
+    }
+
+        .modal-header .btn-close {
+            filter: invert(100%); 
+        }
 </style>
 
 <script>
