@@ -1,0 +1,113 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\obj\\Release\\net8.0-android\\scopedcss\\bundle\\augalinga.ApplicationLayer.styles.css",
+      "PackagePath": "staticwebassets\\augalinga.ApplicationLayer.styles.css"
+    },
+    {
+      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\css\\app.css",
+      "PackagePath": "staticwebassets\\css\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\add.png",
+      "PackagePath": "staticwebassets\\images\\add.png"
+    },
+    {
+      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\add2.png",
+      "PackagePath": "staticwebassets\\images\\add2.png"
+    },
+    {
+      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\back.png",
+      "PackagePath": "staticwebassets\\images\\back.png"
+    },
+    {
+      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\calendar_background.png",
+      "PackagePath": "staticwebassets\\images\\calendar_background.png"
+    },
+    {
+      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\colleagues.png",
+      "PackagePath": "staticwebassets\\images\\colleagues.png"
+    },
+    {
+      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\contacts.png",
+      "PackagePath": "staticwebassets\\images\\contacts.png"
+    },
+    {
+      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\delete.png",
+      "PackagePath": "staticwebassets\\images\\delete.png"
+    },
+    {
+      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\documents.png",
+      "PackagePath": "staticwebassets\\images\\documents.png"
+    },
+    {
+      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\drafts.png",
+      "PackagePath": "staticwebassets\\images\\drafts.png"
+    },
+    {
+      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\favicon.png",
+      "PackagePath": "staticwebassets\\images\\favicon.png"
+    },
+    {
+      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\finances.png",
+      "PackagePath": "staticwebassets\\images\\finances.png"
+    },
+    {
+      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\ginkmedis.png",
+      "PackagePath": "staticwebassets\\images\\ginkmedis.png"
+    },
+    {
+      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\ginkmedis2.png",
+      "PackagePath": "staticwebassets\\images\\ginkmedis2.png"
+    },
+    {
+      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\manufacture.png",
+      "PackagePath": "staticwebassets\\images\\manufacture.png"
+    },
+    {
+      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\nurseries.png",
+      "PackagePath": "staticwebassets\\images\\nurseries.png"
+    },
+    {
+      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\orders.png",
+      "PackagePath": "staticwebassets\\images\\orders.png"
+    },
+    {
+      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\photos.png",
+      "PackagePath": "staticwebassets\\images\\photos.png"
+    },
+    {
+      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\transport.png",
+      "PackagePath": "staticwebassets\\images\\transport.png"
+    },
+    {
+      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "obj\\Release\\net8.0-android\\staticwebassets\\msbuild.augalinga.ApplicationLayer.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Release\\net8.0-android\\staticwebassets\\msbuild.build.augalinga.ApplicationLayer.props",
+      "PackagePath": "build\\augalinga.ApplicationLayer.props"
+    },
+    {
+      "Id": "obj\\Release\\net8.0-android\\staticwebassets\\msbuild.buildMultiTargeting.augalinga.ApplicationLayer.props",
+      "PackagePath": "buildMultiTargeting\\augalinga.ApplicationLayer.props"
+    },
+    {
+      "Id": "obj\\Release\\net8.0-android\\staticwebassets\\msbuild.buildTransitive.augalinga.ApplicationLayer.props",
+      "PackagePath": "buildTransitive\\augalinga.ApplicationLayer.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
