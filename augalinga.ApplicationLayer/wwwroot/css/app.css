@@ -80,22 +80,6 @@ h1:focus {
     display: none;
 }
 
-.back-button {
-    background-color: transparent;
-    cursor: pointer;
-    border: none;
-}
-
-    .back-button img {
-        transition: width 0.3s ease, height 0.3s ease;
-        width: 30px;
-        height: 30px;
-    }
-
-        .back-button img:hover {
-            height: 40px;
-            width: 40px;
-        }
 
 .header {
     position: relative;
@@ -110,22 +94,49 @@ h1 {
     text-align: center;
 }
 
+.back-button {
+    background-color: transparent;
+    cursor: pointer;
+    border: none;
+}
+
+    .back-button i {
+        transition: font-size 0.3s ease;
+        font-size: 30px;
+    }
+
+        .back-button i:hover {
+            font-size: 40px;
+        }
+.delete-button {
+    background-color: transparent;
+    cursor: pointer;
+    border: none;
+}
+    .delete-button i {
+        transition: font-size 0.3s ease;
+        font-size: 30px; 
+    }
+
+        .delete-button i:hover {
+            font-size: 40px;
+        }
+
 .add-button {
     background-color: transparent;
     cursor: pointer;
     border: none;
 }
 
-    .add-button img {
-        transition: width 0.3s ease, height 0.3s ease;
-        width: 30px;
-        height: 30px;
+    .add-button i {
+        transition: font-size 0.3s ease;
+        font-size: 30px;
     }
 
-        .add-button img:hover {
-            height: 40px;
-            width: 40px;
+        .add-button i:hover {
+            font-size: 40px;
         }
+
 
 
 @supports (-webkit-touch-callout: none) {

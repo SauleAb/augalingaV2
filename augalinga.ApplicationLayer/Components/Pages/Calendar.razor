@@ -70,6 +70,21 @@
             }
         }
 
+        if (args.ActionType == ActionType.EventRemove)
+        {
+            if (args.DeletedRecords != null)
+            {
+                foreach (var deletedEvent in args.DeletedRecords)
+                {
+                    var eventToRemove = dbContext.Meetings.FirstOrDefault(e => e.Id == deletedEvent.Id);
+                    if (eventToRemove != null)
+                    {
+                        dbContext.Meetings.Remove(eventToRemove);
+                    }
+                }
+            }
+        }
+
         if (args.ActionType == ActionType.EventChange)
         {
             if (args.ChangedRecords != null)
@@ -97,20 +112,7 @@
             }
         }
 
-        if (args.ActionType == ActionType.EventRemove)
-        {
-            if (args.DeletedRecords != null)
-            {
-                foreach (var deletedEvent in args.DeletedRecords)
-                {
-                    var eventToRemove = dbContext.Meetings.FirstOrDefault(e => e.Id == deletedEvent.Id);
-                    if (eventToRemove != null)
-                    {
-                        dbContext.Meetings.Remove(eventToRemove);
-                    }
-                }
-            }
-        }
+        
         await dbContext.SaveChangesAsync();
     }
 }
