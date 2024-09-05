@@ -7,11 +7,11 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
 {
     public class DraftsViewModel
     {
-        string _projectName;
-        public DraftsViewModel(string projectName)
+        int _projectId;
+        public DraftsViewModel(int projectId)
         {
-            _projectName = projectName;
-            LoadDrafts(_projectName);
+            _projectId = projectId;
+            LoadDrafts(_projectId);
         }
 
         private ObservableCollection<Draft> _drafts;
@@ -28,7 +28,7 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
         public void AddDraftToCollection(Draft draft)
         {
             Drafts.Add(draft);
-            LoadDrafts(_projectName);
+            LoadDrafts(_projectId);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -37,11 +37,11 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void LoadDrafts(string projectName)
+        private void LoadDrafts(int projectId)
         {
             using (var context = new DataContext())
             {
-                var drafts = context.Drafts.Where(draft => draft.Project == projectName).ToList();
+                var drafts = context.Drafts.Where(draft => draft.ProjectId == _projectId).ToList();
 
                 Drafts = new ObservableCollection<Draft>(drafts);
             }
@@ -60,7 +60,7 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
                 dbContext.SaveChanges();
             }
 
-            LoadDrafts(_projectName);
+            LoadDrafts(_projectId);
         }
     }
 }

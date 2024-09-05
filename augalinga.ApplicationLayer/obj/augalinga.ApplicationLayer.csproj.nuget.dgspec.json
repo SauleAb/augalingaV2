@@ -1,7 +1,7 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\augalinga.ApplicationLayer.csproj": {}
+    "C:\\Users\\ThinkPad\\source\\repos\\AugalingaVersion2\\augalinga.ApplicationLayer\\augalinga.ApplicationLayer.csproj": {}
   },
   "projects": {
     "C:\\Users\\ThinkPad\\Desktop\\augalinga\\augalinga.Data\\augalinga.Data.csproj": {
@@ -25,10 +25,8 @@
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "C:\\Program Files\\dotnet\\library-packs": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://nuget.devexpress.com/TvqMbHKJaR65sdAjgbnV8PrFHbunX4PRWGO121oKxYWqTKu9cz/api": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
@@ -51,41 +49,29 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "MSTest": {
-              "target": "Package",
-              "version": "[3.5.0, )"
-            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[8.0.8, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[8.0.8, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[8.0.8, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[8.0.6, )"
-            },
-            "Microsoft.Maui.Controls": {
-              "target": "Package",
-              "version": "[8.0.21, )"
-            },
-            "Microsoft.Maui.Controls.Compatibility": {
-              "target": "Package",
-              "version": "[8.0.21, )"
+              "version": "[8.0.8, )"
             },
             "Syncfusion.Maui.Scheduler": {
               "target": "Package",
-              "version": "[25.2.6, )"
+              "version": "[26.2.13, )"
             }
           },
           "imports": [
@@ -104,18 +90,18 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\augalinga.ApplicationLayer.csproj": {
+    "C:\\Users\\ThinkPad\\source\\repos\\AugalingaVersion2\\augalinga.ApplicationLayer\\augalinga.ApplicationLayer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\augalinga.ApplicationLayer.csproj",
+        "projectUniqueName": "C:\\Users\\ThinkPad\\source\\repos\\AugalingaVersion2\\augalinga.ApplicationLayer\\augalinga.ApplicationLayer.csproj",
         "projectName": "augalinga.ApplicationLayer",
-        "projectPath": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\augalinga.ApplicationLayer.csproj",
+        "projectPath": "C:\\Users\\ThinkPad\\source\\repos\\AugalingaVersion2\\augalinga.ApplicationLayer\\augalinga.ApplicationLayer.csproj",
         "packagesPath": "C:\\Users\\ThinkPad\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\obj\\",
+        "outputPath": "C:\\Users\\ThinkPad\\source\\repos\\AugalingaVersion2\\augalinga.ApplicationLayer\\obj\\",
         "projectStyle": "PackageReference",
         "crossTargeting": true,
         "fallbackFolders": [
@@ -127,42 +113,13 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net8.0-android",
-          "net8.0-ios",
-          "net8.0-maccatalyst",
           "net8.0-windows10.0.19041.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "C:\\Program Files\\dotnet\\library-packs": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://nuget.devexpress.com/TvqMbHKJaR65sdAjgbnV8PrFHbunX4PRWGO121oKxYWqTKu9cz/api": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net8.0-android34.0": {
-            "targetAlias": "net8.0-android",
-            "projectReferences": {
-              "C:\\Users\\ThinkPad\\Desktop\\augalinga\\augalinga.Data\\augalinga.Data.csproj": {
-                "projectPath": "C:\\Users\\ThinkPad\\Desktop\\augalinga\\augalinga.Data\\augalinga.Data.csproj"
-              }
-            }
-          },
-          "net8.0-ios17.2": {
-            "targetAlias": "net8.0-ios",
-            "projectReferences": {
-              "C:\\Users\\ThinkPad\\Desktop\\augalinga\\augalinga.Data\\augalinga.Data.csproj": {
-                "projectPath": "C:\\Users\\ThinkPad\\Desktop\\augalinga\\augalinga.Data\\augalinga.Data.csproj"
-              }
-            }
-          },
-          "net8.0-maccatalyst17.2": {
-            "targetAlias": "net8.0-maccatalyst",
-            "projectReferences": {
-              "C:\\Users\\ThinkPad\\Desktop\\augalinga\\augalinga.Data\\augalinga.Data.csproj": {
-                "projectPath": "C:\\Users\\ThinkPad\\Desktop\\augalinga\\augalinga.Data\\augalinga.Data.csproj"
-              }
-            }
-          },
           "net8.0-windows10.0.19041": {
             "targetAlias": "net8.0-windows10.0.19041.0",
             "projectReferences": {
@@ -184,262 +141,12 @@
         }
       },
       "frameworks": {
-        "net8.0-android34.0": {
-          "targetAlias": "net8.0-android",
-          "dependencies": {
-            "AWSSDK.S3": {
-              "target": "Package",
-              "version": "[3.7.308.9, )"
-            },
-            "Blazored.Modal": {
-              "target": "Package",
-              "version": "[7.3.1, )"
-            },
-            "BootstrapBlazor": {
-              "target": "Package",
-              "version": "[8.6.2, )"
-            },
-            "MSTest": {
-              "target": "Package",
-              "version": "[3.5.0, )"
-            },
-            "Microsoft.AspNetCore.Components.Forms": {
-              "target": "Package",
-              "version": "[8.0.6, )"
-            },
-            "Microsoft.AspNetCore.Components.WebView.Maui": {
-              "target": "Package",
-              "version": "[8.0.40, )"
-            },
-            "Microsoft.Extensions.Logging.Debug": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            },
-            "Microsoft.Maui.Controls": {
-              "target": "Package",
-              "version": "[8.0.40, )"
-            },
-            "Microsoft.Maui.Controls.Compatibility": {
-              "target": "Package",
-              "version": "[8.0.40, )"
-            },
-            "Microsoft.NET.ILLink.Tasks": {
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[8.0.5, )",
-              "autoReferenced": true
-            },
-            "Syncfusion.Blazor.Grid": {
-              "target": "Package",
-              "version": "[26.1.35, )"
-            },
-            "Syncfusion.Blazor.Navigations": {
-              "target": "Package",
-              "version": "[26.1.35, )"
-            },
-            "Syncfusion.Blazor.Schedule": {
-              "target": "Package",
-              "version": "[25.2.6, )"
-            },
-            "Syncfusion.Blazor.Themes": {
-              "target": "Package",
-              "version": "[25.2.6, )"
-            }
-          },
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.Android": {
-              "privateAssets": "all"
-            },
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
-        },
-        "net8.0-ios17.2": {
-          "targetAlias": "net8.0-ios",
-          "dependencies": {
-            "AWSSDK.S3": {
-              "target": "Package",
-              "version": "[3.7.308.9, )"
-            },
-            "Blazored.Modal": {
-              "target": "Package",
-              "version": "[7.3.1, )"
-            },
-            "BootstrapBlazor": {
-              "target": "Package",
-              "version": "[8.6.2, )"
-            },
-            "MSTest": {
-              "target": "Package",
-              "version": "[3.5.0, )"
-            },
-            "Microsoft.AspNetCore.Components.Forms": {
-              "target": "Package",
-              "version": "[8.0.6, )"
-            },
-            "Microsoft.AspNetCore.Components.WebView.Maui": {
-              "target": "Package",
-              "version": "[8.0.40, )"
-            },
-            "Microsoft.Extensions.Logging.Debug": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            },
-            "Microsoft.Maui.Controls": {
-              "target": "Package",
-              "version": "[8.0.40, )"
-            },
-            "Microsoft.Maui.Controls.Compatibility": {
-              "target": "Package",
-              "version": "[8.0.40, )"
-            },
-            "Microsoft.NET.ILLink.Tasks": {
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[8.0.5, )",
-              "autoReferenced": true
-            },
-            "Syncfusion.Blazor.Grid": {
-              "target": "Package",
-              "version": "[26.1.35, )"
-            },
-            "Syncfusion.Blazor.Navigations": {
-              "target": "Package",
-              "version": "[26.1.35, )"
-            },
-            "Syncfusion.Blazor.Schedule": {
-              "target": "Package",
-              "version": "[25.2.6, )"
-            },
-            "Syncfusion.Blazor.Themes": {
-              "target": "Package",
-              "version": "[25.2.6, )"
-            }
-          },
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.iOS": {
-              "privateAssets": "all"
-            },
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
-        },
-        "net8.0-maccatalyst17.2": {
-          "targetAlias": "net8.0-maccatalyst",
-          "dependencies": {
-            "AWSSDK.S3": {
-              "target": "Package",
-              "version": "[3.7.308.9, )"
-            },
-            "Blazored.Modal": {
-              "target": "Package",
-              "version": "[7.3.1, )"
-            },
-            "BootstrapBlazor": {
-              "target": "Package",
-              "version": "[8.6.2, )"
-            },
-            "MSTest": {
-              "target": "Package",
-              "version": "[3.5.0, )"
-            },
-            "Microsoft.AspNetCore.Components.Forms": {
-              "target": "Package",
-              "version": "[8.0.6, )"
-            },
-            "Microsoft.AspNetCore.Components.WebView.Maui": {
-              "target": "Package",
-              "version": "[8.0.40, )"
-            },
-            "Microsoft.Extensions.Logging.Debug": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            },
-            "Microsoft.Maui.Controls": {
-              "target": "Package",
-              "version": "[8.0.40, )"
-            },
-            "Microsoft.Maui.Controls.Compatibility": {
-              "target": "Package",
-              "version": "[8.0.40, )"
-            },
-            "Microsoft.NET.ILLink.Tasks": {
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[8.0.5, )",
-              "autoReferenced": true
-            },
-            "Syncfusion.Blazor.Grid": {
-              "target": "Package",
-              "version": "[26.1.35, )"
-            },
-            "Syncfusion.Blazor.Navigations": {
-              "target": "Package",
-              "version": "[26.1.35, )"
-            },
-            "Syncfusion.Blazor.Schedule": {
-              "target": "Package",
-              "version": "[25.2.6, )"
-            },
-            "Syncfusion.Blazor.Themes": {
-              "target": "Package",
-              "version": "[25.2.6, )"
-            }
-          },
-          "imports": [
-            "xamarinios10",
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.MacCatalyst": {
-              "privateAssets": "all"
-            },
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
-        },
         "net8.0-windows10.0.19041": {
           "targetAlias": "net8.0-windows10.0.19041.0",
           "dependencies": {
             "AWSSDK.S3": {
               "target": "Package",
-              "version": "[3.7.308.9, )"
+              "version": "[3.7.402.5, )"
             },
             "Blazored.Modal": {
               "target": "Package",
@@ -447,19 +154,19 @@
             },
             "BootstrapBlazor": {
               "target": "Package",
-              "version": "[8.6.2, )"
-            },
-            "MSTest": {
-              "target": "Package",
-              "version": "[3.5.0, )"
+              "version": "[8.9.0, )"
             },
             "Microsoft.AspNetCore.Components.Forms": {
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[8.0.8, )"
             },
             "Microsoft.AspNetCore.Components.WebView.Maui": {
               "target": "Package",
-              "version": "[8.0.40, )"
+              "version": "[8.0.82, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.8, )"
             },
             "Microsoft.Extensions.Logging.Debug": {
               "target": "Package",
@@ -467,27 +174,27 @@
             },
             "Microsoft.Maui.Controls": {
               "target": "Package",
-              "version": "[8.0.40, )"
+              "version": "[8.0.82, )"
             },
             "Microsoft.Maui.Controls.Compatibility": {
               "target": "Package",
-              "version": "[8.0.40, )"
+              "version": "[8.0.82, )"
             },
             "Syncfusion.Blazor.Grid": {
               "target": "Package",
-              "version": "[26.1.35, )"
+              "version": "[26.2.13, )"
             },
             "Syncfusion.Blazor.Navigations": {
               "target": "Package",
-              "version": "[26.1.35, )"
+              "version": "[26.2.13, )"
             },
             "Syncfusion.Blazor.Schedule": {
               "target": "Package",
-              "version": "[25.2.6, )"
+              "version": "[26.2.13, )"
             },
             "Syncfusion.Blazor.Themes": {
               "target": "Package",
-              "version": "[25.2.6, )"
+              "version": "[26.2.13, )"
             }
           },
           "imports": [
@@ -515,28 +222,10 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303\\RuntimeIdentifierGraph.json"
         }
       },
       "runtimes": {
-        "android-arm": {
-          "#import": []
-        },
-        "android-arm64": {
-          "#import": []
-        },
-        "android-x64": {
-          "#import": []
-        },
-        "android-x86": {
-          "#import": []
-        },
-        "iossimulator-x64": {
-          "#import": []
-        },
-        "maccatalyst-x64": {
-          "#import": []
-        },
         "win10-x64": {
           "#import": []
         }

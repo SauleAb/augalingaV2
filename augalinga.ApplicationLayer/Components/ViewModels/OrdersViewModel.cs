@@ -7,11 +7,11 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
 {
     public class OrdersViewModel
     {
-        string _projectName;
-        public OrdersViewModel(string projectName)
+        int _projectId;
+        public OrdersViewModel(int projectId)
         {
-            _projectName = projectName;
-            LoadOrders(_projectName);
+            _projectId = projectId;
+            LoadOrders(_projectId);
         }
 
         private ObservableCollection<Order> _orders;
@@ -28,7 +28,7 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
         public void AddOrderToCollection(Order order)
         {
             Orders.Add(order);
-            LoadOrders(_projectName);
+            LoadOrders(_projectId);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -37,11 +37,11 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void LoadOrders(string projectName)
+        private void LoadOrders(int projectId)
         {
             using (var context = new DataContext())
             {
-                var orders = context.Orders.Where(order => order.Project == projectName).ToList();
+                var orders = context.Orders.Where(order => order.ProjectId == _projectId).ToList();
 
                 Orders = new ObservableCollection<Order>(orders);
             }
@@ -60,7 +60,7 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
                 dbContext.SaveChanges();
             }
 
-            LoadOrders(_projectName);
+            LoadOrders(_projectId);
         }
     }
 }

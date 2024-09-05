@@ -7,11 +7,11 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
 {
     public class DocumentsViewModel
     {
-        string _projectName;
-        public DocumentsViewModel(string projectName)
+        int _projectId;
+        public DocumentsViewModel(int projectId)
         {
-            _projectName = projectName;
-            LoadDocuments(_projectName);
+            _projectId = projectId;
+            LoadDocuments(_projectId);
         }
 
         private ObservableCollection<Document> _documents;
@@ -28,7 +28,7 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
         public void AddDocumentToCollection(Document document)
         {
             Documents.Add(document);
-            LoadDocuments(_projectName);
+            LoadDocuments(_projectId);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -37,11 +37,11 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void LoadDocuments(string projectName)
+        private void LoadDocuments(int projectId)
         {
             using (var context = new DataContext())
             {
-                var documents = context.Documents.Where(document => document.Project == projectName).ToList();
+                var documents = context.Documents.Where(document => document.ProjectId == _projectId).ToList();
 
                 Documents = new ObservableCollection<Document>(documents);
             }
@@ -60,7 +60,7 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
             Documents.Remove(documentToRemove);
 
 
-            LoadDocuments(_projectName);
+            LoadDocuments(_projectId);
         }
     }
 }

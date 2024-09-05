@@ -1,4 +1,4 @@
-﻿@page "/projectPhotos/{projectName}"
+﻿@page "/projectPhotos/{projectId}"
 
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Grids
@@ -17,7 +17,7 @@
     <div style="flex: 1">
         <button @onclick="GoBack" class="back-button"><i class="bi bi-arrow-left h2"></i></button>
     </div>
-    <h1>@projectName Photos</h1>
+    <h1>@project.Name Photos</h1>
     <div style="flex: 1; display: flex; justify-content: flex-end;">
         <button class="add-button" @onclick="OpenModal"><i class="bi bi-plus-lg h2"></i></button>
     </div>
@@ -111,7 +111,7 @@
 
 @code {
     [Parameter]
-    public string projectName { get; set; }
+    public int projectId { get; set; }
     PhotosViewModel photosViewModel;
     private List<string> beforePhotos = new List<string>();
     private List<string> afterPhotos = new List<string>();
@@ -128,12 +128,14 @@
     private bool isGeneralTabActive = false;
     private bool isModalVisible = false;
     private int selectedPhotoIndex = 0;
+    Project project = new Project();
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            photosViewModel = new PhotosViewModel(projectName);
+            project = await dbContext.Projects.FindAsync(projectId);
+            photosViewModel = new PhotosViewModel(projectId);
             await LoadPhotos();
         }
         catch (Exception ex)
@@ -170,9 +172,9 @@
     {
         try
         {
-            beforePhotos = await augalinga.ApplicationLayer.Components.Models.S3Bucket.ListPhotosAsync(s3Client, bucket, projectName, "before");
-            afterPhotos = await augalinga.ApplicationLayer.Components.Models.S3Bucket.ListPhotosAsync(s3Client, bucket, projectName, "after");
-            generalPhotos = await augalinga.ApplicationLayer.Components.Models.S3Bucket.ListPhotosAsync(s3Client, bucket, projectName, "general");
+            beforePhotos = await augalinga.ApplicationLayer.Components.Models.S3Bucket.ListPhotosAsync(s3Client, bucket, project.Name, "before");
+            afterPhotos = await augalinga.ApplicationLayer.Components.Models.S3Bucket.ListPhotosAsync(s3Client, bucket, project.Name, "after");
+            generalPhotos = await augalinga.ApplicationLayer.Components.Models.S3Bucket.ListPhotosAsync(s3Client, bucket, project.Name, "general");
         }
         catch (Exception ex)
         {
@@ -208,7 +210,7 @@
     {
         try
         {
-            Navigation.NavigateTo($"/projectMenu/{projectName}");
+            Navigation.NavigateTo($"/projectMenu/{projectId}");
         }
         catch (Exception ex)
         {
@@ -241,7 +243,7 @@
         {
             foreach (var file in selectedFiles)
             {
-                string objectKey = $"{projectName}/{folder}/{category}/{file.Name}";
+                string objectKey = $"{projectId}/{folder}/{category}/{file.Name}";
 
                 const long maxFileSize = 2L * 1024 * 1024 * 1024; // 2GB
                 using var stream = file.OpenReadStream(maxFileSize);
@@ -275,7 +277,7 @@
 
     private void ReloadPage()
     {
-        var uri = Navigation.ToAbsoluteUri($"/projectPhotos/{projectName}");
+        var uri = Navigation.ToAbsoluteUri($"/projectPhotos/{projectId}");
         Navigation.NavigateTo(uri.ToString(), true);
     }
 

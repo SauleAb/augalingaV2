@@ -63,7 +63,6 @@
                             IsAllDay = addedEvent.IsAllDay,
                             Notes = addedEvent.Notes,
                             Employee = addedEvent.Employee,
-                            Background = GetSelectedColor(addedEvent.Employee)
                         };
                     dbContext.Meetings.Add(meeting);
                 }
@@ -104,7 +103,6 @@
                         existingEvent.EventName = editedEvent.EventName;
                         existingEvent.Notes = editedEvent.Notes;
                         existingEvent.Employee = editedEvent.Employee;
-                        existingEvent.Background = GetSelectedColor(editedEvent.Employee);
 
                         dbContext.Meetings.Update(existingEvent);
                     }

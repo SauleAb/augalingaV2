@@ -19,7 +19,7 @@
 <div class="container">
     @foreach (Project project in viewModel.Projects)
     {
-        <NavLink href="@($"projectMenu/{project.Name}")" style="text-decoration: none;">
+        <NavLink href="@($"projectMenu/{project.Id}")" style="text-decoration: none;">
             <div class="card" style="width: 18rem;">
                 <img class="card-img-top" src="../images/calendar_background.png" alt="Card image cap">
                 <div class="card-body">

@@ -1,46 +1,44 @@
-﻿@page "/projectMenu/{projectName}"
-@using System.ComponentModel
-@using System.Collections.ObjectModel
-@using augalinga.ApplicationLayer.Components.ViewModels
+﻿@page "/projectMenu/{projectId:int}"
+@using Microsoft.EntityFrameworkCore
+@inject NavigationManager Navigation
 @using augalinga.Data.Access
 @using augalinga.Data.Entities
-@inject NavigationManager Navigation
-@using Microsoft.EntityFrameworkCore
 
 <div class="header">
     <div style="flex: 1">
         <button @onclick="GoBack" class="back-button"><i class="bi bi-arrow-left h2"></i></button>
     </div>
-    <h1>@projectName</h1>
+    <h1>@project.Name</h1>
     <div style="flex: 1; display: flex; justify-content: flex-end;">
         <button class="delete-button" @onclick="DeleteProject"><i class="bi bi-trash3 h2"></i></button>
     </div>
 </div>
+
 <div class="row">
     <div class="column">
-        <NavLink class="card" href="@($"projectContacts/{projectName}")">
+        <NavLink class="card" href="@($"projectContacts/{projectId}")">
             <img src="../images/contacts.svg" />
             <h2>Contacts</h2>
         </NavLink>
-        <NavLink class="card" href="@($"projectPhotos/{projectName}")">
+        <NavLink class="card" href="@($"projectPhotos/{projectId}")">
             <img src="../images/photos.svg" />
             <h2>Photos</h2>
         </NavLink>
-        <NavLink class="card" href="@($"projectDocuments/{projectName}")">
+        <NavLink class="card" href="@($"projectDocuments/{projectId}")">
             <img src="../images/documents.svg" />
             <h2>Documents</h2>
         </NavLink>
     </div>
     <div class="column">
-        <NavLink class="card" href="@($"projectOrders/{projectName}")">
+        <NavLink class="card" href="@($"projectOrders/{projectId}")">
             <img src="../images/orders.svg" />
             <h2>Orders</h2>
         </NavLink>
-        <NavLink class="card" href="@($"projectDrafts/{projectName}")">
+        <NavLink class="card" href="@($"projectDrafts/{projectId}")">
             <img src="../images/drafts.svg" />
             <h2>Drafts</h2>
         </NavLink>
-        <NavLink class="card" href="@($"projectFinances/{projectName}")">
+        <NavLink class="card" href="@($"projectFinances/{projectId}")">
             <img src="../images/finances.svg" />
             <h2>Finances</h2>
         </NavLink>
@@ -49,13 +47,20 @@
 
 @code {
     [Parameter]
-    public string projectName { get; set; }
+    public int projectId { get; set; }
+
     private DataContext dbContext { get; set; } = new DataContext();
-    private Project projectToDelete;
+    private Project project = new Project();
 
     protected override async Task OnInitializedAsync()
     {
-        projectToDelete = await dbContext.Projects.FirstOrDefaultAsync(p => p.Name == projectName);
+        int Id = projectId;
+        project = await dbContext.Projects.FindAsync(projectId);
+
+        if (project == null)
+        {
+            Navigation.NavigateTo("/projects");
+        }
     }
 
     private void GoBack()
@@ -65,14 +70,15 @@
 
     private async Task DeleteProject()
     {
-        if (projectToDelete != null)
+        if (project != null)
         {
-            dbContext.Projects.Remove(projectToDelete);
+            dbContext.Projects.Remove(project);
             await dbContext.SaveChangesAsync();
             GoBack();
         }
     }
 }
+
 
 <style>
 

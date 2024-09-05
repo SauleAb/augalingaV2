@@ -1,4 +1,4 @@
-﻿@page "/projectDrafts/{projectName}"
+﻿@page "/projectDrafts/{projectId}"
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Grids
 @using augalinga.ApplicationLayer.Components.ViewModels
@@ -20,7 +20,7 @@
     <div style="flex: 1">
         <button @onclick="GoBack" class="back-button"><i class="bi bi-arrow-left h2"></i></button>
     </div>
-    <h1>@projectName Drafts</h1>
+    <h1>@project.Name Drafts</h1>
     <div style="flex: 1; display: flex; justify-content: flex-end;">
         <button class="add-button" @onclick="OpenModal"><i class="bi bi-plus-lg h2"></i></button>
     </div>
@@ -74,7 +74,7 @@
 
 @code {
     [Parameter]
-    public string projectName { get; set; }
+    public int projectId { get; set; }
 
     DraftsViewModel draftsViewModel;
     string bucket = "augalinga-app";
@@ -84,10 +84,12 @@
     private List<IBrowserFile> selectedFiles = new List<IBrowserFile>();
     private string errorMessage;
     private SfGrid<Draft> draftsGrid;
+    Project project = new Project();
 
-    protected override void OnInitialized()
+    protected async override void OnInitialized()
     {
-        draftsViewModel = new DraftsViewModel(projectName);
+        draftsViewModel = new DraftsViewModel(projectId);
+        project = await dbContext.Projects.FindAsync(projectId);
     }
 
     public async Task HideModal()
@@ -103,7 +105,7 @@
 
     private void GoBack()
     {
-        Navigation.NavigateTo($"/projectMenu/{projectName}");
+        Navigation.NavigateTo($"/projectMenu/{projectId}");
     }
 
     private void HandleFileSelect(InputFileChangeEventArgs e)
@@ -118,7 +120,7 @@
         {
             foreach (var file in selectedFiles)
             {
-                string objectKey = $"{projectName}/{folder}{file.Name}";
+                string objectKey = $"{projectId}/{folder}{file.Name}";
 
                 const long maxFileSize = 1073741824; // 1 GB
                 using var stream = file.OpenReadStream(maxFileSize);
@@ -132,7 +134,7 @@
 
                 var draft = new Draft
                     {
-                        Project = projectName,
+                        ProjectId = projectId,
                         Link = $"https://{bucket}.s3.amazonaws.com/{objectKey}",
                         Name = file.Name
                     };

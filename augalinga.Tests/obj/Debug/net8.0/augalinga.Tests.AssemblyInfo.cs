@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("augalinga.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2dd7dbcc4573c3ac13c139edc524552683c80853")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f322c403b41d5bc4a2c80e616683b5b55633efd4")]
 [assembly: System.Reflection.AssemblyProductAttribute("augalinga.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("augalinga.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,7 +1,8 @@
-﻿@page "/projectFinances/{projectName}"
-
+﻿@page "/projectFinances/{projectId:int}"
+@using Microsoft.EntityFrameworkCore
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Grids
+@using System.Collections.ObjectModel
 @using augalinga.ApplicationLayer.Components.ViewModels
 @using augalinga.Data.Entities
 @inject IJSRuntime JS
@@ -12,7 +13,7 @@
     <div style="flex: 1">
         <button @onclick="GoBack" class="back-button"><i class="bi bi-arrow-left h2"></i></button>
     </div>
-    <h1>@projectName Finances</h1>
+    <h1>@project?.Name Finances</h1>
     <div style="flex: 1; display: flex; justify-content: flex-end;">
         <button class="add-button" @onclick="OpenModal"><i class="bi bi-plus-lg h2"></i></button>
     </div>
@@ -92,11 +93,12 @@
 
 @code {
     [Parameter]
-    public string projectName { get; set; }
+    public int projectId { get; set; }
 
-    Expense expense = new Expense();
+    private Expense expense = new Expense();
     private DataContext dbContext { get; set; } = new DataContext();
-    ExpensesViewModel expensesViewModel;
+    private ExpensesViewModel expensesViewModel;
+    Project project = new Project();
     private decimal income;
     private decimal outcome;
     private decimal total;
@@ -109,13 +111,14 @@
 
     protected override void OnInitialized()
     {
-        expensesViewModel = new ExpensesViewModel(projectName);
+        project = dbContext.Projects.FirstOrDefault(w => w.Id == projectId);
+        expensesViewModel = new ExpensesViewModel(projectId);
         CalculateTotals();
     }
 
     private void GoBack()
     {
-        Navigation.NavigateTo($"/projectMenu/{projectName}");
+        Navigation.NavigateTo($"/projectMenu/{projectId}");
     }
 
     public async Task OpenModal()
@@ -125,7 +128,6 @@
 
     private async Task AddFinance()
     {
-        expense.Project = projectName;
         expense.Date = DateOnly.FromDateTime(DateTime.Today);
         expense.Type = selectedType == "Outcome" ? "-" : "+";
 

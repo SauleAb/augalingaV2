@@ -1,21 +1,20 @@
-﻿@page "/projectContacts/{projectName}"
+﻿@page "/projectContacts/{projectId:int}"
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Grids
+@using System.Collections.ObjectModel
 @using augalinga.ApplicationLayer.Components.ViewModels
 @using augalinga.Data.Entities
 @inject NavigationManager Navigation
 @using Syncfusion.Blazor.Inputs
-@using Microsoft.Maui.Controls
-@using System.Text.Json
 @inject IJSRuntime JS
+@using Microsoft.EntityFrameworkCore
 @using augalinga.Data.Access
-@using augalinga.Data.Entities
 
 <div class="header">
     <div style="flex: 1">
         <button @onclick="GoBack" class="back-button"><i class="bi bi-arrow-left h2"></i></button>
     </div>
-    <h1>@projectName Contacts</h1>
+    <h1>@project?.Name Contacts</h1>
     <div style="flex: 1; display: flex; justify-content: flex-end;">
         <button class="add-button" @onclick="OpenModal"><i class="bi bi-plus-lg h2"></i></button>
     </div>
@@ -69,7 +68,7 @@
                     <div class="col">
                         <div class="form-group">
                             <label for="contactNotes">Notes:</label>
-                            <input type="text" multiple="true" class="form-control" id="contactNotes" @bind="contact.Notes" />
+                            <input type="text" class="form-control" id="contactNotes" @bind="contact.Notes" />
                         </div>
                     </div>
                 </div>
@@ -81,41 +80,50 @@
     </div>
 </div>
 
+
 @code {
     [Parameter]
-    public string projectName { get; set; }
+    public int projectId { get; set; }
     private DataContext dbContext { get; set; } = new DataContext();
-    Contact contact = new Contact();
+    private Contact contact = new Contact();
+    private ContactsViewModel contactsViewModel;
+    private Project project = new Project();
 
-    ContactsViewModel contactsViewModel;
-
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        contactsViewModel = new ContactsViewModel(projectName);
+        project = await dbContext.Projects.FindAsync(projectId);
+
+        if (project == null)
+        {
+            Navigation.NavigateTo("/projects");
+            return;
+        }
+
+        contactsViewModel = new ContactsViewModel(project.Name);
+        var contactsList = await dbContext.Contacts
+            .Where(c => c.Id == projectId)
+            .ToListAsync();
+
+        contactsViewModel.Contacts = new ObservableCollection<Contact>(contactsList);
         contact.Number = "+370";
     }
 
     private void GoBack()
     {
-        Navigation.NavigateTo($"/projectMenu/{projectName}");
+        Navigation.NavigateTo($"/projectMenu/{projectId}");
     }
+
     private async Task DeleteContact(Contact contact)
     {
         dbContext.Contacts.Remove(contact);
         await dbContext.SaveChangesAsync();
         contactsViewModel.Contacts.Remove(contact);
     }
-    private async void AddContact()
+
+    private async Task AddContact()
     {
-        contact.Category = projectName;
-        if (contact.Notes == null)
-        {
-            contact.Notes = "";
-        }
-        if (contact.Address == null)
-        {
-            contact.Address = "";
-        }
+        contact.Notes = contact.Notes ?? "";
+        contact.Address = contact.Address ?? "";
         dbContext.Contacts.Add(contact);
         await dbContext.SaveChangesAsync();
         contactsViewModel.Contacts.Add(contact);
@@ -132,7 +140,6 @@
         await JS.InvokeVoidAsync("hideModal");
     }
 }
-
 <script>
     window.showModal = () => {
         const modal = document.querySelector('.modal');
@@ -148,7 +155,3 @@
         }
     };
 </script>
-
-
-<style>
-</style>

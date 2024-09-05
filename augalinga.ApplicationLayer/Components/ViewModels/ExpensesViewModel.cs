@@ -7,11 +7,11 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
 {
     public class ExpensesViewModel
     {
-        private string _projectName;
-        public ExpensesViewModel(string projectName)
+        private int _projectId;
+        public ExpensesViewModel(int projectId)
         {
-            _projectName = projectName;
-            LoadExpenses(_projectName);
+            _projectId = projectId;
+            LoadExpenses(_projectId);
         }
 
         private decimal _income;
@@ -94,7 +94,7 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
         public void AddExpenseToCollection(Expense expense)
         {
             Expenses.Add(expense);
-            LoadExpenses(_projectName);
+            LoadExpenses(_projectId);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -103,11 +103,11 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void LoadExpenses(string projectName)
+        private void LoadExpenses(int projectId)
         {
             using (var context = new DataContext())
             {
-                var expenses = context.Expenses.Where(expense => expense.Project == projectName).OrderByDescending(expense => expense.Date).ToList();
+                var expenses = context.Expenses.Where(expense => expense.Id == projectId).OrderByDescending(expense => expense.Date).ToList();
 
                 Expenses = new ObservableCollection<Expense>(expenses);
             }
@@ -130,7 +130,7 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
                 dbContext.SaveChanges();
             }
 
-            LoadExpenses(_projectName);
+            LoadExpenses(_projectId);
         }
     }
 }

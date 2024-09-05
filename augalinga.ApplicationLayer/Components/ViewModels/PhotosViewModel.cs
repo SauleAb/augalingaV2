@@ -7,19 +7,19 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
 {
     public class PhotosViewModel
     {
-        string _projectName;
+        int _projectId;
         string _category;
-        public PhotosViewModel(string projectName, string category)
+        public PhotosViewModel(int projectId, string category)
         {
-            _projectName = projectName;
+            _projectId = projectId;
             _category = category;
-            LoadPhotos(_projectName, _category);
+            LoadPhotos(_projectId, _category);
         }
 
-        public PhotosViewModel(string projectName)
+        public PhotosViewModel(int projectId)
         {
-            _projectName = projectName;
-            LoadAllPhotos(_projectName);
+            _projectId = projectId;
+            LoadAllPhotos(_projectId);
         }
 
         private ObservableCollection<Photo> _photos;
@@ -36,7 +36,7 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
         public void AddPhotoToCollection(Photo photo)
         {
             Photos.Add(photo);
-            LoadPhotos(_projectName, _category);
+            LoadPhotos(_projectId, _category);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -45,24 +45,24 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void LoadPhotos(string projectName, string category)
+        private void LoadPhotos(int projectId, string category)
         {
             using (var context = new DataContext())
             {
                 var photos = context.Photos
-                    .Where(photo => photo.Project == projectName && photo.Category == category)
+                    .Where(photo => photo.ProjectId == projectId && photo.Category == category)
                     .ToList();
 
                 Photos = new ObservableCollection<Photo>(photos);
             }
         }
 
-        private void LoadAllPhotos(string projectName)
+        private void LoadAllPhotos(int projectId)
         {
             using (var context = new DataContext())
             {
                 var photos = context.Photos
-                    .Where(photo => photo.Project == projectName)
+                    .Where(photo => photo.ProjectId == projectId)
                     .ToList();
 
                 Photos = new ObservableCollection<Photo>(photos);
@@ -82,7 +82,7 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
                 dbContext.SaveChanges();
             }
 
-            LoadPhotos(_projectName, _category);
+            LoadPhotos(_projectId, _category);
         }
     }
 }
