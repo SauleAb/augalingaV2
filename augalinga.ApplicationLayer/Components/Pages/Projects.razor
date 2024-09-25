@@ -1,6 +1,7 @@
 ﻿@page "/projects"
-@using System.ComponentModel
 @using System.Collections.ObjectModel
+@using Microsoft.EntityFrameworkCore
+@using augalinga.ApplicationLayer.Components.Models
 @using augalinga.ApplicationLayer.Components.ViewModels
 @using augalinga.Data.Access
 @using augalinga.Data.Entities
@@ -20,8 +21,8 @@
     @foreach (Project project in viewModel.Projects)
     {
         <NavLink href="@($"projectMenu/{project.Id}")" style="text-decoration: none;">
-            <div class="card" style="width: 18rem;">
-                <img class="card-img-top" src="../images/calendar_background.png" alt="Card image cap">
+            <div class="card" style="width: 18rem; height: 19rem">
+                <img class="card-photo" src="@GetBlobUrl(project.Name, project.ImageUrl)" alt="Project Image">
                 <div class="card-body">
                     <h5 class="card-title">@project.Name</h5>
                 </div>
@@ -29,6 +30,7 @@
         </NavLink>
     }
 </div>
+
 
 <div class="modal show" style="display:none;">
     <div class="modal-dialog">
@@ -41,8 +43,16 @@
                 <div class="row">
                     <div class="col">
                         <div class="form-group">
-                            <label for="expenseName">Project name:</label>
-                            <input type="text" class="form-control" id="expenseName" @bind="project.Name" required />
+                            <label for="projectName">Project name:</label>
+                            <input type="text" class="form-control" id="projectName" @bind="project.Name" required />
+
+                            <label for="fileInput">Select project image:</label>
+                            <InputFile id="fileInput" OnChange="HandleFileSelect" />
+
+                            @if (selectedFile != null)
+                            {
+                                <p>Selected file: @selectedFile.Name</p>
+                            }
                         </div>
                     </div>
                 </div>
@@ -55,9 +65,58 @@
 </div>
 
 @code {
-    ProjectsViewModel viewModel = new ProjectsViewModel();
+    private AzureBlobStorage _blobStorage;
+
+    ProjectsViewModel viewModel;
     Project project = new Project();
     private DataContext dbContext { get; set; } = new DataContext();
+    private IBrowserFile selectedFile;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _blobStorage = new AzureBlobStorage();
+        viewModel = new ProjectsViewModel();
+        await LoadProjectsAsync();
+    }
+
+    private void HandleFileSelect(InputFileChangeEventArgs e)
+    {
+        selectedFile = e.File;
+    }
+
+    private async Task LoadProjectsAsync()
+    {
+        viewModel.Projects = new ObservableCollection<Project>(await dbContext.Projects.ToListAsync());
+    }
+
+    private async Task AddProject()
+    {
+        if (string.IsNullOrWhiteSpace(project.Name))
+        {
+            return;
+        }
+
+        if (selectedFile != null)
+        {
+            await _blobStorage.UploadCoverPhoto(project.Name, selectedFile);
+            project.ImageUrl = selectedFile.Name;
+        }
+
+        dbContext.Projects.Add(project);
+        viewModel.Projects.Add(project);
+        await dbContext.SaveChangesAsync();
+        await LoadProjectsAsync();
+        await HideModal();
+    }
+
+    private string GetBlobUrl(string projectName, string imageName)
+    {
+        if (string.IsNullOrEmpty(imageName))
+        {
+            return "/images/calendar_background.png";
+        }
+        return $"{_blobStorage.GetBlobBaseUrl()}/{projectName}/cover photo/{imageName}";
+    }
 
     private void GoBack()
     {
@@ -67,15 +126,6 @@
     public async Task OpenModal()
     {
         await JS.InvokeVoidAsync("showModal");
-    }
-
-    private async Task AddProject()
-    {
-        dbContext.Projects.Add(project);
-        await dbContext.SaveChangesAsync();
-        viewModel.Projects.Add(project);
-
-        await HideModal();
     }
 
     public async Task HideModal()
@@ -140,6 +190,7 @@
         const modal = document.querySelector('.modal');
         if (modal) {
             modal.style.display = 'block';
+            modal.classList.add('show');
         }
     };
 
@@ -147,6 +198,7 @@
         const modal = document.querySelector('.modal');
         if (modal) {
             modal.style.display = 'none';
+            modal.classList.remove('show');
         }
     };
 </script>

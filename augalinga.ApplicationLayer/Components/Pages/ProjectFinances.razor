@@ -130,7 +130,7 @@
     {
         expense.Date = DateOnly.FromDateTime(DateTime.Today);
         expense.Type = selectedType == "Outcome" ? "-" : "+";
-
+        expense.ProjectId = projectId;
         dbContext.Expenses.Add(expense);
         await dbContext.SaveChangesAsync();
         expensesViewModel.Expenses.Add(expense);

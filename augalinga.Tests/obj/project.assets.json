@@ -5508,23 +5508,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ThinkPad\\.nuget\\packages\\": {},
+    "C:\\Users\\Saule\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ThinkPad\\source\\repos\\AugalingaVersion2\\augalinga.Tests\\augalinga.Tests.csproj",
+      "projectUniqueName": "C:\\Users\\Saule\\source\\repos\\augalingaV2\\augalinga.Tests\\augalinga.Tests.csproj",
       "projectName": "augalinga.Tests",
-      "projectPath": "C:\\Users\\ThinkPad\\source\\repos\\AugalingaVersion2\\augalinga.Tests\\augalinga.Tests.csproj",
-      "packagesPath": "C:\\Users\\ThinkPad\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ThinkPad\\source\\repos\\AugalingaVersion2\\augalinga.Tests\\obj\\",
+      "projectPath": "C:\\Users\\Saule\\source\\repos\\augalingaV2\\augalinga.Tests\\augalinga.Tests.csproj",
+      "packagesPath": "C:\\Users\\Saule\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Saule\\source\\repos\\augalingaV2\\augalinga.Tests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\ThinkPad\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Saule\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -5532,6 +5532,7 @@
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
@@ -5589,7 +5590,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

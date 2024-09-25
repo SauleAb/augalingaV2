@@ -5,18 +5,13 @@ using Contact = augalinga.Data.Entities.Contact;
 
 namespace augalinga.ApplicationLayer.Components.ViewModels
 {
-    public class ContactsViewModel : INotifyPropertyChanged
+    public class ProjectContactsViewModel : INotifyPropertyChanged
     {
-        string _category;
-        public ContactsViewModel(string category)
+        int _projectId;
+        public ProjectContactsViewModel(int projectId)
         {
-            _category = category;
-            LoadContacts(_category);
-        }
-
-        public ContactsViewModel()
-        {
-            LoadContacts();
+            _projectId = projectId;
+            LoadContacts(_projectId);
         }
 
         private ObservableCollection<Contact> _contacts;
@@ -30,16 +25,17 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
             }
         }
 
-        public void AddContactToCollection(Contact contact)
-        {
-            Contacts.Add(contact);
-            LoadContacts(_category);
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
+
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void AddContactToCollection(Contact contact)
+        {
+            Contacts.Add(contact);
+            LoadContacts(_projectId);
         }
 
         public void RemoveContact(Contact contact)
@@ -49,26 +45,16 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
                 dbContext.Contacts.Remove(contact);
                 dbContext.SaveChanges();
             }
-            LoadContacts(_category);
+            LoadContacts(_projectId);
         }
 
-        private void LoadContacts(string category)
+        private void LoadContacts(int projectId)
         {
             using (var dbContext = new DataContext())
             {
                 var contacts = dbContext.Contacts
-                    .Where(c => c.Category == category)
+                    .Where(c => c.ProjectId == projectId)
                     .ToList();
-
-                Contacts = new ObservableCollection<Contact>(contacts);
-            }
-        }
-
-        private void LoadContacts()
-        {
-            using (var dbContext = new DataContext())
-            {
-                var contacts = dbContext.Contacts.ToList();
 
                 Contacts = new ObservableCollection<Contact>(contacts);
             }

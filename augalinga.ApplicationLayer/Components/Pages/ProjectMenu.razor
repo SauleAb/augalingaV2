@@ -1,8 +1,11 @@
 ﻿@page "/projectMenu/{projectId:int}"
+@using BootstrapBlazor.Components
 @using Microsoft.EntityFrameworkCore
-@inject NavigationManager Navigation
+@using Syncfusion.Blazor.Popups
+@using augalinga.ApplicationLayer.Components.Models
 @using augalinga.Data.Access
 @using augalinga.Data.Entities
+@inject NavigationManager Navigation
 
 <div class="header">
     <div style="flex: 1">
@@ -10,9 +13,47 @@
     </div>
     <h1>@project.Name</h1>
     <div style="flex: 1; display: flex; justify-content: flex-end;">
-        <button class="delete-button" @onclick="DeleteProject"><i class="bi bi-trash3 h2"></i></button>
+        <button class="edit-button" @onclick="OpenEditDialog"><i class="bi bi-pencil h2"></i></button>
+        <button class="delete-button" @onclick="OpenDeleteConfirmation"><i class="bi bi-trash3 h2"></i></button>
     </div>
 </div>
+
+<SfDialog Width="300px" IsModal="true" ShowCloseIcon="true" Visible="@isDeleteConfirmationVisible" @ref="deleteConfirmationDialog">
+    <DialogTemplates>
+        <Header>Confirm Delete</Header>
+        <Content>
+            <p>Are you sure you want to delete this project?</p>
+        </Content>
+        <FooterTemplate>
+            <button class="btn btn-danger" @onclick="ConfirmDelete">Yes</button>
+            <button class="btn btn-secondary" @onclick="CloseDeleteConfirmation">No</button>
+        </FooterTemplate>
+    </DialogTemplates>
+</SfDialog>
+
+<SfDialog Width="400px" IsModal="true" ShowCloseIcon="true" Visible="@isEditDialogVisible" @ref="editDialog">
+    <DialogTemplates>
+        <Header>Edit Project</Header>
+        <Content>
+            <div class="form-group">
+                <label for="projectName">Project Name</label>
+                <input type="text" id="projectName" class="form-control" @bind="updatedProjectName" />
+            </div>
+            <div class="form-group">
+                <label for="projectPhoto">Project Photo</label>
+                @if (!string.IsNullOrEmpty(currentPhotoUrl))
+                {
+                    <img src="@currentPhotoUrl" class="current-photo" alt="@GetFileNameFromUrl(currentPhotoUrl)" />
+                }
+                <InputFile id="fileInput" OnChange="HandlePhotoUpload" class="form-control" />
+            </div>
+        </Content>
+        <FooterTemplate>
+            <button class="btn btn-primary" @onclick="SaveChanges">Save</button>
+            <button class="btn btn-secondary" @onclick="CloseEditDialog">Cancel</button>
+        </FooterTemplate>
+    </DialogTemplates>
+</SfDialog>
 
 <div class="row">
     <div class="column">
@@ -51,16 +92,38 @@
 
     private DataContext dbContext { get; set; } = new DataContext();
     private Project project = new Project();
+    private SfDialog deleteConfirmationDialog;
+    private SfDialog editDialog;
+    private bool isDeleteConfirmationVisible = false;
+    private bool isEditDialogVisible = false;
+
+    private string updatedProjectName;
+    private IBrowserFile selectedPhoto;
+    private string currentPhotoUrl;
+
+    private AzureBlobStorage _blobStorage;
+    private const string ContainerName = "augalinga";
 
     protected override async Task OnInitializedAsync()
     {
-        int Id = projectId;
+        _blobStorage = new AzureBlobStorage();
+
         project = await dbContext.Projects.FindAsync(projectId);
 
         if (project == null)
         {
             Navigation.NavigateTo("/projects");
         }
+
+        if (!string.IsNullOrEmpty(project.ImageUrl))
+        {
+            currentPhotoUrl = GetBlobUrl(project.Name, project.ImageUrl);
+        }
+    }
+
+    private string GetBlobUrl(string projectName, string imageName)
+    {
+        return $"{_blobStorage.GetBlobBaseUrl()}/{projectName}/cover photo/{imageName}";
     }
 
     private void GoBack()
@@ -68,91 +131,161 @@
         Navigation.NavigateTo("/projects");
     }
 
-    private async Task DeleteProject()
+    private void OpenDeleteConfirmation()
     {
-        if (project != null)
+        isDeleteConfirmationVisible = true;
+    }
+
+    private void CloseDeleteConfirmation()
+    {
+        isDeleteConfirmationVisible = false;
+    }
+
+    private void OpenEditDialog()
+    {
+        updatedProjectName = project.Name;
+        currentPhotoUrl = project.ImageUrl; // Set current photo URL
+        isEditDialogVisible = true;
+    }
+
+    private void CloseEditDialog()
+    {
+        isEditDialogVisible = false;
+    }
+
+    private async Task HandlePhotoUpload(InputFileChangeEventArgs e)
+    {
+        selectedPhoto = e.File;
+    }
+
+    private async Task SaveChanges()
+    {
+        if (project.Name != updatedProjectName)
         {
-            dbContext.Projects.Remove(project);
+            project.Name = updatedProjectName;
+            dbContext.Projects.Update(project);
             await dbContext.SaveChangesAsync();
-            GoBack();
         }
+
+        if (selectedPhoto != null)
+        {
+            string previousPhotoKey = $"{project.Name}/cover photo/{Path.GetFileName(project.ImageUrl)}";
+
+            if (!string.IsNullOrEmpty(project.ImageUrl))
+            {
+                await _blobStorage.DeleteBlobAsync(previousPhotoKey);
+            }
+
+            await _blobStorage.UploadCoverPhoto(project.Name, selectedPhoto);
+            project.ImageUrl = selectedPhoto.Name;
+            dbContext.Projects.Update(project);
+            await dbContext.SaveChangesAsync();
+        }
+
+        CloseEditDialog();
+    }
+
+    private async Task ConfirmDelete()
+    {
+        dbContext.Projects.Remove(project);
+        await dbContext.SaveChangesAsync();
+
+        // Delete project blobs if necessary
+        await _blobStorage.DeleteBlobAsync($"{project.Name}/cover photo/{Path.GetFileName(project.ImageUrl)}");
+
+        GoBack();
+    }
+
+    private string GetFileNameFromUrl(string url)
+    {
+        int lastSlashIndex = url.LastIndexOf('/');
+        if (lastSlashIndex >= 0)
+        {
+            return url.Substring(lastSlashIndex + 1);
+        }
+        return url;
     }
 }
 
 
+
 <style>
+    .row {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        margin-top: 20px;
+    }
 
-.row {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    margin-top: 20px;
-}
-
-.column {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex: 1;
-}
-
-.card {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    height: 22vh;
-    width: 35vw; /* Set a consistent width */
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    margin-bottom: 20px;
-    text-decoration: none;
-    color: inherit;
-    background-color: white;
-    transition: transform 0.3s ease;
-}
-
-.card:hover {
-    transform: scale(1.05);
-    color: lightgray;
-}
-
-.card img {
-    width: 20%;
-    height: auto;
-    margin-bottom: 10px;
-}
-
-.card h2 {
-    font-size: 2vw;
-    margin: 0;
-    width: 70%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-
-@@media screen and (max-width: 768px) {
     .column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+    }
+
+    .card {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        height: 22vh;
+        width: 35vw;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        margin-bottom: 20px;
+        text-decoration: none;
+        color: inherit;
+        background-color: white;
+        transition: transform 0.3s ease;
+    }
+
+        .card:hover {
+            transform: scale(1.05);
+            color: lightgray;
+        }
+
+        .card img {
+            width: 20%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .card h2 {
+            font-size: 2vw;
+            margin: 0;
+            width: 70%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+    .current-photo {
+        width: 100%;
+        height: auto;
+        margin-bottom: 10px;
+    }
+
+    Media
+    screen and (max-width: 768px) {
+        .column
+
+    {
         flex: auto;
         justify-content: center;
     }
 
     .card {
-        width: 90%; /* Adjusted for smaller screens */
+        width: 90%;
         flex-direction: column;
         height: 150px;
     }
 
-    .card h2 {
-        font-size: 4vw;
-    }
+        .card h2 {
+            font-size: 4vw;
+        }
 
-    .card img {
-        width: 25%;
-    }
-}
 </style>

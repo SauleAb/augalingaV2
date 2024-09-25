@@ -1,5 +1,7 @@
-﻿using augalinga.Data.Access;
+﻿using augalinga.ApplicationLayer.Components.Models;
+using augalinga.Data.Access;
 using augalinga.Data.Entities;
+using Azure.Storage.Blobs;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
@@ -56,6 +58,5 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
 
             LoadProjects();
         }
-
     }
 }

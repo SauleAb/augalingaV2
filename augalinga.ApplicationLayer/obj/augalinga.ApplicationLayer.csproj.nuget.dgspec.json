@@ -1,114 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ThinkPad\\source\\repos\\AugalingaVersion2\\augalinga.ApplicationLayer\\augalinga.ApplicationLayer.csproj": {}
+    "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\augalinga.ApplicationLayer.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ThinkPad\\Desktop\\augalinga\\augalinga.Data\\augalinga.Data.csproj": {
+    "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\augalinga.ApplicationLayer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ThinkPad\\Desktop\\augalinga\\augalinga.Data\\augalinga.Data.csproj",
-        "projectName": "augalinga.Data",
-        "projectPath": "C:\\Users\\ThinkPad\\Desktop\\augalinga\\augalinga.Data\\augalinga.Data.csproj",
-        "packagesPath": "C:\\Users\\ThinkPad\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ThinkPad\\Desktop\\augalinga\\augalinga.Data\\obj\\",
-        "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
-        "configFilePaths": [
-          "C:\\Users\\ThinkPad\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
-        ],
-        "originalTargetFrameworks": [
-          "net8.0"
-        ],
-        "sources": {
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "net8.0": {
-            "targetAlias": "net8.0",
-            "projectReferences": {}
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
-        }
-      },
-      "frameworks": {
-        "net8.0": {
-          "targetAlias": "net8.0",
-          "dependencies": {
-            "Microsoft.EntityFrameworkCore": {
-              "target": "Package",
-              "version": "[8.0.8, )"
-            },
-            "Microsoft.EntityFrameworkCore.Design": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[8.0.8, )"
-            },
-            "Microsoft.EntityFrameworkCore.SqlServer": {
-              "target": "Package",
-              "version": "[8.0.8, )"
-            },
-            "Microsoft.EntityFrameworkCore.Tools": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[8.0.8, )"
-            },
-            "Syncfusion.Maui.Scheduler": {
-              "target": "Package",
-              "version": "[26.2.13, )"
-            }
-          },
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
-        }
-      }
-    },
-    "C:\\Users\\ThinkPad\\source\\repos\\AugalingaVersion2\\augalinga.ApplicationLayer\\augalinga.ApplicationLayer.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "C:\\Users\\ThinkPad\\source\\repos\\AugalingaVersion2\\augalinga.ApplicationLayer\\augalinga.ApplicationLayer.csproj",
+        "projectUniqueName": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\augalinga.ApplicationLayer.csproj",
         "projectName": "augalinga.ApplicationLayer",
-        "projectPath": "C:\\Users\\ThinkPad\\source\\repos\\AugalingaVersion2\\augalinga.ApplicationLayer\\augalinga.ApplicationLayer.csproj",
-        "packagesPath": "C:\\Users\\ThinkPad\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ThinkPad\\source\\repos\\AugalingaVersion2\\augalinga.ApplicationLayer\\obj\\",
+        "projectPath": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\augalinga.ApplicationLayer.csproj",
+        "packagesPath": "C:\\Users\\Saule\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\obj\\",
         "projectStyle": "PackageReference",
         "crossTargeting": true,
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\ThinkPad\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Saule\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -116,6 +26,7 @@
           "net8.0-windows10.0.19041.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
@@ -123,8 +34,8 @@
           "net8.0-windows10.0.19041": {
             "targetAlias": "net8.0-windows10.0.19041.0",
             "projectReferences": {
-              "C:\\Users\\ThinkPad\\Desktop\\augalinga\\augalinga.Data\\augalinga.Data.csproj": {
-                "projectPath": "C:\\Users\\ThinkPad\\Desktop\\augalinga\\augalinga.Data\\augalinga.Data.csproj"
+              "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.Data\\augalinga.Data.csproj": {
+                "projectPath": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.Data\\augalinga.Data.csproj"
               }
             }
           }
@@ -147,6 +58,10 @@
             "AWSSDK.S3": {
               "target": "Package",
               "version": "[3.7.402.5, )"
+            },
+            "Azure.Storage.Blobs": {
+              "target": "Package",
+              "version": "[12.22.0, )"
             },
             "Blazored.Modal": {
               "target": "Package",
@@ -211,7 +126,7 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.Windows.SDK.NET.Ref",
-              "version": "[10.0.19041.31, 10.0.19041.31]"
+              "version": "[10.0.19041.34, 10.0.19041.34]"
             }
           ],
           "frameworkReferences": {
@@ -222,12 +137,107 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400\\RuntimeIdentifierGraph.json"
         }
       },
       "runtimes": {
         "win10-x64": {
           "#import": []
+        }
+      }
+    },
+    "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.Data\\augalinga.Data.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.Data\\augalinga.Data.csproj",
+        "projectName": "augalinga.Data",
+        "projectPath": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.Data\\augalinga.Data.csproj",
+        "packagesPath": "C:\\Users\\Saule\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.Data\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Saule\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.6, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.6, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[8.0.6, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.6, )"
+            },
+            "Microsoft.Maui.Controls": {
+              "target": "Package",
+              "version": "[8.0.40, )"
+            },
+            "Syncfusion.Maui.Scheduler": {
+              "target": "Package",
+              "version": "[25.2.6, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

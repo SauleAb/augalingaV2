@@ -1,14 +1,12 @@
-﻿@page "/projectDrafts/{projectId}"
+﻿@page "/projectDrafts/{projectId:int}"
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Grids
 @using augalinga.ApplicationLayer.Components.ViewModels
+@using augalinga.ApplicationLayer.Components.Models
 @using augalinga.Data.Access
 @using augalinga.Data.Entities
 @using Syncfusion.Blazor.Popups
 @inject NavigationManager Navigation
-@using Amazon;
-@using Amazon.S3;
-@using Amazon.S3.Model;
 @using Syncfusion.Blazor.Inputs
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.Maui.Controls
@@ -77,19 +75,19 @@
     public int projectId { get; set; }
 
     DraftsViewModel draftsViewModel;
-    string bucket = "augalinga-app";
-    string folder = "drafts/";
-    IAmazonS3 s3Client = new AmazonS3Client(RegionEndpoint.EUNorth1);
     public DataContext dbContext { get; set; } = new DataContext();
     private List<IBrowserFile> selectedFiles = new List<IBrowserFile>();
     private string errorMessage;
+    private AzureBlobStorage blobStorage;
     private SfGrid<Draft> draftsGrid;
     Project project = new Project();
+    string folder = "drafts";
 
     protected async override void OnInitialized()
     {
         draftsViewModel = new DraftsViewModel(projectId);
         project = await dbContext.Projects.FindAsync(projectId);
+        blobStorage = new AzureBlobStorage();
     }
 
     public async Task HideModal()
@@ -101,7 +99,6 @@
     {
         await JS.InvokeVoidAsync("showModal");
     }
-
 
     private void GoBack()
     {
@@ -120,24 +117,17 @@
         {
             foreach (var file in selectedFiles)
             {
-                string objectKey = $"{projectId}/{folder}{file.Name}";
+                await blobStorage.UploadFile(project.Name, folder, file);
 
-                const long maxFileSize = 1073741824; // 1 GB
-                using var stream = file.OpenReadStream(maxFileSize);
-                var request = new PutObjectRequest
-                    {
-                        BucketName = bucket,
-                        Key = objectKey,
-                        InputStream = stream
-                    };
-                await s3Client.PutObjectAsync(request);
+                string fileUrl = await blobStorage.GetBlobUrlAsync(project.Name, folder, file.Name);
 
                 var draft = new Draft
                     {
                         ProjectId = projectId,
-                        Link = $"https://{bucket}.s3.amazonaws.com/{objectKey}",
+                        Link = fileUrl,
                         Name = file.Name
                     };
+
                 await dbContext.Drafts.AddAsync(draft);
                 await dbContext.SaveChangesAsync();
                 draftsViewModel.AddDraftToCollection(draft);
@@ -148,22 +138,22 @@
             selectedFiles.Clear();
             await HideModal();
         }
-        catch (AmazonS3Exception s3Ex)
-        {
-            errorMessage = $"S3 Error: {s3Ex.Message}";
-            Console.WriteLine($"S3 Error: {s3Ex}");
-        }
         catch (Exception ex)
         {
             errorMessage = $"An error occurred: {ex.Message}";
-            Console.WriteLine($"General Error: {ex}");
+            Console.WriteLine($"Error: {ex}");
         }
     }
+
     private async Task DeleteDraft(Draft draft)
     {
         dbContext.Drafts.Remove(draft);
         await dbContext.SaveChangesAsync();
-        await Models.S3Bucket.DeleteObject(s3Client, bucket, draft.Link);
+
+        string blobName = $"{project.Name}/{folder}/{draft.Name}";
+        await blobStorage.DeleteBlobAsync(blobName);
+
+        await blobStorage.DeleteBlobAsync(draft.Link);
         draftsViewModel.Drafts.Remove(draft);
     }
 }

@@ -1,5 +1,4 @@
-﻿@page "/projectPhotos/{projectId}"
-
+﻿@page "/projectPhotos/{projectId:int}"
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Grids
 @using augalinga.ApplicationLayer.Components.ViewModels
@@ -134,7 +133,7 @@
     {
         try
         {
-            project = await dbContext.Projects.FindAsync(projectId);
+            project = dbContext.Projects.FirstOrDefault(w => w.Id == projectId);
             photosViewModel = new PhotosViewModel(projectId);
             await LoadPhotos();
         }
