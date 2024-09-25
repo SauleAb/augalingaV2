@@ -1,26 +1,27 @@
 ﻿@page "/projectContacts/{projectId:int}"
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Grids
-@using System.Collections.ObjectModel
 @using augalinga.ApplicationLayer.Components.ViewModels
 @using augalinga.Data.Entities
 @inject NavigationManager Navigation
 @using Syncfusion.Blazor.Inputs
+@using Microsoft.Maui.Controls
+@using System.Text.Json
 @inject IJSRuntime JS
-@using Microsoft.EntityFrameworkCore
 @using augalinga.Data.Access
+@using augalinga.Data.Entities
 
 <div class="header">
     <div style="flex: 1">
         <button @onclick="GoBack" class="back-button"><i class="bi bi-arrow-left h2"></i></button>
     </div>
-    <h1>@project?.Name Contacts</h1>
+    <h1>@project.Name Contacts</h1>
     <div style="flex: 1; display: flex; justify-content: flex-end;">
         <button class="add-button" @onclick="OpenModal"><i class="bi bi-plus-lg h2"></i></button>
     </div>
 </div>
 
-<SfGrid DataSource="@contactsViewModel.Contacts" AllowPaging="true">
+<SfGrid DataSource="@projectContactsViewModel.Contacts" AllowPaging="true">
     <GridColumns>
         <GridColumn Field=@nameof(Contact.Name) HeaderText="Name"></GridColumn>
         <GridColumn Field=@nameof(Contact.Number) HeaderText="Number"></GridColumn>
@@ -68,7 +69,7 @@
                     <div class="col">
                         <div class="form-group">
                             <label for="contactNotes">Notes:</label>
-                            <input type="text" class="form-control" id="contactNotes" @bind="contact.Notes" />
+                            <input type="text" multiple="true" class="form-control" id="contactNotes" @bind="contact.Notes" />
                         </div>
                     </div>
                 </div>
@@ -80,31 +81,19 @@
     </div>
 </div>
 
-
 @code {
     [Parameter]
     public int projectId { get; set; }
     private DataContext dbContext { get; set; } = new DataContext();
-    private Contact contact = new Contact();
-    private ContactsViewModel contactsViewModel;
-    private Project project = new Project();
+    Contact contact = new Contact();
+    Project project = new Project();
 
-    protected override async Task OnInitializedAsync()
+    ProjectContactsViewModel projectContactsViewModel;
+
+    protected override void OnInitialized()
     {
-        project = await dbContext.Projects.FindAsync(projectId);
-
-        if (project == null)
-        {
-            Navigation.NavigateTo("/projects");
-            return;
-        }
-
-        contactsViewModel = new ContactsViewModel(project.Name);
-        var contactsList = await dbContext.Contacts
-            .Where(c => c.Id == projectId)
-            .ToListAsync();
-
-        contactsViewModel.Contacts = new ObservableCollection<Contact>(contactsList);
+        project = dbContext.Projects.FirstOrDefault(w => w.Id == projectId);
+        projectContactsViewModel = new ProjectContactsViewModel(projectId);
         contact.Number = "+370";
     }
 
@@ -112,21 +101,26 @@
     {
         Navigation.NavigateTo($"/projectMenu/{projectId}");
     }
-
     private async Task DeleteContact(Contact contact)
     {
         dbContext.Contacts.Remove(contact);
         await dbContext.SaveChangesAsync();
-        contactsViewModel.Contacts.Remove(contact);
+        projectContactsViewModel.Contacts.Remove(contact);
     }
-
-    private async Task AddContact()
+    private async void AddContact()
     {
-        contact.Notes = contact.Notes ?? "";
-        contact.Address = contact.Address ?? "";
+        contact.ProjectId = projectId;
+        if (contact.Notes == null)
+        {
+            contact.Notes = "";
+        }
+        if (contact.Address == null)
+        {
+            contact.Address = "";
+        }
         dbContext.Contacts.Add(contact);
         await dbContext.SaveChangesAsync();
-        contactsViewModel.Contacts.Add(contact);
+        projectContactsViewModel.Contacts.Add(contact);
         await HideModal();
     }
 
@@ -140,6 +134,7 @@
         await JS.InvokeVoidAsync("hideModal");
     }
 }
+
 <script>
     window.showModal = () => {
         const modal = document.querySelector('.modal');
@@ -155,3 +150,7 @@
         }
     };
 </script>
+
+
+<style>
+</style>

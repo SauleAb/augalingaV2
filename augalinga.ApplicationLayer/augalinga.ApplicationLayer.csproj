@@ -77,6 +77,7 @@
 
     <ItemGroup>
         <PackageReference Include="AWSSDK.S3" Version="3.7.402.5" />
+        <PackageReference Include="Azure.Storage.Blobs" Version="12.22.0" />
         <PackageReference Include="Blazored.Modal" Version="7.3.1" />
         <PackageReference Include="BootstrapBlazor" Version="8.9.0" />
         <PackageReference Include="Microsoft.AspNetCore.Components.Forms" Version="8.0.8" />
@@ -92,7 +93,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\..\Desktop\augalinga\augalinga.Data\augalinga.Data.csproj" />
+      <ProjectReference Include="..\augalinga.Data\augalinga.Data.csproj" />
     </ItemGroup>
 
     <ItemGroup>

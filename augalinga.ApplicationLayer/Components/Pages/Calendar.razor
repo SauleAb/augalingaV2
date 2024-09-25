@@ -103,7 +103,6 @@
                         existingEvent.EventName = editedEvent.EventName;
                         existingEvent.Notes = editedEvent.Notes;
                         existingEvent.Employee = editedEvent.Employee;
-
                         dbContext.Meetings.Update(existingEvent);
                     }
                 }
@@ -115,7 +114,7 @@
     }
 }
 
-<SfSchedule TValue="Meeting">
+<SfSchedule TValue="Meeting" StartHour="07:00">
     <ScheduleEvents TValue="Meeting" ActionCompleted="OnActionCompleted" EventRendered="OnEventRendered"></ScheduleEvents>
     <ScheduleEventSettings DataSource="@calendarViewModel.Events">
         <ScheduleField Id="Id">

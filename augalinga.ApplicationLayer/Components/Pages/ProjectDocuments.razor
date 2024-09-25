@@ -1,20 +1,20 @@
-﻿@page "/projectDocuments/{projectId}"
+﻿@page "/projectDocuments/{projectId:int}"
+@using Azure
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Grids
+@using augalinga.ApplicationLayer.Components.Models
 @using augalinga.ApplicationLayer.Components.ViewModels
 @using augalinga.Data.Access
 @using augalinga.Data.Entities
 @using Syncfusion.Blazor.Popups
 @inject NavigationManager Navigation
-@using Amazon;
-@using Amazon.S3;
-@using Amazon.S3.Model;
 @using Syncfusion.Blazor.Inputs
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.Maui.Controls
 @using System.Text.Json
+@using Azure.Storage.Blobs;
+@using Azure.Storage.Blobs.Models;
 @inject IJSRuntime JS
-
 
 <div class="header">
     <div style="flex: 1">
@@ -38,7 +38,6 @@
     </GridColumns>
 </SfGrid>
 
-
 <div class="modal show" style="display:none;">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -60,15 +59,15 @@
                         }
                     </ul>
                 </div>
-            <div class="modal-footer">
+                <div class="modal-footer">
                     <button type="button" class="btn btn-primary" @onclick="UploadFiles">Submit</button>
-            </div>
+                </div>
                 @if (!string.IsNullOrEmpty(errorMessage))
                 {
                     <div class="alert alert-danger">@errorMessage</div>
                 }
+            </div>
         </div>
-    </div>
     </div>
 </div>
 
@@ -78,19 +77,21 @@
 
     DocumentsViewModel documentsViewModel;
     SfDialog documentDialog;
-    string bucket = "augalinga-app";
-    string folder = "documents/";
-    IAmazonS3 s3Client = new AmazonS3Client(RegionEndpoint.EUNorth1);
+    string containerName = "augalinga";
+    string folder = "documents";
+    BlobContainerClient containerClient;
     public DataContext dbContext { get; set; } = new DataContext();
     private List<IBrowserFile> selectedFiles = new List<IBrowserFile>();
     private string errorMessage;
     private SfGrid<Document> documentsGrid;
     private Project project = new Project();
+    private AzureBlobStorage blobStorage;
 
     protected async override void OnInitialized()
     {
         documentsViewModel = new DocumentsViewModel(projectId);
         project = await dbContext.Projects.FindAsync(projectId);
+        blobStorage = new AzureBlobStorage();
     }
 
     public async Task HideModal()
@@ -102,7 +103,6 @@
     {
         await JS.InvokeVoidAsync("showModal");
     }
-
 
     private void GoBack()
     {
@@ -121,22 +121,14 @@
         {
             foreach (var file in selectedFiles)
             {
-                string objectKey = $"{projectId}/{folder}{file.Name}";
+                await blobStorage.UploadFile(project.Name, folder, file);
 
-                const long maxFileSize = 1073741824; // 1 GB
-                using var stream = file.OpenReadStream(maxFileSize);
-                var request = new PutObjectRequest
-                    {
-                        BucketName = bucket,
-                        Key = objectKey,
-                        InputStream = stream
-                    };
-                await s3Client.PutObjectAsync(request);
+                string fileUrl = await blobStorage.GetBlobUrlAsync(project.Name, folder, file.Name);
 
                 var newDocument = new Document
                     {
                         ProjectId = projectId,
-                        Link = $"https://{bucket}.s3.amazonaws.com/{objectKey}",
+                        Link = fileUrl,
                         Name = file.Name
                     };
                 await dbContext.Documents.AddAsync(newDocument);
@@ -149,10 +141,10 @@
             selectedFiles.Clear();
             await HideModal();
         }
-        catch (AmazonS3Exception s3Ex)
+        catch (RequestFailedException ex)
         {
-            errorMessage = $"S3 Error: {s3Ex.Message}";
-            Console.WriteLine($"S3 Error: {s3Ex}");
+            errorMessage = $"Azure Storage Error: {ex.Message}";
+            Console.WriteLine($"Azure Storage Error: {ex}");
         }
         catch (Exception ex)
         {
@@ -160,29 +152,34 @@
             Console.WriteLine($"General Error: {ex}");
         }
     }
-        private async Task DeleteDocument(Document document)
-        {
-            dbContext.Documents.Remove(document);
-            await dbContext.SaveChangesAsync();
-            await Models.S3Bucket.DeleteObject(s3Client, bucket, document.Link);
-            documentsViewModel.Documents.Remove(document);
-        }
-}
-    <script>
-        window.showModal = () => {
-            const modal = document.querySelector('.modal');
-            if (modal) {
-                modal.style.display = 'block';
-            }
-        };
 
-        window.hideModal = () => {
-            const modal = document.querySelector('.modal');
-            if (modal) {
-                modal.style.display = 'none';
-            }
-        };
-    </script>
+    private async Task DeleteDocument(Document document)
+    {
+        dbContext.Documents.Remove(document);
+        await dbContext.SaveChangesAsync();
+
+        string blobName = $"{project.Name}/{folder}/{document.Name}";
+        await blobStorage.DeleteBlobAsync(blobName);
+
+        documentsViewModel.Documents.Remove(document);
+    }
+}
+
+<script>
+    window.showModal = () => {
+        const modal = document.querySelector('.modal');
+        if (modal) {
+            modal.style.display = 'block';
+        }
+    };
+
+    window.hideModal = () => {
+        const modal = document.querySelector('.modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    };
+</script>
 
 <style>
 </style>

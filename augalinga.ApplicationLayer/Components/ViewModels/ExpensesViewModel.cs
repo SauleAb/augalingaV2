@@ -107,7 +107,7 @@ namespace augalinga.ApplicationLayer.Components.ViewModels
         {
             using (var context = new DataContext())
             {
-                var expenses = context.Expenses.Where(expense => expense.Id == projectId).OrderByDescending(expense => expense.Date).ToList();
+                var expenses = context.Expenses.Where(expense => expense.ProjectId == projectId).OrderByDescending(expense => expense.Date).ToList();
 
                 Expenses = new ObservableCollection<Expense>(expenses);
             }

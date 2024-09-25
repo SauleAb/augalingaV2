@@ -11,7 +11,7 @@ namespace augalinga.Data.Entities
     {
         [Key]
         public int Id { get; set; }
-        public string Project {  get; set; }
+        public int ProjectId {  get; set; }
         public string Title { get; set; }
         public string Category {  get; set; }
         public byte[] Bytes { get; set; }

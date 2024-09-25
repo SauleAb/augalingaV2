@@ -21,7 +21,7 @@ namespace augalinga.Data.Access
         public DbSet<Expense> Expenses {  get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=augalingaDB;User Id=sa;Password=augalinga;TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=augalingaDB;Trusted_Connection=True;TrustServerCertificate=True;");
         }
     }
 }

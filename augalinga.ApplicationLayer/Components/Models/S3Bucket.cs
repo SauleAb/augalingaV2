@@ -102,6 +102,33 @@ namespace augalinga.ApplicationLayer.Components.Models
             return urls;
         }
 
+        public static async Task<string> GetProjectPhotoUrlAsync(IAmazonS3 client, string bucketName, string projectName)
+        {
+            try
+            {
+                var request = new ListObjectsV2Request
+                {
+                    BucketName = bucketName,
+                    Prefix = $"{projectName}/projectImage/",
+                    MaxKeys = 1
+                };
+
+                var response = await client.ListObjectsV2Async(request);
+
+                if (response.S3Objects.Any())
+                {
+                    var key = response.S3Objects.First().Key;
+                    return GetPreSignedURL(client, bucketName, key);
+                }
+            }
+            catch (AmazonS3Exception ex)
+            {
+                Console.WriteLine($"Error encountered on server. Message: '{ex.Message}' while getting project photo.");
+            }
+
+            return "../images/calendar_background.png"; // Default image if no photo is found
+        }
+
         private static string GetPreSignedURL(IAmazonS3 client, string bucketName, string key)
         {
             var request = new GetPreSignedUrlRequest
@@ -259,6 +286,49 @@ namespace augalinga.ApplicationLayer.Components.Models
                 Console.WriteLine($"Error encountered on server. Message:'{ex.Message}' when deleting an object.");
             }
         }
+
+        public static async Task<bool> DoesProjectExistAsync(IAmazonS3 client, string bucketName, string projectName)
+        {
+            var request = new ListObjectsV2Request
+            {
+                BucketName = bucketName,
+                Prefix = $"{projectName}/",
+                MaxKeys = 1
+            };
+
+            var response = await client.ListObjectsV2Async(request);
+            return response.S3Objects.Any();
+        }
+
+        public static async Task DeleteProjectAsync(IAmazonS3 client, string bucketName, string projectName)
+        {
+            try
+            {
+                var request = new ListObjectsV2Request
+                {
+                    BucketName = bucketName,
+                    Prefix = $"{projectName}/"
+                };
+
+                ListObjectsV2Response response;
+                do
+                {
+                    response = await client.ListObjectsV2Async(request);
+                    foreach (S3Object obj in response.S3Objects)
+                    {
+                        await DeleteObject(client, bucketName, obj.Key);
+                    }
+
+                    request.ContinuationToken = response.NextContinuationToken;
+                }
+                while (response.IsTruncated);
+            }
+            catch (AmazonS3Exception ex)
+            {
+                Console.WriteLine($"Error deleting project from S3. Message: {ex.Message}");
+            }
+        }
+
 
     }
 }
