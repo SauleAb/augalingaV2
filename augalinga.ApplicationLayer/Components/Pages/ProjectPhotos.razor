@@ -6,9 +6,6 @@
 @using augalinga.Data.Entities
 @using augalinga.ApplicationLayer.Components.Models
 @inject NavigationManager Navigation
-@using Amazon.S3
-@using Amazon.S3.Model
-@using Amazon
 @inject IJSRuntime JS
 @using Syncfusion.Blazor.Navigations
 
@@ -18,7 +15,7 @@
     </div>
     <h1>@project.Name Photos</h1>
     <div style="flex: 1; display: flex; justify-content: flex-end;">
-        <button class="add-button" @onclick="OpenModal"><i class="bi bi-plus-lg h2"></i></button>
+        <button class="add-button" @onclick="OpenUploadModal"><i class="bi bi-plus-lg h2"></i></button>
     </div>
 </div>
 
@@ -59,7 +56,49 @@
     </div>
 </div>
 
-<div class="modal" style="display:@(isModalVisible ? "block" : "none"); background-color: rgba(0, 0, 0, 0.5);">
+<div class="modal" style="display:@(isUploadModalVisible ? "block" : "none"); background-color: rgba(0, 0, 0, 0.5);">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add photos</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="HideUploadModal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="category">Choose a category:</label>
+                    <select name="categories" id="categories" @bind="category" @oninput="@HandleCategorySelect">
+                        <option value="before">Before</option>
+                        <option value="after">After</option>
+                        <option value="general">General</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="fileInput">Select file:</label>
+                    <InputFile id="fileInput" OnChange="HandleFileSelect" multiple accept="image/*" />
+                    <ul>
+                        @if (selectedFiles.Any())
+                        {
+                            @foreach (var file in selectedFiles)
+                            {
+                                <li>@file.Name</li>
+                            }
+                        }
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @onclick="UploadFiles">Submit</button>
+                </div>
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="alert alert-danger">@errorMessage</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Carousel Modal -->
+<div class="modal" style="display:@(isCarouselModalVisible ? "block" : "none"); background-color: rgba(0, 0, 0, 0.5);">
     <div class="modal-dialog modal-dialog-centered" style="min-width: 70vw; min-height:60vh;">
         <div class="modal-content">
             <div class="modal-header">
@@ -102,8 +141,6 @@
                     }
                 </SfCarousel>
             </div>
-            <div class="modal-footer">
-            </div>
         </div>
     </div>
 </div>
@@ -116,16 +153,16 @@
     private List<string> afterPhotos = new List<string>();
     private List<string> generalPhotos = new List<string>();
     private List<IBrowserFile> selectedFiles = new List<IBrowserFile>();
-    string bucket = "augalinga-app";
     string folder = "photos";
     string category = "before";
-    IAmazonS3 s3Client = new AmazonS3Client(RegionEndpoint.EUNorth1);
     public DataContext dbContext { get; set; } = new DataContext();
     private string errorMessage;
     private bool isBeforeTabActive = true;
     private bool isAfterTabActive = false;
     private bool isGeneralTabActive = false;
-    private bool isModalVisible = false;
+    private bool isUploadModalVisible = false;
+    private bool isCarouselModalVisible = false;
+    private AzureBlobStorage _blobStorage;
     private int selectedPhotoIndex = 0;
     Project project = new Project();
 
@@ -134,6 +171,11 @@
         try
         {
             project = dbContext.Projects.FirstOrDefault(w => w.Id == projectId);
+            _blobStorage = new AzureBlobStorage();
+            if (project == null)
+            {
+                throw new Exception($"Project with ID {projectId} not found.");
+            }
             photosViewModel = new PhotosViewModel(projectId);
             await LoadPhotos();
         }
@@ -171,9 +213,11 @@
     {
         try
         {
-            beforePhotos = await augalinga.ApplicationLayer.Components.Models.S3Bucket.ListPhotosAsync(s3Client, bucket, project.Name, "before");
-            afterPhotos = await augalinga.ApplicationLayer.Components.Models.S3Bucket.ListPhotosAsync(s3Client, bucket, project.Name, "after");
-            generalPhotos = await augalinga.ApplicationLayer.Components.Models.S3Bucket.ListPhotosAsync(s3Client, bucket, project.Name, "general");
+            beforePhotos = await _blobStorage.ListBlobsAsync($"{project.Name}/photos/before");
+            afterPhotos = await _blobStorage.ListBlobsAsync($"{project.Name}/photos/after");
+            generalPhotos = await _blobStorage.ListBlobsAsync($"{project.Name}/photos/general");
+
+            Console.WriteLine($"Loaded {beforePhotos.Count} before photos, {afterPhotos.Count} after photos, {generalPhotos.Count} general photos.");
         }
         catch (Exception ex)
         {
@@ -181,28 +225,26 @@
         }
     }
 
-    public async Task HideModal()
+    public async Task HideUploadModal()
     {
-        try
-        {
-            await JS.InvokeVoidAsync("hideModal");
-        }
-        catch (Exception ex)
-        {
-            HandleException(ex, "An error occurred while hiding the modal");
-        }
+        isUploadModalVisible = false;
     }
 
-    public async Task OpenModal()
+    public async Task OpenUploadModal()
     {
-        try
-        {
-            await JS.InvokeVoidAsync("showModal");
-        }
-        catch (Exception ex)
-        {
-            HandleException(ex, "An error occurred while opening the modal");
-        }
+        isUploadModalVisible = true;
+    }
+
+    private async Task OpenCarouselModal(int photoIndex)
+    {
+        isCarouselModalVisible = true;
+        selectedPhotoIndex = photoIndex;
+    }
+
+    private async Task CloseBiggerView()
+    {
+        isCarouselModalVisible = false;
+        selectedPhotoIndex = -1; // Reset index
     }
 
     private void GoBack()
@@ -240,31 +282,20 @@
         errorMessage = string.Empty;
         try
         {
-            foreach (var file in selectedFiles)
+            foreach (var selectedFile in selectedFiles)
             {
-                string objectKey = $"{projectId}/{folder}/{category}/{file.Name}";
+                if (selectedFile != null)
+                {
+                    await _blobStorage.UploadPhoto(project.Name, category, selectedFile);
 
-                const long maxFileSize = 2L * 1024 * 1024 * 1024; // 2GB
-                using var stream = file.OpenReadStream(maxFileSize);
-                var request = new PutObjectRequest
-                    {
-                        BucketName = bucket,
-                        Key = objectKey,
-                        InputStream = stream
-                    };
-                await s3Client.PutObjectAsync(request);
+                    await LoadPhotos();
+                    await HideUploadModal();
+                }
             }
-            selectedFiles.Clear();
-            ReloadPage();
-            await HideModal();
-        }
-        catch (AmazonS3Exception s3Ex)
-        {
-            HandleException(s3Ex, "S3 Error");
         }
         catch (Exception ex)
         {
-            HandleException(ex, "An error occurred");
+            HandleException(ex, "An error occurred during photo upload");
         }
     }
 
@@ -280,7 +311,7 @@
         Navigation.NavigateTo(uri.ToString(), true);
     }
 
-    private void OnPhotoClicked(string url)
+    private async void OnPhotoClicked(string url)
     {
         if (isBeforeTabActive)
         {
@@ -294,19 +325,7 @@
         {
             selectedPhotoIndex = generalPhotos.IndexOf(url);
         }
-        OpenBiggerView(selectedPhotoIndex);
-    }
-
-    private void CloseBiggerView()
-    {
-        selectedPhotoIndex = -1;
-        isModalVisible = false;
-    }
-
-    private void OpenBiggerView(int photoIndex)
-    {
-        isModalVisible = true;
-        selectedPhotoIndex = photoIndex;
+        await OpenCarouselModal(selectedPhotoIndex);
     }
 
     private void NextPhoto()
@@ -374,21 +393,21 @@
 
     .modal-content {
         background-color: transparent;
-        border:none;
+        border: none;
         color: white;
     }
 
     .modal-header {
-        border:none;
+        border: none;
     }
 
     .modal-footer {
-        border:none;
+        border: none;
     }
 
-        .modal-header .btn-close {
-            filter: invert(100%); 
-        }
+    .modal-header .btn-close {
+        filter: invert(100%);
+    }
 </style>
 
 <script>
@@ -406,3 +425,4 @@
         }
     };
 </script>
+

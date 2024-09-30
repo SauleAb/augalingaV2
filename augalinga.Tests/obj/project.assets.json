@@ -5514,11 +5514,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Saule\\source\\repos\\augalingaV2\\augalinga.Tests\\augalinga.Tests.csproj",
+      "projectUniqueName": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.Tests\\augalinga.Tests.csproj",
       "projectName": "augalinga.Tests",
-      "projectPath": "C:\\Users\\Saule\\source\\repos\\augalingaV2\\augalinga.Tests\\augalinga.Tests.csproj",
+      "projectPath": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.Tests\\augalinga.Tests.csproj",
       "packagesPath": "C:\\Users\\Saule\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Saule\\source\\repos\\augalingaV2\\augalinga.Tests\\obj\\",
+      "outputPath": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.Tests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

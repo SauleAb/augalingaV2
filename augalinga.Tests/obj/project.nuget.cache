@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "PhX+WqEEYKA=",
+  "dgSpecHash": "mHkKex91nt4=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Saule\\source\\repos\\augalingaV2\\augalinga.Tests\\augalinga.Tests.csproj",
+  "projectFilePath": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.Tests\\augalinga.Tests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Saule\\.nuget\\packages\\coverlet.collector\\6.0.0\\coverlet.collector.6.0.0.nupkg.sha512",
     "C:\\Users\\Saule\\.nuget\\packages\\microsoft.codecoverage\\17.8.0\\microsoft.codecoverage.17.8.0.nupkg.sha512",

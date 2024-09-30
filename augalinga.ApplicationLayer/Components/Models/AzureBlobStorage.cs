@@ -97,5 +97,12 @@ namespace augalinga.ApplicationLayer.Components.Models
             using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // 10 MB limit
             await UploadFileAsync(projectName, blobName, stream);
         }
+
+        public async Task UploadPhoto(string projectName, string category, IBrowserFile file)
+        {
+            string blobName = $"{projectName}/photos/{category}/{file.Name}";
+            using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // 10 MB limit
+            await UploadFileAsync(projectName, blobName, stream);
+        }
     }
 }
