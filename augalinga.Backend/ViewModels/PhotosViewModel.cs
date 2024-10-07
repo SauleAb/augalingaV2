@@ -3,7 +3,7 @@ using augalinga.Data.Entities;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
-namespace augalinga.ApplicationLayer.Components.ViewModels
+namespace augalinga.Backend.ViewModels
 {
     public class PhotosViewModel
     {

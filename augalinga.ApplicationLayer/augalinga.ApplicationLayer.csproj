@@ -93,6 +93,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\augalinga.Backend\augalinga.Backend.csproj" />
       <ProjectReference Include="..\augalinga.Data\augalinga.Data.csproj" />
     </ItemGroup>
 

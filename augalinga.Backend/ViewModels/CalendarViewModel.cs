@@ -3,7 +3,7 @@ using System.ComponentModel;
 using augalinga.Data.Access;
 using augalinga.Data.Entities;
 
-namespace augalinga.ApplicationLayer.Components.ViewModels;
+namespace augalinga.Backend.ViewModels;
 
 public class CalendarViewModel : INotifyPropertyChanged
 {

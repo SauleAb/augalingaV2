@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Contact = augalinga.Data.Entities.Contact;
 
-namespace augalinga.ApplicationLayer.Components.ViewModels
+namespace augalinga.Backend.ViewModels
 {
     public class ContactsViewModel : INotifyPropertyChanged
     {

@@ -1,11 +1,12 @@
-﻿using Azure.Storage.Blobs;
+﻿
+using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Components.Forms;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace augalinga.ApplicationLayer.Components.Models
+namespace augalinga.Backend.Models
 {
     public class AzureBlobStorage
     {
