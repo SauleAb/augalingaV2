@@ -1,0 +1,78 @@
+﻿@page "/register"
+@using Microsoft.EntityFrameworkCore
+@using augalinga.Backend.ViewModels
+@using augalinga.Data.Access
+@using augalinga.Data.Entities
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+
+<div class="container">
+    <h1>User Registration</h1>
+    <EditForm Model="registerViewModel" OnValidSubmit="HandleRegister">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <InputText id="username" class="form-control" @bind-Value="registerViewModel.Username" />
+            <ValidationMessage For="@(() => registerViewModel.Username)" />
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <InputText id="email" type="email" class="form-control" @bind-Value="registerViewModel.Email" />
+            <ValidationMessage For="@(() => registerViewModel.Email)" />
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <InputText id="password" type="password" class="form-control" @bind-Value="registerViewModel.Password" />
+            <ValidationMessage For="@(() => registerViewModel.Password)" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Register</button>
+    </EditForm>
+</div>
+
+@code {
+    private UserRegisterViewModel registerViewModel = new UserRegisterViewModel();
+    private DataContext dbContext = new DataContext();
+
+    private async Task HandleRegister()
+    {
+        if (await RegisterUser(registerViewModel))
+        {
+            Navigation.NavigateTo("/login");
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("alert", "Registration failed. Please try again.");
+        }
+    }
+
+    private async Task<bool> RegisterUser(UserRegisterViewModel viewModel)
+    {
+        // Check if the username or email already exists
+        var existingUser = await dbContext.Users
+            .FirstOrDefaultAsync(u => u.Username == viewModel.Username || u.Email == viewModel.Email);
+        if (existingUser != null)
+        {
+            await JS.InvokeVoidAsync("alert", "Username or email already exists.");
+            return false; 
+        }
+
+        var newUser = new User
+            {
+                Username = viewModel.Username,
+                Email = viewModel.Email,
+                Password = HashPassword(viewModel.Password)
+            };
+
+        dbContext.Users.Add(newUser);
+        await dbContext.SaveChangesAsync();
+        return true;
+    }
+
+    private string HashPassword(string password)
+    {
+        return BCrypt.Net.BCrypt.HashPassword(password);
+    }
+}

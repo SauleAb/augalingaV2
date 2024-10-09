@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "augalinga.ApplicationLayer"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "augalinga.Data", "augalinga.Data\augalinga.Data.csproj", "{253331D8-0169-440F-9318-98526FE4F6A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "augalinga.Backend", "augalinga.Backend\augalinga.Backend.csproj", "{067D439A-3EB8-4B96-97EC-11B051AA3DD0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "augalinga.Backend", "augalinga.Backend\augalinga.Backend.csproj", "{067D439A-3EB8-4B96-97EC-11B051AA3DD0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
