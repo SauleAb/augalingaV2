@@ -41,8 +41,8 @@
     {
         if (await VerifyUser(loginViewModel))
         {
-            AuthService.Login(loginViewModel.Username, loginViewModel.Password); // Set user as logged in
-            Navigation.NavigateTo("/"); // Redirect to home page after successful login
+            AuthService.Login(loginViewModel.Username, loginViewModel.Password);
+            Navigation.NavigateTo("/");
         }
         else
         {
