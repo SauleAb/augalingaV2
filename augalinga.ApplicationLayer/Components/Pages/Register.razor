@@ -17,15 +17,22 @@
             <InputText id="username" class="form-control" @bind-Value="registerViewModel.Username" />
             <ValidationMessage For="@(() => registerViewModel.Username)" />
         </div>
+
         <div class="form-group">
             <label for="email">Email:</label>
             <InputText id="email" type="email" class="form-control" @bind-Value="registerViewModel.Email" />
             <ValidationMessage For="@(() => registerViewModel.Email)" />
         </div>
+
         <div class="form-group">
             <label for="password">Password:</label>
             <InputText id="password" type="password" class="form-control" @bind-Value="registerViewModel.Password" />
             <ValidationMessage For="@(() => registerViewModel.Password)" />
+        </div>
+
+        <div class="form-group">
+            <label for="background">Pick a Color:</label>
+            <InputText id="background" type="color" class="form-control" @bind-Value="registerViewModel.Background" />
         </div>
 
         <button type="submit" class="btn btn-primary">Register</button>
@@ -56,14 +63,15 @@
         if (existingUser != null)
         {
             await JS.InvokeVoidAsync("alert", "Username or email already exists.");
-            return false; 
+            return false;
         }
 
         var newUser = new User
             {
                 Username = viewModel.Username,
                 Email = viewModel.Email,
-                Password = HashPassword(viewModel.Password)
+                Password = HashPassword(viewModel.Password),
+                Color = viewModel.Background // Store the selected color
             };
 
         dbContext.Users.Add(newUser);

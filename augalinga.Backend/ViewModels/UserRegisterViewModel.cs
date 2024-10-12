@@ -8,6 +8,7 @@ namespace augalinga.Backend.ViewModels
         private string _username;
         private string _password;
         private string _email;
+        private string _background; // Add background property
 
         [Required(ErrorMessage = "Username is required.")]
         public string Username
@@ -40,6 +41,18 @@ namespace augalinga.Backend.ViewModels
             {
                 _email = value;
                 OnPropertyChanged(nameof(Email));
+            }
+        }
+
+        // Add a property for Background color (the user's associated color)
+        [Required(ErrorMessage = "Color selection is required.")]
+        public string Background
+        {
+            get => _background;
+            set
+            {
+                _background = value;
+                OnPropertyChanged(nameof(Background));
             }
         }
 
