@@ -15,8 +15,36 @@
         background-color: rgba(255, 255, 255, 0.5);
     }
 
+.navbar-fluid {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Space items out */
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    top:0;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-fluid img {
+    max-height: 2.5rem; /* Match the font size of the navbar-brand */
+    position: relative;
+    margin-top: 0; /* Align with the text vertically */
+}
+
+/* Admin navbar item styles */
+.nav-image-container {
+    margin-top: auto;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
+
 .top-row {
-    height: 3.5rem;
+    height: 4rem;
     background-color: rgba(0,0,0,0.4);
 }
 
