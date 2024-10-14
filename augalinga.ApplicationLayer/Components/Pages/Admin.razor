@@ -9,7 +9,7 @@
 @using System.Text.Json
 @inject IJSRuntime JS
 @using augalinga.Data.Access
-@using Microsoft.EntityFrameworkCore; // Add this line
+@using Microsoft.EntityFrameworkCore;
 
 <div class="header">
     <div style="flex: 1">
@@ -23,9 +23,16 @@
 
 <SfGrid DataSource="@usersViewModel.Users" AllowPaging="true">
     <GridColumns>
-        <GridColumn Field=@nameof(User.Username) HeaderText="Name"></GridColumn>
-        <GridColumn Field=@nameof(User.Email) HeaderText="Email"></GridColumn>
-        <GridColumn Field=@nameof(User.Color) HeaderText="Color"></GridColumn>
+        <GridColumn Field=@nameof(user.Username) HeaderText="Name"></GridColumn>
+        <GridColumn Field=@nameof(user.Email) HeaderText="Email"></GridColumn>
+        <GridColumn HeaderText="Color" Width="100">
+            <Template>
+                @{
+                    var currentUser = context as User; 
+                }
+                <div style="width: 30px; height: 30px; background-color: @currentUser.Color; border: 1px solid #000; border-radius: 30px;"></div>
+            </Template>
+        </GridColumn>
         <GridColumn Width="50">
             <Template>
                 <img src="../images/delete.png" height="20px" @onclick="(() => DeleteUser(context as User))" style="cursor: pointer;" />
@@ -103,7 +110,7 @@
     private async Task AddUser()
     {
         var existingUser = await dbContext.Users
-            .FirstOrDefaultAsync(u => u.Email == user.Email); // Ensure this is using Microsoft.EntityFrameworkCore
+            .FirstOrDefaultAsync(u => u.Email == user.Email); 
 
         if (existingUser != null)
         {
@@ -111,7 +118,7 @@
             return;
         }
 
-        user.Password = HashPassword(user.Password); // Hash the password
+        user.Password = HashPassword(user.Password);
         dbContext.Users.Add(user);
         await dbContext.SaveChangesAsync();
         usersViewModel.Users.Add(user);

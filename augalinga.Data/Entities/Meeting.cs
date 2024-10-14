@@ -10,11 +10,10 @@ public class Meeting
     public DateTime To { get; set; }
     public bool IsAllDay { get; set; }
     public string EventName { get; set; }
-    public string Notes { get; set; }
-    public int UserId { get; set; }
+    public string? Notes { get; set; }
+    public int? UserId { get; set; }
     public string BackgroundColor {  get; set; }
 
-    // Navigation property for the user
     [ForeignKey("UserId")]
-    public User User { get; set; }
+    public User? User { get; set; }
 }

@@ -61,8 +61,9 @@
                         <tr>
                             <td class="e-textlabel">For</td>
                             <td colspan="4">
-                                <SfDropDownList TItem="User" TValue="int" DataSource="@calendarViewModel.Users" @bind-Value="(context as Meeting).UserId">
+                                <SfDropDownList TItem="User" TValue="int?" DataSource="@calendarViewModel.Users" @bind-Value="(context as Meeting).UserId">
                                     <DropDownListFieldSettings Text="Username" Value="Id"></DropDownListFieldSettings>
+                                    <SfDropDownListItem Text="Everyone" Value="null"></SfDropDownListItem>
                                 </SfDropDownList>
                             </td>
                         </tr>
@@ -106,37 +107,41 @@
             {
                 foreach (var addedEvent in args.AddedRecords)
                 {
-                    if (addedEvent.Notes == null)
+
+                    // Check if UserId is null
+                    if (addedEvent.UserId == null)
                     {
-                        addedEvent.Notes = "";
+                        addedEvent.BackgroundColor = "#808080"; 
+                    }
+                    else
+                    {
+                        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == addedEvent.UserId);
+                        if (user != null)
+                        {
+                            addedEvent.BackgroundColor = user.Color; 
+                        }
                     }
 
-                    var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == addedEvent.UserId);
-                    if (user != null)
-                    {
-                        Meeting meeting = new Meeting
+                    Meeting meeting = new Meeting
                     {
                         From = addedEvent.From,
                         To = addedEvent.To,
                         EventName = addedEvent.EventName,
                         IsAllDay = addedEvent.IsAllDay,
                         Notes = addedEvent.Notes,
-                        User = user,
                         UserId = addedEvent.UserId,
-                        BackgroundColor = user.Color
+                        BackgroundColor = addedEvent.BackgroundColor
                     };
 
-                        dbContext.Meetings.Add(meeting);
-                        calendarViewModel.Events.Add(meeting);
+                    dbContext.Meetings.Add(meeting);
+                    calendarViewModel.Events.Add(meeting);
 
-                        // Dynamically add the background color CSS class
-                        if (!string.IsNullOrEmpty(meeting.BackgroundColor))
+                    if (!string.IsNullOrEmpty(meeting.BackgroundColor))
+                    {
+                        var colorClass = "custom-bg-" + meeting.BackgroundColor.TrimStart('#');
+                        if (!CustomClass.Contains(colorClass))
                         {
-                            var colorClass = "custom-bg-" + meeting.BackgroundColor.TrimStart('#');
-                            if (!CustomClass.Contains(colorClass))
-                            {
-                                CustomClass.Add(colorClass);
-                            }
+                            CustomClass.Add(colorClass);
                         }
                     }
                 }
@@ -166,35 +171,26 @@
                 foreach (var editedEvent in args.ChangedRecords)
                 {
                     var existingEvent = calendarViewModel.Events.FirstOrDefault(e => e.Id == editedEvent.Id);
-                    if (editedEvent.Notes == null)
+
+                    if (editedEvent.UserId == null)
                     {
-                        editedEvent.Notes = "";
+                        editedEvent.BackgroundColor = "#808080"; // Gray color
                     }
-                    var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == editedEvent.UserId);
-                    if (existingEvent != null && user != null)
+                    else
                     {
-                        existingEvent.From = editedEvent.From;
-                        existingEvent.To = editedEvent.To;
-                        existingEvent.IsAllDay = editedEvent.IsAllDay;
-                        existingEvent.EventName = editedEvent.EventName;
-                        existingEvent.Notes = editedEvent.Notes;
-                        existingEvent.User = user;
-                        existingEvent.UserId = user.Id;
-                        existingEvent.BackgroundColor = user.Color;
-
-                        // Update the event in the database
-                        dbContext.Meetings.Update(existingEvent);
-
-                        // Dynamically update the background color CSS class if necessary
-                        if (!string.IsNullOrEmpty(existingEvent.BackgroundColor))
+                        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == editedEvent.UserId);
+                        if (user != null)
                         {
-                            var colorClass = "custom-bg-" + existingEvent.BackgroundColor.TrimStart('#');
-                            if (!CustomClass.Contains(colorClass))
-                            {
-                                CustomClass.Add(colorClass);
-                            }
+                            existingEvent.BackgroundColor = user.Color; 
+                            existingEvent.UserId = editedEvent.UserId;
                         }
                     }
+                    existingEvent.From = editedEvent.From;
+                    existingEvent.To = editedEvent.To;
+                    existingEvent.IsAllDay = editedEvent.IsAllDay;
+                    existingEvent.EventName = editedEvent.EventName;
+                    existingEvent.Notes = editedEvent.Notes;
+                    dbContext.Meetings.Update(existingEvent);
                 }
             }
         }
