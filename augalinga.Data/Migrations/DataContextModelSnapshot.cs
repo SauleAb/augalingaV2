@@ -57,7 +57,7 @@ namespace augalinga.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Meetings");
+                    b.ToTable("Meetings", (string)null);
                 });
 
             modelBuilder.Entity("User", b =>
@@ -86,7 +86,7 @@ namespace augalinga.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("augalinga.Data.Entities.Contact", b =>
@@ -121,7 +121,7 @@ namespace augalinga.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Contacts");
+                    b.ToTable("Contacts", (string)null);
                 });
 
             modelBuilder.Entity("augalinga.Data.Entities.Document", b =>
@@ -145,7 +145,7 @@ namespace augalinga.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Documents");
+                    b.ToTable("Documents", (string)null);
                 });
 
             modelBuilder.Entity("augalinga.Data.Entities.Draft", b =>
@@ -169,7 +169,7 @@ namespace augalinga.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Drafts");
+                    b.ToTable("Drafts", (string)null);
                 });
 
             modelBuilder.Entity("augalinga.Data.Entities.Expense", b =>
@@ -199,7 +199,7 @@ namespace augalinga.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Expenses");
+                    b.ToTable("Expenses", (string)null);
                 });
 
             modelBuilder.Entity("augalinga.Data.Entities.Order", b =>
@@ -223,7 +223,7 @@ namespace augalinga.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("augalinga.Data.Entities.Photo", b =>
@@ -259,7 +259,7 @@ namespace augalinga.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Photos");
+                    b.ToTable("Photos", (string)null);
                 });
 
             modelBuilder.Entity("augalinga.Data.Entities.Project", b =>
@@ -280,7 +280,7 @@ namespace augalinga.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Projects", (string)null);
                 });
 
             modelBuilder.Entity("Meeting", b =>

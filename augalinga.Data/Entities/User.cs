@@ -7,4 +7,6 @@ public class User
     public string Password { get; set; }
     public string Email { get; set; }
     public string Color { get; set; }
+    [NotMapped]
+    public bool IsChecked { get; set; } = true;
 }

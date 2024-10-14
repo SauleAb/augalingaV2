@@ -2,12 +2,13 @@
 using augalinga.Data.Entities;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 
 public class CalendarViewModel : INotifyPropertyChanged
 {
     private ObservableCollection<Meeting> _events;
     private HashSet<User> _selectedUsers; // Use HashSet to manage selected users efficiently
-    public List<User> Users { get; set; } // New property to hold users
+    public List<User> Users { get; set; } // Property to hold users
 
     public ObservableCollection<Meeting> Events
     {
@@ -19,10 +20,12 @@ public class CalendarViewModel : INotifyPropertyChanged
         }
     }
 
+    public HashSet<User> SelectedUsers => _selectedUsers; // Expose selected users for binding
+
     public CalendarViewModel()
     {
-        _selectedUsers = new HashSet<User>(); 
-        Users = LoadUsers(); 
+        _selectedUsers = new HashSet<User>();
+        Users = LoadUsers();
         LoadEvents(new List<User>());
     }
 
@@ -30,8 +33,7 @@ public class CalendarViewModel : INotifyPropertyChanged
     {
         using (var dbContext = new DataContext())
         {
-            var users = dbContext.Users.ToList();
-            return users;
+            return dbContext.Users.ToList();
         }
     }
 
@@ -43,7 +45,6 @@ public class CalendarViewModel : INotifyPropertyChanged
 
             if (selectedUsers.Any())
             {
-                // Filter events based on selected users
                 query = query.Where(m => selectedUsers.Contains(m.User));
             }
             var meetings = query.ToList();
