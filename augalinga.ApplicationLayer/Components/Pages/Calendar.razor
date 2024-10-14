@@ -82,11 +82,21 @@
 @code {
     public DataContext dbContext { get; set; } = new DataContext();
     CalendarViewModel calendarViewModel { get; set; } = new CalendarViewModel();
-    public string DropDownValue { get; set; } = "";
+    public List<string> CustomClass { get; set; } = new List<string>(); // Define the CustomClass list
+
     public void OnEventRendered(EventRenderedArgs<Meeting> args)
     {
-    }
+        if (!string.IsNullOrEmpty(args.Data.BackgroundColor))
+        {
+            var colorClass = "custom-bg-" + args.Data.BackgroundColor.TrimStart('#');
+            args.CssClasses = new List<string> { colorClass };
 
+            if (!CustomClass.Contains(colorClass))
+            {
+                CustomClass.Add(colorClass);
+            }
+        }
+    }
 
     public async void OnActionCompleted(ActionEventArgs<Meeting> args)
     {
@@ -100,19 +110,35 @@
                     {
                         addedEvent.Notes = "";
                     }
+
                     var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == addedEvent.UserId);
-                    Meeting meeting = new Meeting
+                    if (user != null)
+                    {
+                        Meeting meeting = new Meeting
+                    {
+                        From = addedEvent.From,
+                        To = addedEvent.To,
+                        EventName = addedEvent.EventName,
+                        IsAllDay = addedEvent.IsAllDay,
+                        Notes = addedEvent.Notes,
+                        User = user,
+                        UserId = addedEvent.UserId,
+                        BackgroundColor = user.Color
+                    };
+
+                        dbContext.Meetings.Add(meeting);
+                        calendarViewModel.Events.Add(meeting);
+
+                        // Dynamically add the background color CSS class
+                        if (!string.IsNullOrEmpty(meeting.BackgroundColor))
                         {
-                            From = addedEvent.From,
-                            To = addedEvent.To,
-                            EventName = addedEvent.EventName,
-                            IsAllDay = addedEvent.IsAllDay,
-                            Notes = addedEvent.Notes,
-                            User = user, 
-                            UserId = addedEvent.UserId,
-                            BackgroundColor = user?.Color
-                        };
-                    dbContext.Meetings.Add(meeting);
+                            var colorClass = "custom-bg-" + meeting.BackgroundColor.TrimStart('#');
+                            if (!CustomClass.Contains(colorClass))
+                            {
+                                CustomClass.Add(colorClass);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -127,6 +153,7 @@
                     if (eventToRemove != null)
                     {
                         dbContext.Meetings.Remove(eventToRemove);
+                        calendarViewModel.Events.Remove(eventToRemove);
                     }
                 }
             }
@@ -143,66 +170,65 @@
                     {
                         editedEvent.Notes = "";
                     }
-                    if (existingEvent != null)
+                    var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == editedEvent.UserId);
+                    if (existingEvent != null && user != null)
                     {
                         existingEvent.From = editedEvent.From;
                         existingEvent.To = editedEvent.To;
                         existingEvent.IsAllDay = editedEvent.IsAllDay;
                         existingEvent.EventName = editedEvent.EventName;
                         existingEvent.Notes = editedEvent.Notes;
-                        existingEvent.User = editedEvent.User;
+                        existingEvent.User = user;
+                        existingEvent.UserId = user.Id;
+                        existingEvent.BackgroundColor = user.Color;
+
+                        // Update the event in the database
                         dbContext.Meetings.Update(existingEvent);
+
+                        // Dynamically update the background color CSS class if necessary
+                        if (!string.IsNullOrEmpty(existingEvent.BackgroundColor))
+                        {
+                            var colorClass = "custom-bg-" + existingEvent.BackgroundColor.TrimStart('#');
+                            if (!CustomClass.Contains(colorClass))
+                            {
+                                CustomClass.Add(colorClass);
+                            }
+                        }
                     }
                 }
             }
         }
-
-        
         await dbContext.SaveChangesAsync();
+        StateHasChanged();
+        calendarViewModel = new CalendarViewModel();
     }
 }
 
 <style>
-    .e-schedule .e-vertical-view .e-all-day-appointment-wrapper .e-appointment.baronaite-background,
-    .e-schedule .e-vertical-view .e-day-wrapper .e-appointment.baronaite-background,
-    .e-schedule .e-month-view .e-appointment.baronaite-background {
-        background: #ffd700 !important;
-    }
-
-    .e-schedule .e-vertical-view .e-all-day-appointment-wrapper .e-appointment.gudaityte-background,
-    .e-schedule .e-vertical-view .e-day-wrapper .e-appointment.gudaityte-background,
-    .e-schedule .e-month-view .e-appointment.gudaityte-background {
-        background: #1A9BAB !important;
-    }
-
-    .e-schedule .e-vertical-view .e-all-day-appointment-wrapper .e-appointment.both-background,
-    .e-schedule .e-vertical-view .e-day-wrapper .e-appointment.both-background,
-    .e-schedule .e-month-view .e-appointment.both-background {
-        background: #E7344C !important;
-    }
-
-    .e-schedule .e-vertical-view .e-all-day-appointment-wrapper .e-appointment.custom-class,
-    .e-schedule .e-vertical-view .e-day-wrapper .e-appointment.custom-class,
-    .e-schedule .e-month-view .e-appointment.custom-class {
-        background: #32CD32 !important;
+    @foreach (var cssClass in CustomClass)
+    {
+        <text>
+            .@cssClass {
+                background-color: #@(cssClass.Replace("custom-bg-", "")) !important;
+            }
+        </text>
     }
 
     .calendar-container {
-        height: 80vh; /* Take 80% of the viewport height */
-        overflow: hidden; /* Prevent scrolling on the container itself */
-        margin: 10px; /* Optional: Add margin around the container */
+        height: 80vh;
+        overflow: hidden;
+        margin: 10px;
         position: relative;
     }
 
     .e-schedule {
-        height: 100% !important; /* Ensure the calendar takes up the full height of the container */
-        overflow-y: auto !important; /* Allow scrolling inside the calendar */
-        overflow-x: hidden; /* Optional: Prevent horizontal scrolling */
+        height: 100% !important;
+        overflow-y: auto !important;
+        overflow-x: hidden;
     }
 
     .e-content {
-        height: calc(100% - 50px); /* Adjust based on header height, ensures the content part is scrollable */
-        overflow-y: auto; /* Allow vertical scrolling inside the content */
+        height: calc(100% - 50px);
+        overflow-y: auto;
     }
-
 </style>
