@@ -35,7 +35,12 @@
         </GridColumn>
         <GridColumn Width="50">
             <Template>
-                <img src="../images/delete.png" height="20px" @onclick="(() => DeleteUser(context as User))" style="cursor: pointer;" />
+                <img src="../images/edit.svg" height="20px" @onclick="(() => OpenEditModal(context as User))" style="cursor: pointer;" />
+            </Template>
+        </GridColumn>
+        <GridColumn Width="50">
+            <Template>
+                <img src="../images/trash3.svg" height="20px" @onclick="(() => DeleteUser(context as User))" style="cursor: pointer;" />
             </Template>
         </GridColumn>
     </GridColumns>
@@ -85,10 +90,78 @@
     </div>
 </div>
 
+<div class="modal edit-modal" style="display:none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="HideEditModal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="editUsername">Name:</label>
+                            <input type="text" class="form-control" id="editUsername" @bind="selectedUser.Username" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="editCurrentPassword">Current Password:</label>
+                            <input type="password" class="form-control" id="editCurrentPassword" @bind="currentPassword" required />
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="editNewPassword">New Password:</label>
+                            <input type="password" class="form-control" id="editNewPassword" @bind="newPassword" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="editUserEmail">Email:</label>
+                            <input type="text" class="form-control" id="editUserEmail" @bind="selectedUser.Email" />
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="editUserColor">Color:</label>
+                            <InputText id="editUserColor" type="color" class="form-control" @bind-Value="selectedUser.Color" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" @onclick="SaveUserChanges">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @code {
     private DataContext dbContext { get; set; } = new DataContext();
     private User user = new User();
     private UsersViewModel usersViewModel;
+    private User selectedUser = new User();
+    private string currentPassword = string.Empty;
+    private string newPassword = string.Empty;
+
+    public async Task OpenEditModal(User user)
+    {
+        selectedUser = user;
+        await JS.InvokeVoidAsync("showEditModal");
+    }
+
+    public async Task HideEditModal()
+    {
+        await JS.InvokeVoidAsync("hideEditModal");
+    }
+
 
     protected override void OnInitialized()
     {
@@ -99,12 +172,91 @@
     {
         Navigation.NavigateTo("/");
     }
+    private async Task SaveUserChanges()
+    {
+        try
+        {
+            var existingUser = await dbContext.Users.FindAsync(selectedUser.Id);
+            if (existingUser == null)
+            {
+                await JS.InvokeVoidAsync("alert", "User not found.");
+                return;
+            }
+
+            // Update only the fields that have changed
+            if (selectedUser.Username != existingUser.Username)
+            {
+                existingUser.Username = selectedUser.Username;
+            }
+
+            if (selectedUser.Email != existingUser.Email)
+            {
+                existingUser.Email = selectedUser.Email;
+            }
+
+            if (selectedUser.Color != existingUser.Color)
+            {
+                existingUser.Color = selectedUser.Color;
+
+                var userMeetings = await dbContext.Meetings
+                    .Where(m => m.UserId == existingUser.Id)
+                    .ToListAsync();
+
+                foreach (var meeting in userMeetings)
+                {
+                    meeting.BackgroundColor = selectedUser.Color;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(newPassword) && !string.IsNullOrWhiteSpace(currentPassword))
+            {
+                if (!BCrypt.Net.BCrypt.Verify(currentPassword, existingUser.Password))
+                {
+                    await JS.InvokeVoidAsync("alert", "Current password is incorrect.");
+                    return;
+                }
+                else
+                {
+                    existingUser.Password = HashPassword(newPassword);
+                }
+            }
+
+            await dbContext.SaveChangesAsync();
+
+
+            currentPassword = string.Empty;
+            newPassword = string.Empty;
+
+            usersViewModel = new UsersViewModel();
+            StateHasChanged();
+            await HideEditModal();
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync("alert", $"An error occurred: {ex.Message}");
+        }
+    }
 
     private async Task DeleteUser(User user)
     {
-        dbContext.Users.Remove(user);
-        await dbContext.SaveChangesAsync();
-        usersViewModel.Users.Remove(user);
+        try
+        {
+            var meetings = await dbContext.Meetings
+                .Where(m => m.UserId == user.Id)
+                .ToListAsync();
+
+            dbContext.Meetings.RemoveRange(meetings);
+
+            dbContext.Users.Remove(user);
+            await dbContext.SaveChangesAsync();
+
+            usersViewModel.Users.Remove(user);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync("alert", $"An error occurred: {ex.Message}");
+        }
     }
 
     private async Task AddUser()
@@ -117,7 +269,10 @@
             await JS.InvokeVoidAsync("alert", "Email is already in use.");
             return;
         }
-
+        if (user.Color == null)
+        {
+            user.Color = "#000000";
+        }
         user.Password = HashPassword(user.Password);
         dbContext.Users.Add(user);
         await dbContext.SaveChangesAsync();
@@ -151,6 +306,20 @@
 
     window.hideModal = () => {
         const modal = document.querySelector('.modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    };
+
+    window.showEditModal = () => {
+        const modal = document.querySelector('.edit-modal');
+        if (modal) {
+            modal.style.display = 'block';
+        }
+    };
+
+    window.hideEditModal = () => {
+        const modal = document.querySelector('.edit-modal');
         if (modal) {
             modal.style.display = 'none';
         }

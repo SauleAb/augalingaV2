@@ -137,6 +137,21 @@ h1 {
             font-size: 40px;
         }
 
+.edit-button {
+    background-color: transparent;
+    cursor: pointer;
+    border: none;
+}
+
+    .edit-button i {
+        transition: font-size 0.3s ease;
+        font-size: 30px;
+    }
+
+        .edit-button i:hover {
+            font-size: 40px;
+        }
+
 
 
 @supports (-webkit-touch-callout: none) {
