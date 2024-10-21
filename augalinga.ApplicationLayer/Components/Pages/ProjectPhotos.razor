@@ -32,7 +32,12 @@
         {
             foreach (var url in beforePhotos)
             {
-                <img src="@url" width="300" height="200" style="margin: 5px;" @onclick="() => OnPhotoClicked(url)" />
+                <div style="display: inline-block; position: relative; margin: 5px;">
+                    <img src="@url" width="300" height="200" style="margin: 5px;" @onclick="() => OnPhotoClicked(url)" />
+                    <a href="@url" download="@url.Split('/').Last()" style="text-decoration: none; position: absolute; bottom: 5px; right: 5px;">
+                        <i class="bi bi-download" style="font-size: 24px; color: white; background-color: rgba(0, 0, 0, 0.6); border-radius: 50%; padding: 5px;"></i>
+                    </a>
+                </div>
             }
         }
     </div>
@@ -41,7 +46,12 @@
         {
             foreach (var url in afterPhotos)
             {
-                <img src="@url" width="300" height="200" style="margin: 5px;" @onclick="() => OnPhotoClicked(url)" />
+                <div style="display: inline-block; position: relative; margin: 5px;">
+                    <img src="@url" width="300" height="200" style="margin: 5px;" @onclick="() => OnPhotoClicked(url)" />
+                    <a href="@url" download="@url.Split('/').Last()" style="text-decoration: none; position: absolute; bottom: 5px; right: 5px;">
+                        <i class="bi bi-download" style="font-size: 24px; color: white; background-color: rgba(0, 0, 0, 0.6); border-radius: 50%; padding: 5px;"></i>
+                    </a>
+                </div>
             }
         }
     </div>
@@ -50,7 +60,12 @@
         {
             foreach (var url in generalPhotos)
             {
-                <img src="@url" width="300" height="200" style="margin: 5px;" @onclick="() => OnPhotoClicked(url)" />
+                <div style="display: inline-block; position: relative; margin: 5px;">
+                    <img src="@url" width="300" height="200" style="margin: 5px;" @onclick="() => OnPhotoClicked(url)" />
+                    <a href="@url" download="@url.Split('/').Last()" style="text-decoration: none; position: absolute; bottom: 5px; right: 5px;">
+                        <i class="bi bi-download" style="font-size: 24px; color: white; background-color: rgba(0, 0, 0, 0.6); border-radius: 50%; padding: 5px;"></i>
+                    </a>
+                </div>
             }
         }
     </div>
