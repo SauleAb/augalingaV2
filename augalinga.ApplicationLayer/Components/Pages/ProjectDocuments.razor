@@ -32,7 +32,12 @@
         <GridColumn Field=@nameof(Document.Link) HeaderText="Link"></GridColumn>
         <GridColumn Width="50">
             <Template>
-                <img src="../images/delete.png" height="20px" @onclick="(() => DeleteDocument(context as Document))" style="cursor: pointer;" />
+                <img src="../images/download.svg" height="20px" @onclick="(() => DownloadDocument(context as Document))" style="cursor: pointer;" />
+            </Template>
+        </GridColumn>
+        <GridColumn Width="50">
+            <Template>
+                <img src="../images/trash3.svg" height="20px" @onclick="(() => DeleteDocument(context as Document))" style="cursor: pointer;" />
             </Template>
         </GridColumn>
     </GridColumns>
@@ -92,6 +97,19 @@
         documentsViewModel = new DocumentsViewModel(projectId);
         project = await dbContext.Projects.FindAsync(projectId);
         blobStorage = new AzureBlobStorage();
+    }
+
+    private async Task DownloadDocument(Document document)
+    {
+        try
+        {
+            // Use JSRuntime to open the download URL in a new tab
+            await JS.InvokeVoidAsync("open", document.Link, "_blank");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error downloading document: {ex.Message}");
+        }
     }
 
     public async Task HideModal()
