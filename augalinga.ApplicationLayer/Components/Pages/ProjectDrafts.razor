@@ -30,6 +30,11 @@
         <GridColumn Field=@nameof(Draft.Link) HeaderText="Link"></GridColumn>
         <GridColumn Width="50">
             <Template>
+                <img src="../images/download.svg" height="20px" @onclick="(() => DownloadDraft(context as Draft))" style="cursor: pointer;" />
+            </Template>
+        </GridColumn>
+        <GridColumn Width="50">
+            <Template>
                 <img src="../images/delete.png" height="20px" @onclick="(() => DeleteDraft(context as Draft))" style="cursor: pointer;" />
             </Template>
         </GridColumn>
@@ -88,6 +93,18 @@
         draftsViewModel = new DraftsViewModel(projectId);
         project = await dbContext.Projects.FindAsync(projectId);
         blobStorage = new AzureBlobStorage();
+    }
+
+    private async Task DownloadDraft(Draft draft)
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("open", draft.Link, "_blank");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error downloading document: {ex.Message}");
+        }
     }
 
     public async Task HideModal()

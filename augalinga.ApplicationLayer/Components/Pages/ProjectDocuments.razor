@@ -103,7 +103,6 @@
     {
         try
         {
-            // Use JSRuntime to open the download URL in a new tab
             await JS.InvokeVoidAsync("open", document.Link, "_blank");
         }
         catch (Exception ex)
