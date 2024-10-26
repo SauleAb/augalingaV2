@@ -20,6 +20,7 @@ namespace augalinga.Data.Access
         public DbSet<Draft> Drafts { get; set; }
         public DbSet<Order> Orders {  get; set; }
         public DbSet<Expense> Expenses {  get; set; }
+        public DbSet<Notification> Notifications {  get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=augalingaDB;Trusted_Connection=True;TrustServerCertificate=True;");

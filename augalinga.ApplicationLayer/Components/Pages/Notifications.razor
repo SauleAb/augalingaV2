@@ -1,0 +1,26 @@
+﻿@page "/notifications"
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Grids
+@using augalinga.Backend.ViewModels
+@using augalinga.Data.Entities
+@using augalinga.Data.Access
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+
+<div class="header">
+    <h1>Notifications</h1>
+</div>
+
+<SfGrid DataSource="@notificationsViewModel.Notifications">
+    <GridColumns>
+        <GridColumn Field="@nameof(Notification.UserId)" HeaderText="User" Width="140"></GridColumn>
+        <GridColumn Field="@nameof(Notification.PageName)" HeaderText="Page Modified" Width="150"></GridColumn>
+        <GridColumn Field="@nameof(Notification.CreatedAt)" HeaderText="Modified At" Width="150"></GridColumn>
+    </GridColumns>
+</SfGrid>
+
+@code {
+    NotificationsViewModel notificationsViewModel = new NotificationsViewModel();
+    private DataContext dbContext { get; set; } = new DataContext();
+}
+
