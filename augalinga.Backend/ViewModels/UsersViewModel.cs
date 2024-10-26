@@ -25,7 +25,7 @@ namespace augalinga.Backend.ViewModels
         public void AddUserToCollection(User user)
         {
             Users.Add(user);
-            SaveUser(user); // Save the new user to the database
+            SaveUser(user);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -38,27 +38,27 @@ namespace augalinga.Backend.ViewModels
         {
             using (var dbContext = new DataContext())
             {
-                dbContext.Users.Remove(user); // Changed from Contacts to Users
+                dbContext.Users.Remove(user);
                 dbContext.SaveChanges();
             }
-            LoadUsers(); // Reload all users after removal
+            LoadUsers();
         }
 
-        private void LoadUsers() // Method for loading all users
+        private void LoadUsers()
         {
             using (var dbContext = new DataContext())
             {
-                var users = dbContext.Users.ToList(); // Changed from Contacts to Users
+                var users = dbContext.Users.ToList();
                 Users = new ObservableCollection<User>(users);
             }
         }
 
-        private void SaveUser(User user) // Method to save a new user
+        private void SaveUser(User user)
         {
             using (var dbContext = new DataContext())
             {
-                dbContext.Users.Add(user); // Add the user to the context
-                dbContext.SaveChanges(); // Save changes to the database
+                dbContext.Users.Add(user); 
+                dbContext.SaveChanges(); 
             }
         }
     }

@@ -14,8 +14,8 @@
 
         <div class="form-group">
             <label for="username">Username:</label>
-            <InputText id="username" class="form-control" @bind-Value="registerViewModel.Username" />
-            <ValidationMessage For="@(() => registerViewModel.Username)" />
+            <InputText id="username" class="form-control" @bind-Value="registerViewModel.FullName" />
+            <ValidationMessage For="@(() => registerViewModel.FullName)" />
         </div>
 
         <div class="form-group">
@@ -59,7 +59,7 @@
     {
         // Check if the username or email already exists
         var existingUser = await dbContext.Users
-            .FirstOrDefaultAsync(u => u.Username == viewModel.Username || u.Email == viewModel.Email);
+            .FirstOrDefaultAsync(u => u.FullName == viewModel.FullName || u.Email == viewModel.Email);
         if (existingUser != null)
         {
             await JS.InvokeVoidAsync("alert", "Username or email already exists.");
@@ -68,7 +68,7 @@
 
         var newUser = new User
             {
-                Username = viewModel.Username,
+                FullName = viewModel.FullName,
                 Email = viewModel.Email,
                 Password = HashPassword(viewModel.Password),
                 Color = viewModel.Background // Store the selected color

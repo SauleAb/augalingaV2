@@ -23,7 +23,7 @@
 
 <SfGrid DataSource="@usersViewModel.Users" AllowPaging="true">
     <GridColumns>
-        <GridColumn Field=@nameof(user.Username) HeaderText="Name"></GridColumn>
+        <GridColumn Field=@nameof(user.FullName) HeaderText="Name"></GridColumn>
         <GridColumn Field=@nameof(user.Email) HeaderText="Email"></GridColumn>
         <GridColumn HeaderText="Color" Width="100">
             <Template>
@@ -58,7 +58,7 @@
                     <div class="col">
                         <div class="form-group">
                             <label for="Username">Name:</label>
-                            <input type="text" class="form-control" id="Username" @bind="user.Username" required />
+                            <input type="text" class="form-control" id="Username" @bind="user.FullName" required />
                         </div>
                     </div>
                     <div class="col">
@@ -102,7 +102,7 @@
                     <div class="col">
                         <div class="form-group">
                             <label for="editUsername">Name:</label>
-                            <input type="text" class="form-control" id="editUsername" @bind="selectedUser.Username" required />
+                            <input type="text" class="form-control" id="editUsername" @bind="selectedUser.FullName" required />
                         </div>
                     </div>
                 </div>
@@ -183,10 +183,9 @@
                 return;
             }
 
-            // Update only the fields that have changed
-            if (selectedUser.Username != existingUser.Username)
+            if (selectedUser.FullName != existingUser.FullName)
             {
-                existingUser.Username = selectedUser.Username;
+                existingUser.FullName = selectedUser.FullName;
             }
 
             if (selectedUser.Email != existingUser.Email)

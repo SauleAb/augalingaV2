@@ -2606,6 +2606,7 @@
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
           "Azure.Storage.Blobs": "12.22.0",
+          "BCrypt.Net-Next": "4.0.3",
           "Microsoft.AspNetCore.Components.Web": "8.0.2",
           "augalinga.Data": "1.0.0"
         },
@@ -5126,6 +5127,7 @@
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
           "Azure.Storage.Blobs": "12.22.0",
+          "BCrypt.Net-Next": "4.0.3",
           "Microsoft.AspNetCore.Components.Web": "8.0.2",
           "augalinga.Data": "1.0.0"
         },

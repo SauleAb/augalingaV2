@@ -6,7 +6,7 @@
 @inject NavigationManager Navigation
 @inject IJSRuntime JS
 @using augalinga.Backend.Services
-@inject IAuthService AuthService // Inject AuthService
+@inject IAuthService IAuthService
 
 <div class="container">
     <h1>User Login</h1>
@@ -15,9 +15,9 @@
         <ValidationSummary />
 
         <div class="form-group">
-            <label for="username">Username:</label>
-            <InputText id="username" class="form-control" @bind-Value="loginViewModel.Username" />
-            <ValidationMessage For="@(() => loginViewModel.Username)" />
+            <label for="username">Full name:</label>
+            <InputText id="username" class="form-control" @bind-Value="loginViewModel.FullName" />
+            <ValidationMessage For="@(() => loginViewModel.FullName)" />
         </div>
         <div class="form-group">
             <label for="password">Password:</label>
@@ -41,7 +41,7 @@
     {
         if (await VerifyUser(loginViewModel))
         {
-            AuthService.Login(loginViewModel.Username, loginViewModel.Password);
+            await IAuthService.Login(loginViewModel.FullName, loginViewModel.Password);
             Navigation.NavigateTo("/");
         }
         else
@@ -53,7 +53,7 @@
     private async Task<bool> VerifyUser(UserLoginViewModel viewModel)
     {
         var user = await dbContext.Users
-            .FirstOrDefaultAsync(u => u.Username == viewModel.Username);
+            .FirstOrDefaultAsync(u => u.FullName == viewModel.FullName);
 
         if (user != null)
         {

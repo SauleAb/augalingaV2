@@ -84,7 +84,7 @@
     {
         @foreach (var user in usersViewModel.Users)
         {
-            <SfCheckBox @bind-Checked="@user.IsChecked" @onclick="() => OnUserSelectionChanged(user)" Label="@user.Username" >
+            <SfCheckBox @bind-Checked="@user.IsChecked" @onclick="() => OnUserSelectionChanged(user)" Label="@user.FullName" >
             </SfCheckBox>
         }
     }

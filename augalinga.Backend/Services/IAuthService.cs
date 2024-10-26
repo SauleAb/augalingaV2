@@ -10,8 +10,9 @@ namespace augalinga.Backend.Services
     {
         event Action OnChange;
         bool IsUserLoggedIn();
-        void Login(string username, string password);
+        Task Login(string fullName, string password);
         void Logout();
+        User GetCurrentUser();
     }
 
 }
