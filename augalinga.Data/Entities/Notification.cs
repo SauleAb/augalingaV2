@@ -18,5 +18,7 @@ namespace augalinga.Data.Entities
 
         [ForeignKey("UserId")]
         public User User { get; set; }
+        [NotMapped]
+        public string UserName => User != null ? User.FullName : "Unknown User";
     }
 }

@@ -8,6 +8,7 @@
 @using augalinga.Data.Entities
 @inject NavigationManager Navigation
 @inject IAuthService IAuthService
+@inject NotificationsViewModel notificationsViewModel
 @inject IJSRuntime JS
 
 <div class="header">
@@ -106,13 +107,7 @@
 
         dbContext.Projects.Add(project);
         viewModel.Projects.Add(project);
-        var notification = new Notification
-            {
-                PageName = "Projects",
-                CreatedAt = DateTime.UtcNow,
-                UserId = IAuthService.GetCurrentUser().Id
-            };
-        dbContext.Notifications.Add(notification);
+        notificationsViewModel.CreateNotification("Projects");
         await dbContext.SaveChangesAsync();
         await LoadProjectsAsync();
         await HideModal();
