@@ -85,6 +85,21 @@ namespace augalinga.Backend.Models
             }
         }
 
+        public async Task DeletePhotoAsync(string projectName, string category, string fileName)
+        {
+            try
+            {
+                var blobContainerClient = _blobServiceClient.GetBlobContainerClient(ContainerName);
+                var blobClient = blobContainerClient.GetBlobClient($"{projectName}/photos/{category}/{fileName}");
+                await blobClient.DeleteIfExistsAsync();
+                Console.WriteLine($"Deleted {fileName} from {category} in {projectName}.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting blob: {ex.Message}");
+            }
+        }
+
         public async Task UploadCoverPhoto(string projectName, IBrowserFile file)
         {
             string blobName = $"{projectName}/cover photo/{file.Name}";

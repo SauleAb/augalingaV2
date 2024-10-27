@@ -39,6 +39,9 @@
                     <a href="@url" download="@url.Split('/').Last()" style="text-decoration: none; position: absolute; bottom: 5px; right: 5px;">
                         <i class="bi bi-download" style="font-size: 24px; color: white; background-color: rgba(0, 0, 0, 0.6); border-radius: 50%; padding: 5px;"></i>
                     </a>
+                    <button @onclick="() => DeletePhoto(url)" style="position: absolute; bottom: 5px; right: 40px; background: transparent; border: none; cursor: pointer;">
+                        <i class="bi bi-trash" style="font-size: 24px; color: white; background-color: rgba(0, 0, 0, 0.6); border-radius: 50%; padding: 5px;"></i>
+                    </button>
                 </div>
             }
         }
@@ -53,6 +56,9 @@
                     <a href="@url" download="@url.Split('/').Last()" style="text-decoration: none; position: absolute; bottom: 5px; right: 5px;">
                         <i class="bi bi-download" style="font-size: 24px; color: white; background-color: rgba(0, 0, 0, 0.6); border-radius: 50%; padding: 5px;"></i>
                     </a>
+                    <button @onclick="() => DeletePhoto(url)" style="position: absolute; bottom: 5px; right: 40px; background: transparent; border: none; cursor: pointer;">
+                        <i class="bi bi-trash" style="font-size: 24px; color: white; background-color: rgba(0, 0, 0, 0.6); border-radius: 50%; padding: 5px;"></i>
+                    </button>
                 </div>
             }
         }
@@ -67,13 +73,16 @@
                     <a href="@url" download="@url.Split('/').Last()" style="text-decoration: none; position: absolute; bottom: 5px; right: 5px;">
                         <i class="bi bi-download" style="font-size: 24px; color: white; background-color: rgba(0, 0, 0, 0.6); border-radius: 50%; padding: 5px;"></i>
                     </a>
+                    <button @onclick="() => DeletePhoto(url)" style="position: absolute; bottom: 5px; right: 40px; background: transparent; border: none; cursor: pointer;">
+                        <i class="bi bi-trash" style="font-size: 24px; color: white; background-color: rgba(0, 0, 0, 0.6); border-radius: 50%; padding: 5px;"></i>
+                    </button>
                 </div>
             }
         }
     </div>
 </div>
 
-<div class="modal" style="display:@(isUploadModalVisible ? "block" : "none"); background-color: rgba(0, 0, 0, 0.5);">
+<div class="modal upload" style="display:@(isUploadModalVisible ? "block" : "none"); background-color: rgba(0, 0, 0, 0.5);">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -317,6 +326,30 @@
         }
     }
 
+    private async Task DeletePhoto(string url)
+    {
+        var confirmed = await JS.InvokeAsync<bool>("confirm", $"Are you sure you want to delete this photo?");
+        if (!confirmed) return;
+        try
+        {
+            var category = url.Contains("before") ? "before" :
+                           url.Contains("after") ? "after" :
+                           url.Contains("general") ? "general" : null;
+
+            if (category != null)
+            {
+                var fileName = url.Split('/').Last();
+                await _blobStorage.DeletePhotoAsync(project.Name, category, fileName);
+
+                await LoadPhotos();
+            }
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex, "An error occurred during photo deletion");
+        }
+    }
+
     private void HandleException(Exception ex, string errorMessagePrefix)
     {
         errorMessage = $"{errorMessagePrefix}: {ex.Message}";
@@ -425,6 +458,11 @@
 
     .modal-header .btn-close {
         filter: invert(100%);
+    }
+
+    .modal.upload {
+        display: block;
+        background-color: rgba(128, 128, 128, 0.8);
     }
 </style>
 
