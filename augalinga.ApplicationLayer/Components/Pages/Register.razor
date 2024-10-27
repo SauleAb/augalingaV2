@@ -3,8 +3,10 @@
 @using augalinga.Backend.ViewModels
 @using augalinga.Data.Access
 @using augalinga.Data.Entities
+@using augalinga.Data.Enums
 @inject NavigationManager Navigation
 @inject IJSRuntime JS
+@inject NotificationsViewModel NotificationsViewModel
 
 <div class="container">
     <h1>User Registration</h1>
@@ -57,7 +59,6 @@
 
     private async Task<bool> RegisterUser(UserRegisterViewModel viewModel)
     {
-        // Check if the username or email already exists
         var existingUser = await dbContext.Users
             .FirstOrDefaultAsync(u => u.FullName == viewModel.FullName || u.Email == viewModel.Email);
         if (existingUser != null)
@@ -71,11 +72,12 @@
                 FullName = viewModel.FullName,
                 Email = viewModel.Email,
                 Password = HashPassword(viewModel.Password),
-                Color = viewModel.Background // Store the selected color
+                Color = viewModel.Background 
             };
 
         dbContext.Users.Add(newUser);
         await dbContext.SaveChangesAsync();
+        NotificationsViewModel.CreateNotification(newUser.FullName, null, NotificationType.UserAdded, null);
         return true;
     }
 

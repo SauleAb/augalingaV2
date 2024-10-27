@@ -11,8 +11,9 @@
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.Maui.Controls
 @using System.Text.Json
+@using augalinga.Data.Enums
 @inject IJSRuntime JS
-
+@inject NotificationsViewModel NotificationsViewModel
 
 <div class="header">
     <div style="flex: 1">
@@ -148,6 +149,7 @@
                 await dbContext.Drafts.AddAsync(draft);
                 await dbContext.SaveChangesAsync();
                 draftsViewModel.AddDraftToCollection(draft);
+                NotificationsViewModel.CreateNotification(file.Name, project.Name, NotificationType.DraftAdded, null);
             }
             await Task.Delay(800);
             await draftsGrid.Refresh();
@@ -172,6 +174,7 @@
 
         await blobStorage.DeleteBlobAsync(draft.Link);
         draftsViewModel.Drafts.Remove(draft);
+        NotificationsViewModel.CreateNotification(draft.Name, project.Name, NotificationType.DraftDeleted, null);
     }
 }
 <script>

@@ -3,9 +3,12 @@
 @using Microsoft.EntityFrameworkCore
 @using Syncfusion.Blazor.Popups
 @using augalinga.Backend.Models
+@using augalinga.Backend.ViewModels
 @using augalinga.Data.Access
 @using augalinga.Data.Entities
+@using augalinga.Data.Enums
 @inject NavigationManager Navigation
+@inject NotificationsViewModel NotificationsViewModel
 
 <div class="header">
     <div style="flex: 1">
@@ -165,6 +168,7 @@
             project.Name = updatedProjectName;
             dbContext.Projects.Update(project);
             await dbContext.SaveChangesAsync();
+            NotificationsViewModel.CreateNotification(project.Name, null, NotificationType.ProjectModified, null);
         }
 
         if (selectedPhoto != null)
@@ -180,6 +184,7 @@
             project.ImageUrl = selectedPhoto.Name;
             dbContext.Projects.Update(project);
             await dbContext.SaveChangesAsync();
+            NotificationsViewModel.CreateNotification(project.Name, null, NotificationType.ProjectModified, null);
         }
 
         CloseEditDialog();
@@ -192,6 +197,7 @@
 
         // Delete project blobs if necessary
         await _blobStorage.DeleteBlobAsync($"{project.Name}/cover photo/{Path.GetFileName(project.ImageUrl)}");
+        NotificationsViewModel.CreateNotification(project.Name, null, NotificationType.ProjectDeleted, null);
 
         GoBack();
     }

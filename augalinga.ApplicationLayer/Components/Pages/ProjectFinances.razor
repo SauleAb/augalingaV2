@@ -8,6 +8,8 @@
 @inject IJSRuntime JS
 @inject NavigationManager Navigation
 @using augalinga.Data.Access
+@using augalinga.Data.Enums
+@inject NotificationsViewModel NotificationsViewModel
 
 <div class="header">
     <div style="flex: 1">
@@ -134,8 +136,8 @@
         dbContext.Expenses.Add(expense);
         await dbContext.SaveChangesAsync();
         expensesViewModel.Expenses.Add(expense);
-
         CalculateTotals();
+        NotificationsViewModel.CreateNotification(expense.Transaction, project.Name, NotificationType.ExpenseAdded, null);
 
         expense = new Expense();
         await HideModal();
@@ -158,8 +160,9 @@
         dbContext.Expenses.Remove(expenseToDelete);
         await dbContext.SaveChangesAsync();
         expensesViewModel.Expenses.Remove(expenseToDelete);
-
         CalculateTotals();
+
+        NotificationsViewModel.CreateNotification(expenseToDelete.Transaction, project.Name, NotificationType.ExpenseDeleted, null);
     }
 }
 

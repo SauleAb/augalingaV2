@@ -11,8 +11,9 @@
 
 <SfGrid DataSource="@NotificationsViewModel.Notifications">
     <GridColumns>
-        <GridColumn Field="@nameof(Notification.UserName)" HeaderText="User" Width="140"></GridColumn>
-        <GridColumn Field="@nameof(Notification.PageName)" HeaderText="Page Modified" Width="150"></GridColumn>
+        <GridColumn Field="@nameof(Notification.UserName)" HeaderText="By" Width="80"></GridColumn>
+        <GridColumn Field="@nameof(Notification.ForUserName)" HeaderText="For" Width="80"></GridColumn>
+        <GridColumn Field="@nameof(Notification.Message)" HeaderText="Notification" Width="250"></GridColumn>
         <GridColumn Field="@nameof(Notification.CreatedAt)" HeaderText="Modified At" Width="150"></GridColumn>
     </GridColumns>
 </SfGrid>

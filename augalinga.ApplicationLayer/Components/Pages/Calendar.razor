@@ -8,6 +8,8 @@
 @using augalinga.Backend.ViewModels
 @using augalinga.Data.Entities
 @using augalinga.Data.Access
+@using augalinga.Data.Enums
+@inject NotificationsViewModel NotificationsViewModel
 
 <div class="calendar-container">
     <SfSchedule TValue="Meeting" StartHour="07:00" EnableAllDayScroll="true">
@@ -62,7 +64,7 @@
                             <td class="e-textlabel">For</td>
                             <td colspan="4">
                                 <SfDropDownList TItem="User" TValue="int?" DataSource="@calendarViewModel.Users" @bind-Value="(context as Meeting).UserId">
-                                    <DropDownListFieldSettings Text="Username" Value="Id"></DropDownListFieldSettings>
+                                    <DropDownListFieldSettings Text="FullName" Value="Id"></DropDownListFieldSettings>
                                     <SfDropDownListItem Text="Everyone" Value="null"></SfDropDownListItem>
                                 </SfDropDownList>
                             </td>
@@ -160,6 +162,7 @@
 
                     dbContext.Meetings.Add(meeting);
                     calendarViewModel.Events.Add(meeting);
+                    NotificationsViewModel.CreateNotification(meeting.EventName, null, NotificationType.MeetingAdded, meeting.UserId);
 
                     if (!string.IsNullOrEmpty(meeting.BackgroundColor))
                     {
@@ -184,6 +187,7 @@
                     {
                         dbContext.Meetings.Remove(eventToRemove);
                         calendarViewModel.Events.Remove(eventToRemove);
+                        NotificationsViewModel.CreateNotification(eventToRemove.EventName, null, NotificationType.MeetingDeleted, eventToRemove.UserId);
                     }
                 }
             }
@@ -216,6 +220,7 @@
                     existingEvent.EventName = editedEvent.EventName;
                     existingEvent.Notes = editedEvent.Notes;
                     dbContext.Meetings.Update(existingEvent);
+                    NotificationsViewModel.CreateNotification(existingEvent.EventName, null, NotificationType.MeetingModified, existingEvent.UserId);
                 }
             }
         }

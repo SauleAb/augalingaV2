@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using augalinga.Data.Entities;
+using augalinga.Data.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Contact = augalinga.Data.Entities.Contact;
 
 namespace augalinga.Data.Access
@@ -24,6 +26,15 @@ namespace augalinga.Data.Access
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=augalingaDB;Trusted_Connection=True;TrustServerCertificate=True;");
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Notification>()
+                .Property(n => n.Type)
+                .HasConversion(new EnumToStringConverter<NotificationType>());
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
