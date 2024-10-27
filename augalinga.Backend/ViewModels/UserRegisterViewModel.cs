@@ -8,7 +8,7 @@ namespace augalinga.Backend.ViewModels
         private string _fullName;
         private string _password;
         private string _email;
-        private string _background; // Add background property
+        private string _background; 
 
         [Required(ErrorMessage = "Full name is required.")]
         public string FullName

@@ -30,6 +30,7 @@ namespace augalinga.Backend.ViewModels
                 OnPropertyChanged(nameof(Notifications));
             }
         }
+
         private static readonly Dictionary<NotificationType, string> NotificationTemplates = new Dictionary<NotificationType, string>
         {
             { NotificationType.ProjectAdded, "A new project has been added - {0}" },
@@ -50,7 +51,7 @@ namespace augalinga.Backend.ViewModels
             { NotificationType.MeetingDeleted, "A meeting has been deleted - {0}" },
             { NotificationType.UserAdded, "A new user has been registered - {0}" },
             { NotificationType.UserDeleted, "User has been removed - {0}" },
-            { NotificationType.UserModified, "User's details have been updated - {0}" },
+            { NotificationType.UserModified, "{0}'s details have been updated" },
             { NotificationType.ExpenseAdded, "A new expense has been added to {1} - {0}" },
             { NotificationType.ExpenseDeleted, "An expense has been deleted from {1} - {0}" }
         };

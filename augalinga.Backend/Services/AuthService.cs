@@ -20,12 +20,12 @@ namespace augalinga.Backend.Services
             return _isLoggedIn;
         }
 
-        public async Task Login(string fullName, string password)
+        public async Task Login(string email, string password)
         {
-            if (!string.IsNullOrEmpty(fullName) && !string.IsNullOrEmpty(password))
+            if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
             {
                 var user = await _dbContext.Users
-                    .FirstOrDefaultAsync(u => u.FullName == fullName);
+                    .FirstOrDefaultAsync(u => u.Email == email);
 
                 if (user != null && BCrypt.Net.BCrypt.Verify(password, user.Password))
                 {

@@ -5,17 +5,17 @@ namespace augalinga.Backend.ViewModels
 {
     public class UserLoginViewModel : INotifyPropertyChanged
     {
-        private string _fullName;
+        private string _email;
         private string _password;
 
-        [Required(ErrorMessage = "Full name is required.")]
-        public string FullName
+        [Required(ErrorMessage = "Email is required.")]
+        public string Email
         {
-            get => _fullName;
+            get => _email;
             set
             {
-                _fullName = value;
-                OnPropertyChanged(nameof(FullName));
+                _email = value;
+                OnPropertyChanged(nameof(Email));
             }
         }
 

@@ -15,9 +15,9 @@
         <ValidationSummary />
 
         <div class="form-group">
-            <label for="username">Full name:</label>
-            <InputText id="username" class="form-control" @bind-Value="loginViewModel.FullName" />
-            <ValidationMessage For="@(() => loginViewModel.FullName)" />
+            <label for="email">Email:</label>
+            <InputText id="username" class="form-control" @bind-Value="loginViewModel.Email" />
+            <ValidationMessage For="@(() => loginViewModel.Email)" />
         </div>
         <div class="form-group">
             <label for="password">Password:</label>
@@ -41,19 +41,19 @@
     {
         if (await VerifyUser(loginViewModel))
         {
-            await IAuthService.Login(loginViewModel.FullName, loginViewModel.Password);
+            await IAuthService.Login(loginViewModel.Email, loginViewModel.Password);
             Navigation.NavigateTo("/");
         }
         else
         {
-            await JS.InvokeVoidAsync("alert", "Invalid username or password.");
+            await JS.InvokeVoidAsync("alert", "Invalid email or password.");
         }
     }
 
     private async Task<bool> VerifyUser(UserLoginViewModel viewModel)
     {
         var user = await dbContext.Users
-            .FirstOrDefaultAsync(u => u.FullName == viewModel.FullName);
+            .FirstOrDefaultAsync(u => u.Email == viewModel.Email);
 
         if (user != null)
         {
