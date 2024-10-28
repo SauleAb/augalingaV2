@@ -1,6 +1,7 @@
 ﻿@page "/admin"
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Grids
+@using augalinga.Backend.Services
 @using augalinga.Backend.ViewModels
 @using augalinga.Data.Entities
 @inject NavigationManager Navigation
@@ -12,6 +13,7 @@
 @using Microsoft.EntityFrameworkCore;
 @using augalinga.Data.Enums
 @inject NotificationsViewModel NotificationsViewModel
+@inject IAuthService IAuthService
 
 <div class="header">
     <div style="flex: 1">
@@ -19,6 +21,7 @@
     </div>
     <h1>Admin</h1>
     <div style="flex: 1; display: flex; justify-content: flex-end;">
+        <button class="logout-button" @onclick="Logout"><i class="bi bi-box-arrow-right"></i></button>
         <button class="add-button" @onclick="OpenModal"><i class="bi bi-plus-lg h2"></i></button>
     </div>
 </div>
@@ -174,6 +177,13 @@
     {
         Navigation.NavigateTo("/");
     }
+
+    private void Logout()
+    {
+        IAuthService.Logout();
+        Navigation.NavigateTo("/login");
+    }
+
     private async Task SaveUserChanges()
     {
         try
@@ -245,22 +255,29 @@
     {
         try
         {
+            // First, find all notifications for the user
+            var notifications = await dbContext.Notifications
+                .Where(n => n.UserId == user.Id || n.ForUserId == user.Id) // Check both UserId and ForUserId
+                .ToListAsync();
+
+            // Remove notifications
+            dbContext.Notifications.RemoveRange(notifications);
+
+            // Now find meetings
             var meetings = await dbContext.Meetings
                 .Where(m => m.UserId == user.Id)
                 .ToListAsync();
 
+            // Remove meetings
             dbContext.Meetings.RemoveRange(meetings);
 
-            var notifications = await dbContext.Notifications
-                .Where(n => n.UserId == user.Id)
-                .ToListAsync();
-
-            dbContext.Notifications.RemoveRange(notifications);
-
+            // Finally, remove the user
             dbContext.Users.Remove(user);
 
+            // Save changes to the database
             await dbContext.SaveChangesAsync();
 
+            // Update the UI
             usersViewModel.Users.Remove(user);
             StateHasChanged();
         }

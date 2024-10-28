@@ -137,6 +137,21 @@ h1 {
             font-size: 40px;
         }
 
+.logout-button {
+    background-color: transparent;
+    cursor: pointer;
+    border: none;
+}
+
+    .logout-button i {
+        transition: font-size 0.3s ease;
+        font-size: 30px;
+    }
+
+        .logout-button i:hover {
+            font-size: 40px;
+        }
+
 .edit-button {
     background-color: transparent;
     cursor: pointer;
