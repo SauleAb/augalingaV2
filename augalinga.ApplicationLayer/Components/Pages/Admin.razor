@@ -251,7 +251,14 @@
 
             dbContext.Meetings.RemoveRange(meetings);
 
+            var notifications = await dbContext.Notifications
+                .Where(n => n.UserId == user.Id)
+                .ToListAsync();
+
+            dbContext.Notifications.RemoveRange(notifications);
+
             dbContext.Users.Remove(user);
+
             await dbContext.SaveChangesAsync();
 
             usersViewModel.Users.Remove(user);

@@ -76,12 +76,13 @@
                 FullName = viewModel.FullName,
                 Email = viewModel.Email,
                 Password = HashPassword(viewModel.Password),
-                Color = viewModel.Background 
+                Color = viewModel.Background,
+                Token = Guid.NewGuid().ToString()
             };
 
         dbContext.Users.Add(newUser);
         await dbContext.SaveChangesAsync();
-        NotificationsViewModel.CreateNotification(newUser.FullName, null, NotificationType.UserAdded, null);
+        await SecureStorage.SetAsync("authToken", newUser.Token);
         return true;
     }
 

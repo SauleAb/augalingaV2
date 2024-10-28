@@ -1,9 +1,7 @@
 ﻿using augalinga.Data.Access;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Maui.Storage; // Add this namespace for SecureStorage
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace augalinga.Backend.Services
@@ -14,6 +12,19 @@ namespace augalinga.Backend.Services
         private bool _isLoggedIn;
         private User _currentUser;
         public event Action OnChange;
+
+        private const string AuthTokenKey = "authToken";
+
+        public async Task InitializeAsync()
+        {
+            var storedToken = await SecureStorage.GetAsync(AuthTokenKey);
+            if (!string.IsNullOrEmpty(storedToken))
+            {
+                _currentUser = await _dbContext.Users.FirstOrDefaultAsync(u => u.Token == storedToken);
+                _isLoggedIn = _currentUser != null;
+                NotifyStateChanged();
+            }
+        }
 
         public bool IsUserLoggedIn()
         {
@@ -31,6 +42,9 @@ namespace augalinga.Backend.Services
                 {
                     _isLoggedIn = true;
                     _currentUser = user;
+
+                    await SecureStorage.SetAsync(AuthTokenKey, user.Token);
+
                     NotifyStateChanged();
                 }
                 else
@@ -45,9 +59,10 @@ namespace augalinga.Backend.Services
         {
             _isLoggedIn = false;
             _currentUser = null;
+
+            SecureStorage.Remove(AuthTokenKey);
             NotifyStateChanged();
         }
-
         public User GetCurrentUser()
         {
             return _currentUser;

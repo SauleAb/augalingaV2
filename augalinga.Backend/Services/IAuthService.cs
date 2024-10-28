@@ -13,6 +13,7 @@ namespace augalinga.Backend.Services
         Task Login(string email, string password);
         void Logout();
         User GetCurrentUser();
-    }
+        Task InitializeAsync();
+    };
 
 }
