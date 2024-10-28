@@ -4,13 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using augalinga.Data.Entities;
+using augalinga.Data.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Contact = augalinga.Data.Entities.Contact;
 
 namespace augalinga.Data.Access
 {
     public class DataContext : DbContext
     {
+        public DbSet<User> Users { get; set; }
         public DbSet<Meeting> Meetings { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Contact> Contacts { get; set; }
@@ -19,9 +22,19 @@ namespace augalinga.Data.Access
         public DbSet<Draft> Drafts { get; set; }
         public DbSet<Order> Orders {  get; set; }
         public DbSet<Expense> Expenses {  get; set; }
+        public DbSet<Notification> Notifications {  get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=augalingaDB;Trusted_Connection=True;TrustServerCertificate=True;");
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Notification>()
+                .Property(n => n.Type)
+                .HasConversion(new EnumToStringConverter<NotificationType>());
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

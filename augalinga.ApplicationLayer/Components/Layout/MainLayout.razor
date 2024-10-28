@@ -1,13 +1,42 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager Navigation
+@using augalinga.Backend.Services
+@inject IAuthService AuthService
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+    @if (AuthService.IsUserLoggedIn())
+    {
+        <div class="sidebar">
+            <NavMenu />
+        </div>
+        <main>
+            <article class="content px-4">
+                @Body
+            </article>
+        </main>
+    }
+    else
+    {
+        <main>
+            <article class="content px-4">
+                @Body
+            </article>
+        </main>
+    }
 </div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        AuthService.OnChange += StateHasChanged; // Subscribe to the event
+        if (!AuthService.IsUserLoggedIn())
+        {
+            Navigation.NavigateTo("/login");
+        }
+    }
+
+    public void Dispose()
+    {
+        AuthService.OnChange -= StateHasChanged; // Unsubscribe from the event
+    }
+}

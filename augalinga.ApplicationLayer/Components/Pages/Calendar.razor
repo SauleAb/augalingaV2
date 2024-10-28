@@ -1,4 +1,6 @@
 ﻿@page "/"
+@using Microsoft.EntityFrameworkCore
+@using Syncfusion.Blazor.DropDowns
 @using Syncfusion.Blazor.Schedule
 @using Syncfusion.Blazor.Inputs
 @using Syncfusion.Blazor.Calendars
@@ -6,41 +8,122 @@
 @using augalinga.Backend.ViewModels
 @using augalinga.Data.Entities
 @using augalinga.Data.Access
+@using augalinga.Data.Enums
+@inject NotificationsViewModel NotificationsViewModel
+
+<div class="calendar-container">
+    <SfSchedule TValue="Meeting" StartHour="07:00" EnableAllDayScroll="true">
+        <ScheduleEvents TValue="Meeting" ActionCompleted="OnActionCompleted" EventRendered="OnEventRendered"></ScheduleEvents>
+        <ScheduleEventSettings DataSource="@calendarViewModel.Events">
+            <ScheduleField Id="Id">
+                <FieldSubject Name="EventName"></FieldSubject>
+                <FieldDescription Name="Notes"></FieldDescription>
+                <FieldIsAllDay Name="IsAllDay"></FieldIsAllDay>
+                <FieldStartTime Name="From"></FieldStartTime>
+                <FieldEndTime Name="To"></FieldEndTime>
+                <EventSettingsField Name="BackgroundColor"></EventSettingsField>
+            </ScheduleField>
+        </ScheduleEventSettings>
+        <ScheduleViews>
+            <ScheduleView Option="View.Day"></ScheduleView>
+            <ScheduleView Option="View.Week"></ScheduleView>
+            <ScheduleView Option="View.WorkWeek"></ScheduleView>
+            <ScheduleView Option="View.Month"></ScheduleView>
+            <ScheduleView Option="View.Agenda"></ScheduleView>
+        </ScheduleViews>
+
+        <ScheduleTemplates>
+            <EditorTemplate>
+                <table class="custom-event-editor" width="100%" cellpadding="5">
+                    <tbody>
+                        <tr>
+                            <td class="e-textlabel">Name</td>
+                            <td colspan="4">
+                                <SfTextBox @bind-Value="(context as Meeting).EventName"></SfTextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="e-textlabel">From</td>
+                            <td colspan="4">
+                                <SfDateTimePicker @bind-Value="(context as Meeting).From"></SfDateTimePicker>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="e-textlabel">To</td>
+                            <td colspan="4">
+                                <SfDateTimePicker @bind-Value="(context as Meeting).To"></SfDateTimePicker>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="e-textlabel">All day</td>
+                            <td colspan="4">
+                                <SfCheckBox @bind-Checked="(context as Meeting).IsAllDay"></SfCheckBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="e-textlabel">For</td>
+                            <td colspan="4">
+                                <SfDropDownList TItem="User" TValue="int?" DataSource="@calendarViewModel.Users" @bind-Value="(context as Meeting).UserId">
+                                    <DropDownListFieldSettings Text="FullName" Value="Id"></DropDownListFieldSettings>
+                                    <SfDropDownListItem Text="Everyone" Value="null"></SfDropDownListItem>
+                                </SfDropDownList>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="e-textlabel">Notes</td>
+                            <td colspan="4">
+                                <SfTextBox Multiline="true" @bind-Value="(context as Meeting).Notes"></SfTextBox>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </EditorTemplate>
+        </ScheduleTemplates>
+    </SfSchedule>
+</div>
+<div class="user-filter-container">
+    @if (usersViewModel.Users != null && usersViewModel.Users.Any())
+    {
+        @foreach (var user in usersViewModel.Users)
+        {
+            <SfCheckBox @bind-Checked="@user.IsChecked" @onclick="() => OnUserSelectionChanged(user)" Label="@user.FullName" >
+            </SfCheckBox>
+        }
+    }
+    else
+    {
+        <p>No users available to display.</p>
+    }
+    </div>
+
 @code {
     public DataContext dbContext { get; set; } = new DataContext();
     CalendarViewModel calendarViewModel { get; set; } = new CalendarViewModel();
-    public List<string> CustomClass = new List<string>() { "custom-class" };
-
+    UsersViewModel usersViewModel { get; set; } = new UsersViewModel();
+    public List<string> CustomClass { get; set; } = new List<string>(); // Define the CustomClass list
 
     public void OnEventRendered(EventRenderedArgs<Meeting> args)
     {
-        if (args.Data.Employee == "Baronaite")
+        if (!string.IsNullOrEmpty(args.Data.BackgroundColor))
         {
-            args.CssClasses = new List<string> { "baronaite-background" };
-        }
-        else if (args.Data.Employee == "Gudaityte")
-        {
-            args.CssClasses = new List<string> { "gudaityte-background" };
-        }
-        else if (args.Data.Employee == "Both")
-        {
-            args.CssClasses = new List<string> { "both-background" };
-        }
-        else
-        {
-            args.CssClasses = CustomClass;
+            var colorClass = "custom-bg-" + args.Data.BackgroundColor.TrimStart('#');
+            args.CssClasses = new List<string> { colorClass };
+
+            if (!CustomClass.Contains(colorClass))
+            {
+                CustomClass.Add(colorClass);
+            }
         }
     }
 
-    private string GetSelectedColor(string employee)
+    private void OnUserSelectionChanged(User user)
     {
-        return employee switch
-        {
-            "Baronaite" => "#FFFFD700", // Yellow
-            "Gudaityte" => "#1A9BAB",   // Electric
-            "Both" => "#E7344C",        // Red
-            _ => "#FFFFFFFF",           // Default color
-        };
+        // Toggle the IsChecked property
+        user.IsChecked = !user.IsChecked;
+
+        // Update the event filtering based on selected users
+        var selectedUsers = usersViewModel.Users.Where(u => u.IsChecked).ToList();
+        calendarViewModel.LoadEvents(selectedUsers);
     }
 
     public async void OnActionCompleted(ActionEventArgs<Meeting> args)
@@ -51,20 +134,44 @@
             {
                 foreach (var addedEvent in args.AddedRecords)
                 {
-                    if (addedEvent.Notes == null)
+
+                    // Check if UserId is null
+                    if (addedEvent.UserId == null)
                     {
-                        addedEvent.Notes = "";
+                        addedEvent.BackgroundColor = "#808080"; 
                     }
-                    Meeting meeting = new Meeting
+                    else
+                    {
+                        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == addedEvent.UserId);
+                        if (user != null)
                         {
-                            From = addedEvent.From,
-                            To = addedEvent.To,
-                            EventName = addedEvent.EventName,
-                            IsAllDay = addedEvent.IsAllDay,
-                            Notes = addedEvent.Notes,
-                            Employee = addedEvent.Employee,
-                        };
+                            addedEvent.BackgroundColor = user.Color; 
+                        }
+                    }
+
+                    Meeting meeting = new Meeting
+                    {
+                        From = addedEvent.From,
+                        To = addedEvent.To,
+                        EventName = addedEvent.EventName,
+                        IsAllDay = addedEvent.IsAllDay,
+                        Notes = addedEvent.Notes,
+                        UserId = addedEvent.UserId,
+                        BackgroundColor = addedEvent.BackgroundColor
+                    };
+
                     dbContext.Meetings.Add(meeting);
+                    calendarViewModel.Events.Add(meeting);
+                    NotificationsViewModel.CreateNotification(meeting.EventName, null, NotificationType.MeetingAdded, meeting.UserId);
+
+                    if (!string.IsNullOrEmpty(meeting.BackgroundColor))
+                    {
+                        var colorClass = "custom-bg-" + meeting.BackgroundColor.TrimStart('#');
+                        if (!CustomClass.Contains(colorClass))
+                        {
+                            CustomClass.Add(colorClass);
+                        }
+                    }
                 }
             }
         }
@@ -79,6 +186,8 @@
                     if (eventToRemove != null)
                     {
                         dbContext.Meetings.Remove(eventToRemove);
+                        calendarViewModel.Events.Remove(eventToRemove);
+                        NotificationsViewModel.CreateNotification(eventToRemove.EventName, null, NotificationType.MeetingDeleted, eventToRemove.UserId);
                     }
                 }
             }
@@ -91,118 +200,69 @@
                 foreach (var editedEvent in args.ChangedRecords)
                 {
                     var existingEvent = calendarViewModel.Events.FirstOrDefault(e => e.Id == editedEvent.Id);
-                    if (editedEvent.Notes == null)
+
+                    if (editedEvent.UserId == null)
                     {
-                        editedEvent.Notes = "";
+                        editedEvent.BackgroundColor = "#808080"; // Gray color
                     }
-                    if (existingEvent != null)
+                    else
                     {
-                        existingEvent.From = editedEvent.From;
-                        existingEvent.To = editedEvent.To;
-                        existingEvent.IsAllDay = editedEvent.IsAllDay;
-                        existingEvent.EventName = editedEvent.EventName;
-                        existingEvent.Notes = editedEvent.Notes;
-                        existingEvent.Employee = editedEvent.Employee;
-                        dbContext.Meetings.Update(existingEvent);
+                        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == editedEvent.UserId);
+                        if (user != null)
+                        {
+                            existingEvent.BackgroundColor = user.Color; 
+                            existingEvent.UserId = editedEvent.UserId;
+                        }
                     }
+                    existingEvent.From = editedEvent.From;
+                    existingEvent.To = editedEvent.To;
+                    existingEvent.IsAllDay = editedEvent.IsAllDay;
+                    existingEvent.EventName = editedEvent.EventName;
+                    existingEvent.Notes = editedEvent.Notes;
+                    dbContext.Meetings.Update(existingEvent);
+                    NotificationsViewModel.CreateNotification(existingEvent.EventName, null, NotificationType.MeetingModified, existingEvent.UserId);
                 }
             }
         }
-
-        
         await dbContext.SaveChangesAsync();
+        StateHasChanged();
+        calendarViewModel = new CalendarViewModel();
     }
 }
 
-<SfSchedule TValue="Meeting" StartHour="07:00">
-    <ScheduleEvents TValue="Meeting" ActionCompleted="OnActionCompleted" EventRendered="OnEventRendered"></ScheduleEvents>
-    <ScheduleEventSettings DataSource="@calendarViewModel.Events">
-        <ScheduleField Id="Id">
-            <FieldSubject Name="EventName"></FieldSubject>
-            <FieldDescription Name="Notes"></FieldDescription>
-            <FieldIsAllDay Name="IsAllDay"></FieldIsAllDay>
-            <FieldStartTime Name="From"></FieldStartTime>
-            <FieldEndTime Name="To"></FieldEndTime>
-        </ScheduleField>
-    </ScheduleEventSettings>
-    <ScheduleViews>
-        <ScheduleView Option="View.Day"></ScheduleView>
-        <ScheduleView Option="View.Week"></ScheduleView>
-        <ScheduleView Option="View.WorkWeek"></ScheduleView>
-        <ScheduleView Option="View.Month"></ScheduleView>
-        <ScheduleView Option="View.Agenda"></ScheduleView>
-    </ScheduleViews>
-
-    <ScheduleTemplates>
-        <EditorTemplate>
-            <table class="custom-event-editor" width="100%" cellpadding="5">
-                <tbody>
-                    <tr>
-                        <td class="e-textlabel">Name</td>
-                        <td colspan="4">
-                            <SfTextBox @bind-Value="(context as Meeting).EventName"></SfTextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="e-textlabel">From</td>
-                        <td colspan="4">
-                            <SfDateTimePicker @bind-Value="(context as Meeting).From"></SfDateTimePicker>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="e-textlabel">To</td>
-                        <td colspan="4">
-                            <SfDateTimePicker @bind-Value="(context as Meeting).To"></SfDateTimePicker>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="e-textlabel">All day</td>
-                        <td colspan="4">
-                            <SfCheckBox @bind-Checked="(context as Meeting).IsAllDay"></SfCheckBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="e-textlabel">For</td>
-                        <td colspan="4">
-                            <SfRadioButton Label="Baronaite" Value="Baronaite" Name="Employee" @bind-Checked="(context as Meeting).Employee"></SfRadioButton>
-                            <SfRadioButton Label="Gudaityte" Value="Gudaityte" Name="Employee" @bind-Checked="(context as Meeting).Employee"></SfRadioButton>
-                            <SfRadioButton Label="Both" Value="Both" Name="Employee" @bind-Checked="(context as Meeting).Employee"></SfRadioButton>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="e-textlabel">Notes</td>
-                        <td colspan="4">
-                            <SfTextBox Multiline="true" @bind-Value="(context as Meeting).Notes"></SfTextBox>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </EditorTemplate>
-    </ScheduleTemplates>
-</SfSchedule>
-
 <style>
-    .e-schedule .e-vertical-view .e-all-day-appointment-wrapper .e-appointment.baronaite-background,
-    .e-schedule .e-vertical-view .e-day-wrapper .e-appointment.baronaite-background,
-    .e-schedule .e-month-view .e-appointment.baronaite-background {
-        background: #ffd700 !important;
+    @foreach (var cssClass in CustomClass)
+    {
+        <text>
+            .@cssClass {
+                background-color: #@(cssClass.Replace("custom-bg-", "")) !important;
+            }
+        </text>
     }
 
-    .e-schedule .e-vertical-view .e-all-day-appointment-wrapper .e-appointment.gudaityte-background,
-    .e-schedule .e-vertical-view .e-day-wrapper .e-appointment.gudaityte-background,
-    .e-schedule .e-month-view .e-appointment.gudaityte-background {
-        background: #1A9BAB !important;
+    .calendar-container {
+        height: 80vh;
+        overflow: hidden;
+        margin: 10px;
+        position: relative;
     }
 
-    .e-schedule .e-vertical-view .e-all-day-appointment-wrapper .e-appointment.both-background,
-    .e-schedule .e-vertical-view .e-day-wrapper .e-appointment.both-background,
-    .e-schedule .e-month-view .e-appointment.both-background {
-        background: #E7344C !important;
+    .e-schedule {
+        height: 100% !important;
+        overflow-y: auto !important;
+        overflow-x: hidden;
     }
 
-    .e-schedule .e-vertical-view .e-all-day-appointment-wrapper .e-appointment.custom-class,
-    .e-schedule .e-vertical-view .e-day-wrapper .e-appointment.custom-class,
-    .e-schedule .e-month-view .e-appointment.custom-class {
-        background: #32CD32 !important;
+    .e-content {
+        height: calc(100% - 50px);
+        overflow-y: auto;
+    }
+
+    .user-filter-container {
+        bottom:0;
+        z-index: 2;
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
     }
 </style>

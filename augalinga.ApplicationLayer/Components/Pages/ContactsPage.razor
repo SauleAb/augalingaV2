@@ -4,8 +4,10 @@
 @using augalinga.Backend.ViewModels
 @using augalinga.Data.Entities
 @using augalinga.Data.Access
+@using augalinga.Data.Enums
 @inject NavigationManager Navigation
 @inject IJSRuntime JS
+@inject NotificationsViewModel NotificationsViewModel
 
 <div class="header">
     <div style="flex: 1">
@@ -100,6 +102,7 @@
         dbContext.Contacts.Remove(contact);
         await dbContext.SaveChangesAsync();
         contactsViewModel.Contacts.Remove(contact);
+        NotificationsViewModel.CreateNotification(contact.Name, contact.Category, NotificationType.ContactDeleted, null);
     }
 
     private async void AddContact()
@@ -116,6 +119,7 @@
         dbContext.Contacts.Add(contact);
         await dbContext.SaveChangesAsync();
         contactsViewModel.Contacts.Add(contact);
+        NotificationsViewModel.CreateNotification(contact.Name, contact.Category, NotificationType.ContactAdded, null);
         await HideModal();
     }
 

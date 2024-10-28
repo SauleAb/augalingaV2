@@ -11,7 +11,9 @@
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.Maui.Controls
 @using System.Text.Json
+@using augalinga.Data.Enums
 @inject IJSRuntime JS
+@inject NotificationsViewModel NotificationsViewModel
 
 
 <div class="header">
@@ -28,6 +30,11 @@
     <GridColumns>
         <GridColumn Field=@nameof(Order.Name) HeaderText="Name"></GridColumn>
         <GridColumn Field=@nameof(Order.Link) HeaderText="Link"></GridColumn>
+        <GridColumn Width="50">
+            <Template>
+                <img src="../images/download.svg" height="20px" @onclick="(() => DownloadOrder(context as Order))" style="cursor: pointer;" />
+            </Template>
+        </GridColumn>
         <GridColumn Width="50">
             <Template>
                 <img src="../images/delete.png" height="20px" @onclick="(() => DeleteOrder(context as Order))" style="cursor: pointer;" />
@@ -89,6 +96,17 @@
         ordersViewModel = new OrdersViewModel(projectId);
         blobStorage = new AzureBlobStorage();
     }
+    private async Task DownloadOrder(Order order)
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("open", order.Link, "_blank");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error downloading document: {ex.Message}");
+        }
+    }
 
     public async Task HideModal()
     {
@@ -131,6 +149,7 @@
                 await dbContext.Orders.AddAsync(order);
                 await dbContext.SaveChangesAsync();
                 ordersViewModel.AddOrderToCollection(order);
+                NotificationsViewModel.CreateNotification(order.Name, project.Name, NotificationType.OrderAdded, null);
             }
 
             await Task.Delay(800);
@@ -157,6 +176,7 @@
 
         await blobStorage.DeleteBlobAsync(order.Link);
         ordersViewModel.Orders.Remove(order);
+        NotificationsViewModel.CreateNotification(order.Name, project.Name, NotificationType.OrderDeleted, null);
     }
 }
 <script>

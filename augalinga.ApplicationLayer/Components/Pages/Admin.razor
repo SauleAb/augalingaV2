@@ -1,0 +1,334 @@
+﻿@page "/admin"
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Grids
+@using augalinga.Backend.ViewModels
+@using augalinga.Data.Entities
+@inject NavigationManager Navigation
+@using Syncfusion.Blazor.Inputs
+@using Microsoft.Maui.Controls
+@using System.Text.Json
+@inject IJSRuntime JS
+@using augalinga.Data.Access
+@using Microsoft.EntityFrameworkCore;
+@using augalinga.Data.Enums
+@inject NotificationsViewModel NotificationsViewModel
+
+<div class="header">
+    <div style="flex: 1">
+        <button @onclick="GoBack" class="back-button"><i class="bi bi-arrow-left h2"></i></button>
+    </div>
+    <h1>Admin</h1>
+    <div style="flex: 1; display: flex; justify-content: flex-end;">
+        <button class="add-button" @onclick="OpenModal"><i class="bi bi-plus-lg h2"></i></button>
+    </div>
+</div>
+
+<SfGrid DataSource="@usersViewModel.Users" AllowPaging="true">
+    <GridColumns>
+        <GridColumn Field=@nameof(user.FullName) HeaderText="Name"></GridColumn>
+        <GridColumn Field=@nameof(user.Email) HeaderText="Email"></GridColumn>
+        <GridColumn HeaderText="Color" Width="100">
+            <Template>
+                @{
+                    var currentUser = context as User; 
+                }
+                <div style="width: 30px; height: 30px; background-color: @currentUser.Color; border: 1px solid #000; border-radius: 30px;"></div>
+            </Template>
+        </GridColumn>
+        <GridColumn Width="50">
+            <Template>
+                <img src="../images/edit.svg" height="20px" @onclick="(() => OpenEditModal(context as User))" style="cursor: pointer;" />
+            </Template>
+        </GridColumn>
+        <GridColumn Width="50">
+            <Template>
+                <img src="../images/trash3.svg" height="20px" @onclick="(() => DeleteUser(context as User))" style="cursor: pointer;" />
+            </Template>
+        </GridColumn>
+    </GridColumns>
+</SfGrid>
+
+<div class="modal show" style="display:none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add a User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="HideModal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="Username">Name:</label>
+                            <input type="text" class="form-control" id="Username" @bind="user.FullName" required />
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="userPassword">Password:</label>
+                            <input type="password" class="form-control" id="userPassword" @bind="user.Password" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="userEmail">Email:</label>
+                            <input type="text" class="form-control" id="userEmail" @bind="user.Email" />
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="userColor">Color:</label>
+                            <InputText id="userColor" type="color" class="form-control" @bind-Value="user.Color" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" @onclick="AddUser">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal edit-modal" style="display:none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="HideEditModal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="editUsername">Name:</label>
+                            <input type="text" class="form-control" id="editUsername" @bind="selectedUser.FullName" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="editCurrentPassword">Current Password:</label>
+                            <input type="password" class="form-control" id="editCurrentPassword" @bind="currentPassword" required />
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="editNewPassword">New Password:</label>
+                            <input type="password" class="form-control" id="editNewPassword" @bind="newPassword" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="editUserEmail">Email:</label>
+                            <input type="text" class="form-control" id="editUserEmail" @bind="selectedUser.Email" />
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="editUserColor">Color:</label>
+                            <InputText id="editUserColor" type="color" class="form-control" @bind-Value="selectedUser.Color" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" @onclick="SaveUserChanges">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private DataContext dbContext { get; set; } = new DataContext();
+    private User user = new User();
+    private UsersViewModel usersViewModel;
+    private User selectedUser = new User();
+    private string currentPassword = string.Empty;
+    private string newPassword = string.Empty;
+
+    public async Task OpenEditModal(User user)
+    {
+        selectedUser = user;
+        await JS.InvokeVoidAsync("showEditModal");
+    }
+
+    public async Task HideEditModal()
+    {
+        await JS.InvokeVoidAsync("hideEditModal");
+    }
+
+
+    protected override void OnInitialized()
+    {
+        usersViewModel = new UsersViewModel();
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/");
+    }
+    private async Task SaveUserChanges()
+    {
+        try
+        {
+            var existingUser = await dbContext.Users.FindAsync(selectedUser.Id);
+            if (existingUser == null)
+            {
+                await JS.InvokeVoidAsync("alert", "User not found.");
+                return;
+            }
+
+            if (selectedUser.FullName != existingUser.FullName)
+            {
+                existingUser.FullName = selectedUser.FullName;
+                NotificationsViewModel.CreateNotification(existingUser.FullName, null, NotificationType.UserModified, null);
+            }
+
+            if (selectedUser.Email != existingUser.Email)
+            {
+                existingUser.Email = selectedUser.Email;
+                NotificationsViewModel.CreateNotification(existingUser.FullName, null, NotificationType.UserModified, null);
+            }
+
+            if (selectedUser.Color != existingUser.Color)
+            {
+                existingUser.Color = selectedUser.Color;
+                NotificationsViewModel.CreateNotification(existingUser.FullName, null, NotificationType.UserModified, null);
+
+                var userMeetings = await dbContext.Meetings
+                    .Where(m => m.UserId == existingUser.Id)
+                    .ToListAsync();
+
+                foreach (var meeting in userMeetings)
+                {
+                    meeting.BackgroundColor = selectedUser.Color;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(newPassword) && !string.IsNullOrWhiteSpace(currentPassword))
+            {
+                if (!BCrypt.Net.BCrypt.Verify(currentPassword, existingUser.Password))
+                {
+                    await JS.InvokeVoidAsync("alert", "Current password is incorrect.");
+                    return;
+                }
+                else
+                {
+                    existingUser.Password = HashPassword(newPassword);
+                }
+            }
+
+            await dbContext.SaveChangesAsync();
+
+
+            currentPassword = string.Empty;
+            newPassword = string.Empty;
+
+            usersViewModel = new UsersViewModel();
+            StateHasChanged();
+            await HideEditModal();
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync("alert", $"An error occurred: {ex.Message}");
+        }
+    }
+
+    private async Task DeleteUser(User user)
+    {
+        try
+        {
+            var meetings = await dbContext.Meetings
+                .Where(m => m.UserId == user.Id)
+                .ToListAsync();
+
+            dbContext.Meetings.RemoveRange(meetings);
+
+            dbContext.Users.Remove(user);
+            await dbContext.SaveChangesAsync();
+
+            usersViewModel.Users.Remove(user);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync("alert", $"An error occurred: {ex.Message}");
+        }
+    }
+
+    private async Task AddUser()
+    {
+        var existingUser = await dbContext.Users
+            .FirstOrDefaultAsync(u => u.Email == user.Email); 
+
+        if (existingUser != null)
+        {
+            await JS.InvokeVoidAsync("alert", "Email is already in use.");
+            return;
+        }
+        if (user.Color == null)
+        {
+            user.Color = "#000000";
+        }
+        user.Password = HashPassword(user.Password);
+        dbContext.Users.Add(user);
+        await dbContext.SaveChangesAsync();
+        usersViewModel.Users.Add(user);
+        await HideModal();
+    }
+
+    private string HashPassword(string password)
+    {
+        return BCrypt.Net.BCrypt.HashPassword(password);
+    }
+
+    public async Task OpenModal()
+    {
+        await JS.InvokeVoidAsync("showModal");
+    }
+
+    public async Task HideModal()
+    {
+        await JS.InvokeVoidAsync("hideModal");
+    }
+}
+
+<script>
+    window.showModal = () => {
+        const modal = document.querySelector('.modal');
+        if (modal) {
+            modal.style.display = 'block';
+        }
+    };
+
+    window.hideModal = () => {
+        const modal = document.querySelector('.modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    };
+
+    window.showEditModal = () => {
+        const modal = document.querySelector('.edit-modal');
+        if (modal) {
+            modal.style.display = 'block';
+        }
+    };
+
+    window.hideEditModal = () => {
+        const modal = document.querySelector('.edit-modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    };
+</script>
+
+<style>
+</style>

@@ -13,7 +13,7 @@ namespace augalinga.Data.Entities
 
         public int Id { get; set; }
         public string Name { get; set; }
-        public string ImageUrl { get; set; }
+        public string? ImageUrl { get; set; }
         public Project(string name)
         {
             Name = name;

@@ -1,13 +1,15 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using augalinga.Data.Access;
+﻿using augalinga.Data.Access;
 using augalinga.Data.Entities;
-
-namespace augalinga.Backend.ViewModels;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
 
 public class CalendarViewModel : INotifyPropertyChanged
 {
     private ObservableCollection<Meeting> _events;
+    private HashSet<User> _selectedUsers; // Use HashSet to manage selected users efficiently
+    public List<User> Users { get; set; } // Property to hold users
+
     public ObservableCollection<Meeting> Events
     {
         get => _events;
@@ -17,43 +19,52 @@ public class CalendarViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(Events));
         }
     }
+
+    public HashSet<User> SelectedUsers => _selectedUsers; // Expose selected users for binding
+
     public CalendarViewModel()
     {
-        LoadEvents(true, true, true);
+        _selectedUsers = new HashSet<User>();
+        Users = LoadUsers();
+        LoadEvents(new List<User>());
     }
 
-    // public CalendarViewModel(bool baronaite, bool gudaityte, bool both)
-    // {
-    //     LoadEvents(baronaite, gudaityte, both);
-    // }
+    private List<User> LoadUsers()
+    {
+        using (var dbContext = new DataContext())
+        {
+            return dbContext.Users.ToList();
+        }
+    }
 
-    public void LoadEvents(bool baronaite, bool gudaityte, bool both)
+    public void LoadEvents(List<User> selectedUsers)
     {
         using (var dbContext = new DataContext())
         {
             IQueryable<Meeting> query = dbContext.Meetings.AsQueryable();
 
-            if (!baronaite)
+            if (selectedUsers.Any())
             {
-                query = query.Where(m => m.Employee != "Baronaite");
+                query = query.Where(m => selectedUsers.Contains(m.User));
             }
-            if (!gudaityte)
-            {
-                query = query.Where(m => m.Employee != "Gudaityte");
-            }
-            if (!both)
-            {
-                query = query.Where(m => m.Employee != "Both");
-            }
-
             var meetings = query.ToList();
             Events = new ObservableCollection<Meeting>(meetings);
         }
     }
 
-    public void AddEventToCollection(Meeting newMeeting)
+    public void ToggleUserSelection(User user)
     {
-        Events.Add(newMeeting);
+        if (_selectedUsers.Contains(user))
+        {
+            _selectedUsers.Remove(user);
+        }
+        else
+        {
+            _selectedUsers.Add(user);
+        }
+
+        // Load events based on updated selected users
+        LoadEvents(_selectedUsers.ToList());
     }
 
     public event PropertyChangedEventHandler PropertyChanged;

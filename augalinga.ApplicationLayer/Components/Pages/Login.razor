@@ -1,0 +1,70 @@
+﻿@page "/login"
+@using Microsoft.EntityFrameworkCore
+@using augalinga.Backend.ViewModels
+@using augalinga.Data.Access
+@using augalinga.Data.Entities
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+@using augalinga.Backend.Services
+@inject IAuthService IAuthService
+
+<div class="container">
+    <h1>User Login</h1>
+    <EditForm Model="loginViewModel" OnValidSubmit="HandleLogin">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <InputText id="username" class="form-control" @bind-Value="loginViewModel.Email" />
+            <ValidationMessage For="@(() => loginViewModel.Email)" />
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <InputText id="password" type="password" class="form-control" @bind-Value="loginViewModel.Password" />
+            <ValidationMessage For="@(() => loginViewModel.Password)" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Login</button>
+    </EditForm>
+
+    <div class="mt-3">
+        <button class="btn btn-link" @onclick="NavigateToRegister">Don't have an account? Register here.</button>
+    </div>
+</div>
+
+@code {
+    private UserLoginViewModel loginViewModel = new UserLoginViewModel();
+    private DataContext dbContext = new DataContext();
+
+    private async Task HandleLogin()
+    {
+        if (await VerifyUser(loginViewModel))
+        {
+            await IAuthService.Login(loginViewModel.Email, loginViewModel.Password);
+            Navigation.NavigateTo("/");
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("alert", "Invalid email or password.");
+        }
+    }
+
+    private async Task<bool> VerifyUser(UserLoginViewModel viewModel)
+    {
+        var user = await dbContext.Users
+            .FirstOrDefaultAsync(u => u.Email == viewModel.Email);
+
+        if (user != null)
+        {
+            return BCrypt.Net.BCrypt.Verify(viewModel.Password, user.Password);
+        }
+
+        return false;
+    }
+
+    private void NavigateToRegister()
+    {
+        Navigation.NavigateTo("/register");
+    }
+}

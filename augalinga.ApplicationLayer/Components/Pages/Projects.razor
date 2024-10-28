@@ -2,10 +2,14 @@
 @using System.Collections.ObjectModel
 @using Microsoft.EntityFrameworkCore
 @using augalinga.Backend.Models
+@using augalinga.Backend.Services
 @using augalinga.Backend.ViewModels
 @using augalinga.Data.Access
 @using augalinga.Data.Entities
+@using augalinga.Data.Enums
 @inject NavigationManager Navigation
+@inject IAuthService IAuthService
+@inject NotificationsViewModel NotificationsViewModel
 @inject IJSRuntime JS
 
 <div class="header">
@@ -104,6 +108,7 @@
 
         dbContext.Projects.Add(project);
         viewModel.Projects.Add(project);
+        NotificationsViewModel.CreateNotification(project.Name, null, NotificationType.ProjectAdded, null);
         await dbContext.SaveChangesAsync();
         await LoadProjectsAsync();
         await HideModal();
@@ -159,6 +164,11 @@
         font-size: 2rem;
         text-align: center;
         color: black;
+    }
+
+    .card-photo
+    {
+        max-height: 200px;
     }
 
     .card a {

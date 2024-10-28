@@ -1,0 +1,33 @@
+﻿@page "/notifications"
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Grids
+@using augalinga.Backend.ViewModels
+@using augalinga.Data.Entities
+@inject NotificationsViewModel NotificationsViewModel
+
+<div class="header">
+    <h1>Notifications</h1>
+</div>
+
+<SfGrid DataSource="@NotificationsViewModel.Notifications" AllowFiltering="true" AllowPaging="true" AllowSorting="true">
+    <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
+    <GridSortSettings>
+        <GridSortColumns>
+            <GridSortColumn Field="CreatedAt" Direction="SortDirection.Descending"></GridSortColumn>
+        </GridSortColumns>
+    </GridSortSettings>
+    <GridColumns>
+        <GridColumn Field="@nameof(Notification.UserName)" HeaderText="By" Width="80"></GridColumn>
+        <GridColumn Field="@nameof(Notification.ForUserName)" HeaderText="For" Width="80"></GridColumn>
+        <GridColumn Field="@nameof(Notification.Message)" HeaderText="Notification" Width="250"></GridColumn>
+        <GridColumn Field="@nameof(Notification.CreatedAt)" HeaderText="Created At" Width="100"><SortSettings AllowSorting="true" /></GridColumn>
+    </GridColumns>
+</SfGrid>
+
+@code {
+    UsersViewModel usersViewModel;
+    protected override void OnInitialized()
+    {
+        usersViewModel = new UsersViewModel();
+    }
+}

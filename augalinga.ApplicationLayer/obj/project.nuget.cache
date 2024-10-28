@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Ofmyk6uV7Pg=",
+  "dgSpecHash": "RQXXL+/64q8=",
   "success": true,
   "projectFilePath": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\augalinga.ApplicationLayer.csproj",
   "expectedPackageFiles": [
@@ -10,6 +10,7 @@
     "C:\\Users\\Saule\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
     "C:\\Users\\Saule\\.nuget\\packages\\azure.storage.blobs\\12.22.0\\azure.storage.blobs.12.22.0.nupkg.sha512",
     "C:\\Users\\Saule\\.nuget\\packages\\azure.storage.common\\12.21.0\\azure.storage.common.12.21.0.nupkg.sha512",
+    "C:\\Users\\Saule\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\Saule\\.nuget\\packages\\blazored.modal\\7.3.1\\blazored.modal.7.3.1.nupkg.sha512",
     "C:\\Users\\Saule\\.nuget\\packages\\bootstrapblazor\\8.9.0\\bootstrapblazor.8.9.0.nupkg.sha512",
     "C:\\Users\\Saule\\.nuget\\packages\\microsoft.aspnetcore.authorization\\8.0.8\\microsoft.aspnetcore.authorization.8.0.8.nupkg.sha512",
