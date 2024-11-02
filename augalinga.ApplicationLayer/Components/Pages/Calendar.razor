@@ -5,11 +5,13 @@
 @using Syncfusion.Blazor.Inputs
 @using Syncfusion.Blazor.Calendars
 @using Syncfusion.Blazor.Buttons
+@using augalinga.Backend.Services
 @using augalinga.Backend.ViewModels
 @using augalinga.Data.Entities
 @using augalinga.Data.Access
 @using augalinga.Data.Enums
 @inject NotificationsViewModel NotificationsViewModel
+@inject IAuthService IAuthService
 
 <div class="calendar-container">
     <SfSchedule TValue="Meeting" StartHour="07:00" EnableAllDayScroll="true">
@@ -33,7 +35,7 @@
         </ScheduleViews>
 
         <ScheduleTemplates>
-            <EditorTemplate>
+           <EditorTemplate>
                 <table class="custom-event-editor" width="100%" cellpadding="5">
                     <tbody>
                         <tr>
@@ -61,12 +63,18 @@
                             </td>
                         </tr>
                         <tr>
+                            <td class="e-textlabel">Assign to All Users</td>
+                            <td colspan="4">
+                                <SfCheckBox @bind-Checked="(context as Meeting).IsAssignedToAllUsers" @onchange="() => OnAssignToAllUsersChanged(context as Meeting)"></SfCheckBox>
+                            </td>
+                        </tr>
+                        <tr>
                             <td class="e-textlabel">For</td>
                             <td colspan="4">
-                                <SfDropDownList TItem="User" TValue="int?" DataSource="@calendarViewModel.Users" @bind-Value="(context as Meeting).UserId">
-                                    <DropDownListFieldSettings Text="FullName" Value="Id"></DropDownListFieldSettings>
-                                    <SfDropDownListItem Text="Everyone" Value="null"></SfDropDownListItem>
-                                </SfDropDownList>
+                                <SfMultiSelect TValue="List<User>" TItem="User" Placeholder="User" DataSource="@calendarViewModel.Users" 
+                                    @bind-Value="(context as Meeting).SelectedUsers" Enabled="!(context as Meeting).IsAssignedToAllUsers">
+                                    <MultiSelectFieldSettings Text="FullName" Value="Id"></MultiSelectFieldSettings>
+                                </SfMultiSelect>
                             </td>
                         </tr>
                         <tr>
@@ -81,6 +89,7 @@
         </ScheduleTemplates>
     </SfSchedule>
 </div>
+
 <div class="user-filter-container">
     @if (usersViewModel.Users != null && usersViewModel.Users.Any())
     {
@@ -94,14 +103,14 @@
     {
         <p>No users available to display.</p>
     }
-    </div>
+</div>
 
 @code {
     public DataContext dbContext { get; set; } = new DataContext();
     CalendarViewModel calendarViewModel { get; set; } = new CalendarViewModel();
     UsersViewModel usersViewModel { get; set; } = new UsersViewModel();
-    public List<string> CustomClass { get; set; } = new List<string>(); // Define the CustomClass list
-
+    public List<string> CustomClass { get; set; } = new List<string>();
+    Meeting meeting;
     public void OnEventRendered(EventRenderedArgs<Meeting> args)
     {
         if (!string.IsNullOrEmpty(args.Data.BackgroundColor))
@@ -118,113 +127,63 @@
 
     private void OnUserSelectionChanged(User user)
     {
-        // Toggle the IsChecked property
         user.IsChecked = !user.IsChecked;
-
-        // Update the event filtering based on selected users
-        var selectedUsers = usersViewModel.Users.Where(u => u.IsChecked).ToList();
+        var selectedUsers = usersViewModel.Users.Where(u => u.IsChecked).Select(u => u.Id).ToList();
         calendarViewModel.LoadEvents(selectedUsers);
+        StateHasChanged(); 
+    }
+
+    private void OnAssignToAllUsersChanged(Meeting meeting)
+    {
+        if (meeting != null)
+        {
+            meeting.SelectedUsers = new List<User>();
+            if (meeting.IsAssignedToAllUsers)
+            {
+                foreach (var user in calendarViewModel.Users)
+                {
+                    meeting.SelectedUsers.Add(user);
+                }
+            }
+            else
+            {
+                meeting.SelectedUsers.Clear();
+            }
+        }
     }
 
     public async void OnActionCompleted(ActionEventArgs<Meeting> args)
     {
-        if (args.ActionType == ActionType.EventCreate)
+        if (args.ActionType == ActionType.EventCreate && args.AddedRecords != null)
         {
-            if (args.AddedRecords != null)
+            foreach (var addedEvent in args.AddedRecords)
             {
-                foreach (var addedEvent in args.AddedRecords)
-                {
-
-                    // Check if UserId is null
-                    if (addedEvent.UserId == null)
-                    {
-                        addedEvent.BackgroundColor = "#808080"; 
-                    }
-                    else
-                    {
-                        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == addedEvent.UserId);
-                        if (user != null)
-                        {
-                            addedEvent.BackgroundColor = user.Color; 
-                        }
-                    }
-
-                    Meeting meeting = new Meeting
-                    {
-                        From = addedEvent.From,
-                        To = addedEvent.To,
-                        EventName = addedEvent.EventName,
-                        IsAllDay = addedEvent.IsAllDay,
-                        Notes = addedEvent.Notes,
-                        UserId = addedEvent.UserId,
-                        BackgroundColor = addedEvent.BackgroundColor
-                    };
-
-                    dbContext.Meetings.Add(meeting);
-                    calendarViewModel.Events.Add(meeting);
-                    NotificationsViewModel.CreateNotification(meeting.EventName, null, NotificationType.MeetingAdded, meeting.UserId);
-
-                    if (!string.IsNullOrEmpty(meeting.BackgroundColor))
-                    {
-                        var colorClass = "custom-bg-" + meeting.BackgroundColor.TrimStart('#');
-                        if (!CustomClass.Contains(colorClass))
-                        {
-                            CustomClass.Add(colorClass);
-                        }
-                    }
-                }
+                await calendarViewModel.CreateEvent(addedEvent);
+                StateHasChanged();
+                calendarViewModel = new CalendarViewModel();
             }
         }
 
-        if (args.ActionType == ActionType.EventRemove)
+        if (args.ActionType == ActionType.EventRemove && args.DeletedRecords != null)
         {
-            if (args.DeletedRecords != null)
+            foreach (var deletedEvent in args.DeletedRecords)
             {
-                foreach (var deletedEvent in args.DeletedRecords)
-                {
-                    var eventToRemove = dbContext.Meetings.FirstOrDefault(e => e.Id == deletedEvent.Id);
-                    if (eventToRemove != null)
-                    {
-                        dbContext.Meetings.Remove(eventToRemove);
-                        calendarViewModel.Events.Remove(eventToRemove);
-                        NotificationsViewModel.CreateNotification(eventToRemove.EventName, null, NotificationType.MeetingDeleted, eventToRemove.UserId);
-                    }
-                }
+                await calendarViewModel.DeleteEvent(deletedEvent);
+                StateHasChanged();
+                calendarViewModel = new CalendarViewModel();
             }
         }
 
-        if (args.ActionType == ActionType.EventChange)
+        if (args.ActionType == ActionType.EventChange && args.ChangedRecords != null)
         {
-            if (args.ChangedRecords != null)
+            foreach (var editedEvent in args.ChangedRecords)
             {
-                foreach (var editedEvent in args.ChangedRecords)
-                {
-                    var existingEvent = calendarViewModel.Events.FirstOrDefault(e => e.Id == editedEvent.Id);
-
-                    if (editedEvent.UserId == null)
-                    {
-                        editedEvent.BackgroundColor = "#808080"; // Gray color
-                    }
-                    else
-                    {
-                        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == editedEvent.UserId);
-                        if (user != null)
-                        {
-                            existingEvent.BackgroundColor = user.Color; 
-                            existingEvent.UserId = editedEvent.UserId;
-                        }
-                    }
-                    existingEvent.From = editedEvent.From;
-                    existingEvent.To = editedEvent.To;
-                    existingEvent.IsAllDay = editedEvent.IsAllDay;
-                    existingEvent.EventName = editedEvent.EventName;
-                    existingEvent.Notes = editedEvent.Notes;
-                    dbContext.Meetings.Update(existingEvent);
-                    NotificationsViewModel.CreateNotification(existingEvent.EventName, null, NotificationType.MeetingModified, existingEvent.UserId);
-                }
+                await calendarViewModel.ModifyEvent(editedEvent);
+                StateHasChanged();
+                calendarViewModel = new CalendarViewModel();
             }
         }
-        await dbContext.SaveChangesAsync();
+
         StateHasChanged();
         calendarViewModel = new CalendarViewModel();
     }
@@ -259,7 +218,7 @@
     }
 
     .user-filter-container {
-        bottom:0;
+        bottom: 0;
         z-index: 2;
         display: flex;
         flex-direction: row;

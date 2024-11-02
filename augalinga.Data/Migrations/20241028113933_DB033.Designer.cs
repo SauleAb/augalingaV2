@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using augalinga.Data.Access;
 
@@ -11,9 +12,11 @@ using augalinga.Data.Access;
 namespace augalinga.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20241028113933_DB033")]
+    partial class DB033
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,27 +53,21 @@ namespace augalinga.Data.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("SelectedUserIds")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("To")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Meetings");
-                });
-
-            modelBuilder.Entity("MeetingUser", b =>
-                {
-                    b.Property<int>("MeetingsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SelectedUsersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MeetingsId", "SelectedUsersId");
-
-                    b.HasIndex("SelectedUsersId");
-
-                    b.ToTable("UserMeetings", (string)null);
                 });
 
             modelBuilder.Entity("User", b =>
@@ -333,19 +330,13 @@ namespace augalinga.Data.Migrations
                     b.ToTable("Projects");
                 });
 
-            modelBuilder.Entity("MeetingUser", b =>
+            modelBuilder.Entity("Meeting", b =>
                 {
-                    b.HasOne("Meeting", null)
+                    b.HasOne("User", "User")
                         .WithMany()
-                        .HasForeignKey("MeetingsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
-                    b.HasOne("User", null)
-                        .WithMany()
-                        .HasForeignKey("SelectedUsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("augalinga.Data.Entities.Notification", b =>

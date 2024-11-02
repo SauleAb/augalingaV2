@@ -22,7 +22,6 @@
     <h1>Admin</h1>
     <div style="flex: 1; display: flex; justify-content: flex-end;">
         <button class="logout-button" @onclick="Logout"><i class="bi bi-box-arrow-right"></i></button>
-        <button class="add-button" @onclick="OpenModal"><i class="bi bi-plus-lg h2"></i></button>
     </div>
 </div>
 
@@ -50,50 +49,6 @@
         </GridColumn>
     </GridColumns>
 </SfGrid>
-
-<div class="modal show" style="display:none;">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add a User</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="HideModal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col">
-                        <div class="form-group">
-                            <label for="Username">Name:</label>
-                            <input type="text" class="form-control" id="Username" @bind="user.FullName" required />
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-group">
-                            <label for="userPassword">Password:</label>
-                            <input type="password" class="form-control" id="userPassword" @bind="user.Password" required />
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <div class="form-group">
-                            <label for="userEmail">Email:</label>
-                            <input type="text" class="form-control" id="userEmail" @bind="user.Email" />
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-group">
-                            <label for="userColor">Color:</label>
-                            <InputText id="userColor" type="color" class="form-control" @bind-Value="user.Color" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" @onclick="AddUser">Submit</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="modal edit-modal" style="display:none;">
     <div class="modal-dialog">
@@ -213,7 +168,7 @@
                 NotificationsViewModel.CreateNotification(existingUser.FullName, null, NotificationType.UserModified, null);
 
                 var userMeetings = await dbContext.Meetings
-                    .Where(m => m.UserId == existingUser.Id)
+                    .Where(m => m.SelectedUsers.Contains(existingUser))
                     .ToListAsync();
 
                 foreach (var meeting in userMeetings)
@@ -265,11 +220,21 @@
 
             // Now find meetings
             var meetings = await dbContext.Meetings
-                .Where(m => m.UserId == user.Id)
+                .Where(m => m.SelectedUsers.Contains(user))
                 .ToListAsync();
 
             // Remove meetings
-            dbContext.Meetings.RemoveRange(meetings);
+            foreach (var meeting in meetings)
+            {
+                // Remove the user from SelectedUsers
+                meeting.SelectedUsers.Remove(user);
+
+                // If no users remain in SelectedUsers, remove the meeting
+                if (!meeting.SelectedUsers.Any())
+                {
+                    dbContext.Meetings.Remove(meeting);
+                }
+            }
 
             // Finally, remove the user
             dbContext.Users.Remove(user);
@@ -285,27 +250,6 @@
         {
             await JS.InvokeVoidAsync("alert", $"An error occurred: {ex.Message}");
         }
-    }
-
-    private async Task AddUser()
-    {
-        var existingUser = await dbContext.Users
-            .FirstOrDefaultAsync(u => u.Email == user.Email); 
-
-        if (existingUser != null)
-        {
-            await JS.InvokeVoidAsync("alert", "Email is already in use.");
-            return;
-        }
-        if (user.Color == null)
-        {
-            user.Color = "#000000";
-        }
-        user.Password = HashPassword(user.Password);
-        dbContext.Users.Add(user);
-        await dbContext.SaveChangesAsync();
-        usersViewModel.Users.Add(user);
-        await HideModal();
     }
 
     private string HashPassword(string password)
