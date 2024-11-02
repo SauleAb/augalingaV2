@@ -33,27 +33,27 @@ namespace augalinga.Backend.ViewModels
 
         private static readonly Dictionary<NotificationType, string> NotificationTemplates = new Dictionary<NotificationType, string>
         {
-            { NotificationType.ProjectAdded, "A new project has been added - {0}" },
-            { NotificationType.ProjectModified, "A project has been modified - {0}" },
-            { NotificationType.ProjectDeleted, "A project has been deleted - {0}" },
-            { NotificationType.DocumentAdded, "A new document has been added to {1} - {0}" },
-            { NotificationType.DocumentDeleted, "A document has been deleted from {1} - {0}" },
-            { NotificationType.DraftAdded, "A new draft has been added to {1} - {0}" },
-            { NotificationType.DraftDeleted, "A draft has been deleted from {1} - {0}" },
-            { NotificationType.OrderAdded, "A new order has been added to {1} - {0}" },
-            { NotificationType.OrderDeleted, "An order has been deleted from {1} - {0}" },
-            { NotificationType.PhotoAdded, "A new photo has been added to {1} - {0}" },
-            { NotificationType.PhotoDeleted, "A photo has been deleted from {1} - {0}" },
-            { NotificationType.ContactAdded, "A new contact has been added to {1} - {0}" },
-            { NotificationType.ContactDeleted, "A contact has been deleted from {1} - {0}" },
-            { NotificationType.MeetingAdded, "A new meeting has been added - {0}" },
-            { NotificationType.MeetingModified, "A meeting has been modified - {0}" },
-            { NotificationType.MeetingDeleted, "A meeting has been deleted - {0}" },
-            { NotificationType.UserAdded, "A new user has been registered - {0}" },
-            { NotificationType.UserDeleted, "User has been removed - {0}" },
-            { NotificationType.UserModified, "{0}'s details have been updated" },
-            { NotificationType.ExpenseAdded, "A new expense has been added to {1} - {0}" },
-            { NotificationType.ExpenseDeleted, "An expense has been deleted from {1} - {0}" }
+            { NotificationType.ProjectAdded, "Project - Added - {0}" },
+            { NotificationType.ProjectModified, "Project - Modified - {0}" },
+            { NotificationType.ProjectDeleted, "Project - Deleted - {0}" },
+            { NotificationType.DocumentAdded, "Document - Added to {1} - {0}" },
+            { NotificationType.DocumentDeleted, "Document - Deleted from {1} - {0}" },
+            { NotificationType.DraftAdded, "Draft - Added to {1} - {0}" },
+            { NotificationType.DraftDeleted, "Draft - Deleted from {1} - {0}" },
+            { NotificationType.OrderAdded, "Order - Added to {1} - {0}" },
+            { NotificationType.OrderDeleted, "Order - Deleted from {1} - {0}" },
+            { NotificationType.PhotoAdded, "Photo - Added to {1} - {0}" },
+            { NotificationType.PhotoDeleted, "Photo - Deleted from {1} - {0}" },
+            { NotificationType.ContactAdded, "Contact - Added to {1} - {0}" },
+            { NotificationType.ContactDeleted, "Contact - Deleted from {1} - {0}" },
+            { NotificationType.MeetingAdded, "Meeting - Added - {0}" },
+            { NotificationType.MeetingModified, "Meeting - Modified - {0}" },
+            { NotificationType.MeetingDeleted, "Meeting - Deleted - {0}" },
+            { NotificationType.UserAdded, "User - Registered - {0}" },
+            { NotificationType.UserDeleted, "User - Removed - {0}" },
+            { NotificationType.UserModified, "User - Updated - {0}" },
+            { NotificationType.ExpenseAdded, "Expense - Added to {1} - {0}" },
+            { NotificationType.ExpenseDeleted, "Expense - Deleted from {1} - {0}" }
         };
 
         public void CreateNotification(string entityName, string? projectName, NotificationType type, int? forUserId)

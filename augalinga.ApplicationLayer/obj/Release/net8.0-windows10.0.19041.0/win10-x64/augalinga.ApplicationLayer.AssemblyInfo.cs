@@ -18,7 +18,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("augalinga.ApplicationLayer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+e1ed1e402678c09f2e960842660524b3b0203cb4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+2264f5fb4c3837457f615a733944b0e0a5d70633")]
 [assembly: System.Reflection.AssemblyProductAttribute("augalinga.ApplicationLayer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("augalinga.ApplicationLayer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

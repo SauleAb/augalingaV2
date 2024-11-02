@@ -8,6 +8,7 @@ public class User
     public string Email { get; set; }
     public string Color { get; set; }
     public string Token { get; set; }
+    public List<Meeting> Meetings {  get; set; }
     [NotMapped]
     public bool IsChecked { get; set; } = true;
 }

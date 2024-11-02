@@ -44,7 +44,6 @@ namespace augalinga.Backend.ViewModels
             }
         }
 
-        // Add a property for Background color (the user's associated color)
         [Required(ErrorMessage = "Color selection is required.")]
         public string Background
         {
