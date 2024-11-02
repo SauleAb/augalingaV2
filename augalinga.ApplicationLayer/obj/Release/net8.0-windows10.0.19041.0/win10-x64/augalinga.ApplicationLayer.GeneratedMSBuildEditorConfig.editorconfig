@@ -9,128 +9,156 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = augalinga.ApplicationLayer
 build_property.RootNamespace = augalinga.ApplicationLayer
-build_property.ProjectDir = C:\Users\ThinkPad\source\repos\augalingaV2\augalinga.ApplicationLayer\
+build_property.ProjectDir = C:\Users\Saule\Desktop\augalingaV2\augalinga.ApplicationLayer\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\ThinkPad\source\repos\augalingaV2\augalinga.ApplicationLayer
+build_property.MSBuildProjectDirectory = C:\Users\Saule\Desktop\augalingaV2\augalinga.ApplicationLayer
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/ThinkPad/source/repos/augalingaV2/augalinga.ApplicationLayer/App.xaml]
+[C:/Users/Saule/Desktop/augalingaV2/augalinga.ApplicationLayer/App.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = augalinga.ApplicationLayer.App.xaml
 build_metadata.AdditionalFiles.TargetPath = App.xaml
 build_metadata.AdditionalFiles.RelativePath = App.xaml
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ThinkPad/source/repos/augalingaV2/augalinga.ApplicationLayer/MainPage.xaml]
+[C:/Users/Saule/Desktop/augalingaV2/augalinga.ApplicationLayer/MainPage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = augalinga.ApplicationLayer.MainPage.xaml
 build_metadata.AdditionalFiles.TargetPath = MainPage.xaml
 build_metadata.AdditionalFiles.RelativePath = MainPage.xaml
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ThinkPad/source/repos/augalingaV2/augalinga.ApplicationLayer/Components/Pages/Calendar.razor]
+[C:/Users/Saule/Desktop/augalingaV2/augalinga.ApplicationLayer/Components/Pages/Admin.razor]
+build_metadata.AdditionalFiles.GenKind = 
+build_metadata.AdditionalFiles.ManifestResourceName = 
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBZG1pbi5yYXpvcg==
+build_metadata.AdditionalFiles.RelativePath = 
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Saule/Desktop/augalingaV2/augalinga.ApplicationLayer/Components/Pages/Calendar.razor]
 build_metadata.AdditionalFiles.GenKind = 
 build_metadata.AdditionalFiles.ManifestResourceName = 
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDYWxlbmRhci5yYXpvcg==
 build_metadata.AdditionalFiles.RelativePath = 
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ThinkPad/source/repos/augalingaV2/augalinga.ApplicationLayer/Components/Pages/Contacts.razor]
+[C:/Users/Saule/Desktop/augalingaV2/augalinga.ApplicationLayer/Components/Pages/Contacts.razor]
 build_metadata.AdditionalFiles.GenKind = 
 build_metadata.AdditionalFiles.ManifestResourceName = 
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDb250YWN0cy5yYXpvcg==
 build_metadata.AdditionalFiles.RelativePath = 
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ThinkPad/source/repos/augalingaV2/augalinga.ApplicationLayer/Components/Pages/ContactsPage.razor]
+[C:/Users/Saule/Desktop/augalingaV2/augalinga.ApplicationLayer/Components/Pages/ContactsPage.razor]
 build_metadata.AdditionalFiles.GenKind = 
 build_metadata.AdditionalFiles.ManifestResourceName = 
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDb250YWN0c1BhZ2UucmF6b3I=
 build_metadata.AdditionalFiles.RelativePath = 
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ThinkPad/source/repos/augalingaV2/augalinga.ApplicationLayer/Components/Pages/ProjectContacts.razor]
+[C:/Users/Saule/Desktop/augalingaV2/augalinga.ApplicationLayer/Components/Pages/Login.razor]
+build_metadata.AdditionalFiles.GenKind = 
+build_metadata.AdditionalFiles.ManifestResourceName = 
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xMb2dpbi5yYXpvcg==
+build_metadata.AdditionalFiles.RelativePath = 
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Saule/Desktop/augalingaV2/augalinga.ApplicationLayer/Components/Pages/Notifications.razor]
+build_metadata.AdditionalFiles.GenKind = 
+build_metadata.AdditionalFiles.ManifestResourceName = 
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xOb3RpZmljYXRpb25zLnJhem9y
+build_metadata.AdditionalFiles.RelativePath = 
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Saule/Desktop/augalingaV2/augalinga.ApplicationLayer/Components/Pages/ProjectContacts.razor]
 build_metadata.AdditionalFiles.GenKind = 
 build_metadata.AdditionalFiles.ManifestResourceName = 
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQcm9qZWN0Q29udGFjdHMucmF6b3I=
 build_metadata.AdditionalFiles.RelativePath = 
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ThinkPad/source/repos/augalingaV2/augalinga.ApplicationLayer/Components/Pages/ProjectDocuments.razor]
+[C:/Users/Saule/Desktop/augalingaV2/augalinga.ApplicationLayer/Components/Pages/ProjectDocuments.razor]
 build_metadata.AdditionalFiles.GenKind = 
 build_metadata.AdditionalFiles.ManifestResourceName = 
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQcm9qZWN0RG9jdW1lbnRzLnJhem9y
 build_metadata.AdditionalFiles.RelativePath = 
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ThinkPad/source/repos/augalingaV2/augalinga.ApplicationLayer/Components/Pages/ProjectDrafts.razor]
+[C:/Users/Saule/Desktop/augalingaV2/augalinga.ApplicationLayer/Components/Pages/ProjectDrafts.razor]
 build_metadata.AdditionalFiles.GenKind = 
 build_metadata.AdditionalFiles.ManifestResourceName = 
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQcm9qZWN0RHJhZnRzLnJhem9y
 build_metadata.AdditionalFiles.RelativePath = 
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ThinkPad/source/repos/augalingaV2/augalinga.ApplicationLayer/Components/Pages/ProjectFinances.razor]
+[C:/Users/Saule/Desktop/augalingaV2/augalinga.ApplicationLayer/Components/Pages/ProjectFinances.razor]
 build_metadata.AdditionalFiles.GenKind = 
 build_metadata.AdditionalFiles.ManifestResourceName = 
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQcm9qZWN0RmluYW5jZXMucmF6b3I=
 build_metadata.AdditionalFiles.RelativePath = 
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ThinkPad/source/repos/augalingaV2/augalinga.ApplicationLayer/Components/Pages/ProjectMenu.razor]
+[C:/Users/Saule/Desktop/augalingaV2/augalinga.ApplicationLayer/Components/Pages/ProjectMenu.razor]
 build_metadata.AdditionalFiles.GenKind = 
 build_metadata.AdditionalFiles.ManifestResourceName = 
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQcm9qZWN0TWVudS5yYXpvcg==
 build_metadata.AdditionalFiles.RelativePath = 
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ThinkPad/source/repos/augalingaV2/augalinga.ApplicationLayer/Components/Pages/ProjectOrders.razor]
+[C:/Users/Saule/Desktop/augalingaV2/augalinga.ApplicationLayer/Components/Pages/ProjectOrders.razor]
 build_metadata.AdditionalFiles.GenKind = 
 build_metadata.AdditionalFiles.ManifestResourceName = 
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQcm9qZWN0T3JkZXJzLnJhem9y
 build_metadata.AdditionalFiles.RelativePath = 
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ThinkPad/source/repos/augalingaV2/augalinga.ApplicationLayer/Components/Pages/ProjectPhotos.razor]
+[C:/Users/Saule/Desktop/augalingaV2/augalinga.ApplicationLayer/Components/Pages/ProjectPhotos.razor]
 build_metadata.AdditionalFiles.GenKind = 
 build_metadata.AdditionalFiles.ManifestResourceName = 
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQcm9qZWN0UGhvdG9zLnJhem9y
 build_metadata.AdditionalFiles.RelativePath = 
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ThinkPad/source/repos/augalingaV2/augalinga.ApplicationLayer/Components/Pages/Projects.razor]
+[C:/Users/Saule/Desktop/augalingaV2/augalinga.ApplicationLayer/Components/Pages/Projects.razor]
 build_metadata.AdditionalFiles.GenKind = 
 build_metadata.AdditionalFiles.ManifestResourceName = 
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQcm9qZWN0cy5yYXpvcg==
 build_metadata.AdditionalFiles.RelativePath = 
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ThinkPad/source/repos/augalingaV2/augalinga.ApplicationLayer/Components/Routes.razor]
+[C:/Users/Saule/Desktop/augalingaV2/augalinga.ApplicationLayer/Components/Pages/Register.razor]
+build_metadata.AdditionalFiles.GenKind = 
+build_metadata.AdditionalFiles.ManifestResourceName = 
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWdpc3Rlci5yYXpvcg==
+build_metadata.AdditionalFiles.RelativePath = 
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Saule/Desktop/augalingaV2/augalinga.ApplicationLayer/Components/Routes.razor]
 build_metadata.AdditionalFiles.GenKind = 
 build_metadata.AdditionalFiles.ManifestResourceName = 
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xSb3V0ZXMucmF6b3I=
 build_metadata.AdditionalFiles.RelativePath = 
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ThinkPad/source/repos/augalingaV2/augalinga.ApplicationLayer/Components/_Imports.razor]
+[C:/Users/Saule/Desktop/augalingaV2/augalinga.ApplicationLayer/Components/_Imports.razor]
 build_metadata.AdditionalFiles.GenKind = 
 build_metadata.AdditionalFiles.ManifestResourceName = 
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xfSW1wb3J0cy5yYXpvcg==
 build_metadata.AdditionalFiles.RelativePath = 
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/ThinkPad/source/repos/augalingaV2/augalinga.ApplicationLayer/Components/Layout/MainLayout.razor]
+[C:/Users/Saule/Desktop/augalingaV2/augalinga.ApplicationLayer/Components/Layout/MainLayout.razor]
 build_metadata.AdditionalFiles.GenKind = 
 build_metadata.AdditionalFiles.ManifestResourceName = 
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTWFpbkxheW91dC5yYXpvcg==
 build_metadata.AdditionalFiles.RelativePath = 
 build_metadata.AdditionalFiles.CssScope = b-c6wwwawb8h
 
-[C:/Users/ThinkPad/source/repos/augalingaV2/augalinga.ApplicationLayer/Components/Layout/NavMenu.razor]
+[C:/Users/Saule/Desktop/augalingaV2/augalinga.ApplicationLayer/Components/Layout/NavMenu.razor]
 build_metadata.AdditionalFiles.GenKind = 
 build_metadata.AdditionalFiles.ManifestResourceName = 
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTmF2TWVudS5yYXpvcg==

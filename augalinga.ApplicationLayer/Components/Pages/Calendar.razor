@@ -107,10 +107,16 @@
 
 @code {
     public DataContext dbContext { get; set; } = new DataContext();
-    CalendarViewModel calendarViewModel { get; set; } = new CalendarViewModel();
+    CalendarViewModel calendarViewModel;
     UsersViewModel usersViewModel { get; set; } = new UsersViewModel();
     public List<string> CustomClass { get; set; } = new List<string>();
     Meeting meeting;
+
+    protected override void OnInitialized()
+    {
+        calendarViewModel = new CalendarViewModel(NotificationsViewModel);
+    }
+
     public void OnEventRendered(EventRenderedArgs<Meeting> args)
     {
         if (!string.IsNullOrEmpty(args.Data.BackgroundColor))
@@ -173,7 +179,7 @@
             {
                 await calendarViewModel.CreateEvent(addedEvent);
                 StateHasChanged();
-                calendarViewModel = new CalendarViewModel();
+                calendarViewModel = new CalendarViewModel(NotificationsViewModel);
             }
         }
 
@@ -183,7 +189,7 @@
             {
                 await calendarViewModel.DeleteEvent(deletedEvent);
                 StateHasChanged();
-                calendarViewModel = new CalendarViewModel();
+                calendarViewModel = new CalendarViewModel(NotificationsViewModel);
             }
         }
 
@@ -193,12 +199,12 @@
             {
                 await calendarViewModel.ModifyEvent(editedEvent);
                 StateHasChanged();
-                calendarViewModel = new CalendarViewModel();
+                calendarViewModel = new CalendarViewModel(NotificationsViewModel);
             }
         }
 
         StateHasChanged();
-        calendarViewModel = new CalendarViewModel();
+        calendarViewModel = new CalendarViewModel(NotificationsViewModel);
     }
 }
 

@@ -10,6 +10,7 @@ public class CalendarViewModel : INotifyPropertyChanged
     private ObservableCollection<Meeting> _events;
     public List<User> Users { get; set; }
     private HashSet<int> _selectedUserIds;
+    private readonly NotificationsViewModel _notificationsViewModel;
     public ObservableCollection<Meeting> Events
     {
         get => _events;
@@ -20,8 +21,9 @@ public class CalendarViewModel : INotifyPropertyChanged
         }
     }
 
-    public CalendarViewModel()
+    public CalendarViewModel(NotificationsViewModel notificationsViewModel)
     {
+        _notificationsViewModel = notificationsViewModel;
         _selectedUserIds = new HashSet<int>();
         Users = LoadUsers();
         Events = new ObservableCollection<Meeting>();
@@ -59,11 +61,25 @@ public class CalendarViewModel : INotifyPropertyChanged
         }
     }
 
+    public void CreateNotifications(string meetingTitle, List<User> selectedUsers, NotificationType notificationType)
+    {
+        foreach (var user in selectedUsers)
+        {
+            _notificationsViewModel.CreateNotification(meetingTitle, null, notificationType, user.Id);
+        }
+    }
+
+
     public async Task CreateEvent(Meeting addedEvent)
     {
         using (var dbContext = new DataContext())
         {
             if ((addedEvent.SelectedUsers == null || !addedEvent.SelectedUsers.Any()) && !addedEvent.IsAssignedToAllUsers)
+            {
+                addedEvent.IsAssignedToAllUsers = true;
+            }
+
+            if (addedEvent.SelectedUsers.Count == Users.Count)
             {
                 addedEvent.IsAssignedToAllUsers = true;
             }
@@ -92,6 +108,8 @@ public class CalendarViewModel : INotifyPropertyChanged
             await dbContext.SaveChangesAsync();
 
             Events.Add(meeting);
+
+            CreateNotifications(meeting.EventName, meeting.SelectedUsers, NotificationType.MeetingAdded);
         }
     }
 
@@ -111,6 +129,7 @@ public class CalendarViewModel : INotifyPropertyChanged
             dbContext.Meetings.Remove(eventToRemove);
             await dbContext.SaveChangesAsync();
             Events.Remove(eventToRemove);
+            CreateNotifications(eventToRemove.EventName, eventToRemove.SelectedUsers, NotificationType.MeetingDeleted);
         }
     }
 
@@ -124,6 +143,11 @@ public class CalendarViewModel : INotifyPropertyChanged
             if (existingEvent == null) return;
 
             if ((editedEvent.SelectedUsers == null || !editedEvent.SelectedUsers.Any()) && !editedEvent.IsAssignedToAllUsers)
+            {
+                editedEvent.IsAssignedToAllUsers = true;
+            }
+
+            if (editedEvent.SelectedUsers.Count == Users.Count)
             {
                 editedEvent.IsAssignedToAllUsers = true;
             }
@@ -149,6 +173,8 @@ public class CalendarViewModel : INotifyPropertyChanged
             dbContext.Meetings.Update(existingEvent);
             await Task.Delay(500); // Optional delay
             await dbContext.SaveChangesAsync();
+
+            CreateNotifications(existingEvent.EventName, existingEvent.SelectedUsers, NotificationType.MeetingModified);
         }
     }
 
