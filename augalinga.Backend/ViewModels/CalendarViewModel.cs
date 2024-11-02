@@ -63,6 +63,11 @@ public class CalendarViewModel : INotifyPropertyChanged
     {
         using (var dbContext = new DataContext())
         {
+            if ((addedEvent.SelectedUsers == null || !addedEvent.SelectedUsers.Any()) && !addedEvent.IsAssignedToAllUsers)
+            {
+                addedEvent.IsAssignedToAllUsers = true;
+            }
+
             var meeting = new Meeting
             {
                 From = addedEvent.From,
@@ -70,6 +75,7 @@ public class CalendarViewModel : INotifyPropertyChanged
                 EventName = addedEvent.EventName,
                 IsAllDay = addedEvent.IsAllDay,
                 Notes = addedEvent.Notes,
+                IsAssignedToAllUsers = addedEvent.IsAssignedToAllUsers,
                 BackgroundColor = addedEvent.SelectedUsers.Count == 1
                     ? addedEvent.SelectedUsers.First().Color
                     : "#000000"
@@ -116,6 +122,11 @@ public class CalendarViewModel : INotifyPropertyChanged
                 .FirstOrDefaultAsync(e => e.Id == editedEvent.Id);
 
             if (existingEvent == null) return;
+
+            if ((editedEvent.SelectedUsers == null || !editedEvent.SelectedUsers.Any()) && !editedEvent.IsAssignedToAllUsers)
+            {
+                editedEvent.IsAssignedToAllUsers = true;
+            }
 
             existingEvent.From = editedEvent.From;
             existingEvent.To = editedEvent.To;

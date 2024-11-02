@@ -72,7 +72,7 @@
                             <td class="e-textlabel">For</td>
                             <td colspan="4">
                                 <SfMultiSelect TValue="List<User>" TItem="User" Placeholder="User" DataSource="@calendarViewModel.Users" 
-                                    @bind-Value="(context as Meeting).SelectedUsers" Enabled="!(context as Meeting).IsAssignedToAllUsers">
+                                    @bind-Value="(context as Meeting).SelectedUsers" Enabled="!(context as Meeting).IsAssignedToAllUsers" @onchange="() => OnSelectedUsersChanged(context as Meeting)">
                                     <MultiSelectFieldSettings Text="FullName" Value="Id"></MultiSelectFieldSettings>
                                 </SfMultiSelect>
                             </td>
@@ -122,6 +122,19 @@
             {
                 CustomClass.Add(colorClass);
             }
+        }
+    }
+
+    private void OnSelectedUsersChanged(Meeting meeting)
+    {
+        // Automatically check "Assign to All Users" if all users are selected
+        if (meeting.SelectedUsers.Count == calendarViewModel.Users.Count)
+        {
+            meeting.IsAssignedToAllUsers = true;
+        }
+        else
+        {
+            meeting.IsAssignedToAllUsers = false;
         }
     }
 
