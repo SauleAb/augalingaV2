@@ -148,10 +148,9 @@
 
                 await dbContext.Drafts.AddAsync(draft);
                 await dbContext.SaveChangesAsync();
-                draftsViewModel.AddDraftToCollection(draft);
+                draftsViewModel.Drafts.Add(draft);
                 NotificationsViewModel.CreateNotification(file.Name, project.Name, NotificationType.DraftAdded, null);
             }
-            await Task.Delay(800);
             await draftsGrid.Refresh();
             StateHasChanged();
             selectedFiles.Clear();

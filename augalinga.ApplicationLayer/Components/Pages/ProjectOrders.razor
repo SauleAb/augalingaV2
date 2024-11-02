@@ -148,7 +148,7 @@
 
                 await dbContext.Orders.AddAsync(order);
                 await dbContext.SaveChangesAsync();
-                ordersViewModel.AddOrderToCollection(order);
+                ordersViewModel.Orders.Add(order);
                 NotificationsViewModel.CreateNotification(order.Name, project.Name, NotificationType.OrderAdded, null);
             }
 

@@ -133,6 +133,11 @@
         selectedFiles = e.GetMultipleFiles().ToList();
     }
 
+    private void ReloadPage()
+    {
+        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+    }
+
     private async Task UploadFiles()
     {
         errorMessage = string.Empty;
@@ -152,14 +157,13 @@
                     };
                 await dbContext.Documents.AddAsync(newDocument);
                 await dbContext.SaveChangesAsync();
-                documentsViewModel.AddDocumentToCollection(newDocument);
+                documentsViewModel.Documents.Add(newDocument);
                 NotificationsViewModel.CreateNotification(file.Name, project.Name, NotificationType.DocumentAdded, null);
             }
-            await Task.Delay(800);
-            await documentsGrid.Refresh();
-            StateHasChanged();
             selectedFiles.Clear();
             await HideModal();
+            await documentsGrid.Refresh();
+            StateHasChanged();
         }
         catch (RequestFailedException ex)
         {
