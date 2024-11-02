@@ -35,16 +35,21 @@ namespace augalinga.Data.Access
                 .HasConversion(new EnumToStringConverter<NotificationType>());
 
             modelBuilder.Entity<Notification>()
-       .HasOne(n => n.User)
-       .WithMany() // Assuming User has many Notifications
-       .HasForeignKey(n => n.UserId)
-       .OnDelete(DeleteBehavior.Cascade); // This enables cascade delete
+                .HasOne(n => n.User)
+                .WithMany() // Assuming User has many Notifications
+                .HasForeignKey(n => n.UserId)
+                .OnDelete(DeleteBehavior.Cascade); // This enables cascade delete
 
             modelBuilder.Entity<Notification>()
                 .HasOne(n => n.ForUser)
                 .WithMany() // Assuming User has many Notifications as ForUser
                 .HasForeignKey(n => n.ForUserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Meetings)
+                .WithMany(m => m.SelectedUsers)
+                .UsingEntity(j => j.ToTable("UserMeetings"));
 
             base.OnModelCreating(modelBuilder);
         }

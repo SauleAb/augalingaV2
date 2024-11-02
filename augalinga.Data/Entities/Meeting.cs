@@ -11,9 +11,7 @@ public class Meeting
     public bool IsAllDay { get; set; }
     public string EventName { get; set; }
     public string? Notes { get; set; }
-    public int? UserId { get; set; }
     public string BackgroundColor {  get; set; }
-
-    [ForeignKey("UserId")]
-    public User? User { get; set; }
+    public bool IsAssignedToAllUsers { get; set; }
+    public List<User> SelectedUsers { get; set; } = new List<User>();
 }

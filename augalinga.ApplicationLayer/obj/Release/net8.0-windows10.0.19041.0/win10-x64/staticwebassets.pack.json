@@ -1,95 +1,155 @@
 {
   "Files": [
     {
-      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\obj\\Release\\net8.0-windows10.0.19041.0\\win10-x64\\scopedcss\\bundle\\augalinga.ApplicationLayer.styles.css",
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\obj\\Release\\net8.0-windows10.0.19041.0\\win10-x64\\scopedcss\\bundle\\augalinga.ApplicationLayer.styles.css",
       "PackagePath": "staticwebassets\\augalinga.ApplicationLayer.styles.css"
     },
     {
-      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\css\\app.css",
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\css\\app.css",
       "PackagePath": "staticwebassets\\css\\app.css"
     },
     {
-      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
       "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css"
     },
     {
-      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
       "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css.map"
     },
     {
-      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\add.png",
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\add.png",
       "PackagePath": "staticwebassets\\images\\add.png"
     },
     {
-      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\add2.png",
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\add2.png",
       "PackagePath": "staticwebassets\\images\\add2.png"
     },
     {
-      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\back.png",
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\back.png",
       "PackagePath": "staticwebassets\\images\\back.png"
     },
     {
-      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\calendar_background.png",
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\calendar_background.png",
       "PackagePath": "staticwebassets\\images\\calendar_background.png"
     },
     {
-      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\colleagues.png",
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\colleagues.png",
       "PackagePath": "staticwebassets\\images\\colleagues.png"
     },
     {
-      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\contacts.png",
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\contacts.png",
       "PackagePath": "staticwebassets\\images\\contacts.png"
     },
     {
-      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\delete.png",
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\contacts.svg",
+      "PackagePath": "staticwebassets\\images\\contacts.svg"
+    },
+    {
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\delete.png",
       "PackagePath": "staticwebassets\\images\\delete.png"
     },
     {
-      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\documents.png",
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\documents.png",
       "PackagePath": "staticwebassets\\images\\documents.png"
     },
     {
-      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\drafts.png",
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\documents.svg",
+      "PackagePath": "staticwebassets\\images\\documents.svg"
+    },
+    {
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\download.svg",
+      "PackagePath": "staticwebassets\\images\\download.svg"
+    },
+    {
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\drafts.png",
       "PackagePath": "staticwebassets\\images\\drafts.png"
     },
     {
-      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\favicon.png",
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\drafts.svg",
+      "PackagePath": "staticwebassets\\images\\drafts.svg"
+    },
+    {
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\edit.svg",
+      "PackagePath": "staticwebassets\\images\\edit.svg"
+    },
+    {
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\favicon.png",
       "PackagePath": "staticwebassets\\images\\favicon.png"
     },
     {
-      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\finances.png",
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\finances.png",
       "PackagePath": "staticwebassets\\images\\finances.png"
     },
     {
-      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\ginkmedis.png",
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\finances.svg",
+      "PackagePath": "staticwebassets\\images\\finances.svg"
+    },
+    {
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\ginkmedis.png",
       "PackagePath": "staticwebassets\\images\\ginkmedis.png"
     },
     {
-      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\ginkmedis2.png",
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\ginkmedis2.png",
       "PackagePath": "staticwebassets\\images\\ginkmedis2.png"
     },
     {
-      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\manufacture.png",
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\ginkmedis3.png",
+      "PackagePath": "staticwebassets\\images\\ginkmedis3.png"
+    },
+    {
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\logo.png",
+      "PackagePath": "staticwebassets\\images\\logo.png"
+    },
+    {
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\logo2.png",
+      "PackagePath": "staticwebassets\\images\\logo2.png"
+    },
+    {
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\manufacture.png",
       "PackagePath": "staticwebassets\\images\\manufacture.png"
     },
     {
-      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\nurseries.png",
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\manufacture.svg",
+      "PackagePath": "staticwebassets\\images\\manufacture.svg"
+    },
+    {
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\nurseries.png",
       "PackagePath": "staticwebassets\\images\\nurseries.png"
     },
     {
-      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\orders.png",
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\nurseries.svg",
+      "PackagePath": "staticwebassets\\images\\nurseries.svg"
+    },
+    {
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\orders.png",
       "PackagePath": "staticwebassets\\images\\orders.png"
     },
     {
-      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\photos.png",
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\orders.svg",
+      "PackagePath": "staticwebassets\\images\\orders.svg"
+    },
+    {
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\photos.png",
       "PackagePath": "staticwebassets\\images\\photos.png"
     },
     {
-      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\transport.png",
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\photos.svg",
+      "PackagePath": "staticwebassets\\images\\photos.svg"
+    },
+    {
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\transport.png",
       "PackagePath": "staticwebassets\\images\\transport.png"
     },
     {
-      "Id": "C:\\Users\\ThinkPad\\source\\repos\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\index.html",
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\transport.svg",
+      "PackagePath": "staticwebassets\\images\\transport.svg"
+    },
+    {
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\images\\trash3.svg",
+      "PackagePath": "staticwebassets\\images\\trash3.svg"
+    },
+    {
+      "Id": "C:\\Users\\Saule\\Desktop\\augalingaV2\\augalinga.ApplicationLayer\\wwwroot\\index.html",
       "PackagePath": "staticwebassets\\index.html"
     },
     {
