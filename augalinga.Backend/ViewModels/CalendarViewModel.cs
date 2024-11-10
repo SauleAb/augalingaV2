@@ -170,4 +170,31 @@ public class CalendarViewModel : INotifyPropertyChanged
             CreateNotifications(existingEvent.EventName, existingEvent.SelectedUsers, NotificationType.MeetingModified);
         }
     }
+
+    public void ToggleAssignToAllUsers(Meeting meeting)
+    {
+        if (meeting != null)
+        {
+            if (meeting.IsAssignedToAllUsers)
+            {
+                meeting.SelectedUsers = Users.ToList(); // Assign all users
+            }
+            else
+            {
+                meeting.SelectedUsers.Clear(); // Clear selected users
+            }
+        }
+    }
+
+    public void IsAssignToAllUsersCheck(Meeting meeting)
+    {
+        if (meeting.SelectedUsers.Count == Users.Count)
+        {
+            meeting.IsAssignedToAllUsers = true;
+        }
+        else
+        {
+            meeting.IsAssignedToAllUsers = false;
+        }
+    }
 }

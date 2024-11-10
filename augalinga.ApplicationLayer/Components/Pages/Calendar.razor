@@ -133,15 +133,7 @@
 
     private void OnSelectedUsersChanged(Meeting meeting)
     {
-        // Automatically check "Assign to All Users" if all users are selected
-        if (meeting.SelectedUsers.Count == calendarViewModel.Users.Count)
-        {
-            meeting.IsAssignedToAllUsers = true;
-        }
-        else
-        {
-            meeting.IsAssignedToAllUsers = false;
-        }
+        calendarViewModel.IsAssignToAllUsersCheck(meeting);
     }
 
     private void OnUserSelectionChanged(User user)
@@ -154,21 +146,7 @@
 
     private void OnAssignToAllUsersChanged(Meeting meeting)
     {
-        if (meeting != null)
-        {
-            meeting.SelectedUsers = new List<User>();
-            if (meeting.IsAssignedToAllUsers)
-            {
-                foreach (var user in calendarViewModel.Users)
-                {
-                    meeting.SelectedUsers.Add(user);
-                }
-            }
-            else
-            {
-                meeting.SelectedUsers.Clear();
-            }
-        }
+        calendarViewModel.ToggleAssignToAllUsers(meeting);
     }
 
     public async void OnActionCompleted(ActionEventArgs<Meeting> args)
