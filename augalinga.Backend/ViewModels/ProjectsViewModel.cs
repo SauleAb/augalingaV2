@@ -23,12 +23,6 @@ namespace augalinga.Backend.ViewModels
             }
         }
 
-        public void AddProjectToCollection(Project project)
-        {
-            Projects.Add(project);
-            LoadProjects();
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)
         {
@@ -39,22 +33,6 @@ namespace augalinga.Backend.ViewModels
         {
             var projects = new DataContext().Projects.ToList();
             Projects = new ObservableCollection<Project>(projects);
-        }
-
-        public void RemoveProject(string projectName)
-        {
-            //local
-            var projectToRemove = Projects.FirstOrDefault(p => p.Name == projectName);
-            Projects.Remove(projectToRemove);
-
-            //database
-            using (var dbContext = new DataContext())
-            {
-                dbContext.Projects.Remove(projectToRemove);
-                dbContext.SaveChanges();
-            }
-
-            LoadProjects();
         }
     }
 }

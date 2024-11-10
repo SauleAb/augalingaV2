@@ -11,7 +11,7 @@ namespace augalinga.Backend.ViewModels
             LoadUsers();
         }
 
-        private ObservableCollection<User> _users; // Changed from Contact to User
+        private ObservableCollection<User> _users;
         public ObservableCollection<User> Users
         {
             get => _users;
@@ -22,26 +22,10 @@ namespace augalinga.Backend.ViewModels
             }
         }
 
-        public void AddUserToCollection(User user)
-        {
-            Users.Add(user);
-            SaveUser(user);
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public void RemoveUser(User user)
-        {
-            using (var dbContext = new DataContext())
-            {
-                dbContext.Users.Remove(user);
-                dbContext.SaveChanges();
-            }
-            LoadUsers();
         }
 
         private void LoadUsers()
@@ -50,15 +34,6 @@ namespace augalinga.Backend.ViewModels
             {
                 var users = dbContext.Users.ToList();
                 Users = new ObservableCollection<User>(users);
-            }
-        }
-
-        private void SaveUser(User user)
-        {
-            using (var dbContext = new DataContext())
-            {
-                dbContext.Users.Add(user); 
-                dbContext.SaveChanges(); 
             }
         }
     }

@@ -8,7 +8,7 @@ namespace augalinga.Backend.ViewModels
         private string _fullName;
         private string _password;
         private string _email;
-        private string _background; 
+        private string _background = "#FFFFFF";
 
         [Required(ErrorMessage = "Full name is required.")]
         public string FullName
@@ -22,6 +22,7 @@ namespace augalinga.Backend.ViewModels
         }
 
         [Required(ErrorMessage = "Password is required.")]
+        [DataType(DataType.Password)]
         public string Password
         {
             get => _password;

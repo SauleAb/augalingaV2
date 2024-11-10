@@ -8,6 +8,11 @@ namespace augalinga.Backend.ViewModels
     public class DocumentsViewModel
     {
         int _projectId;
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
         public DocumentsViewModel(int projectId)
         {
             _projectId = projectId;
@@ -25,17 +30,7 @@ namespace augalinga.Backend.ViewModels
             }
         }
 
-        public void AddDocumentToCollection(Document document)
-        {
-            Documents.Add(document);
-            LoadDocuments(_projectId);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        
 
         private void LoadDocuments(int projectId)
         {

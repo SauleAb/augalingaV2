@@ -1,12 +1,9 @@
 ﻿@page "/register"
-@using Microsoft.EntityFrameworkCore
 @using augalinga.Backend.ViewModels
-@using augalinga.Data.Access
-@using augalinga.Data.Entities
-@using augalinga.Data.Enums
+@using augalinga.Backend.Services
 @inject NavigationManager Navigation
 @inject IJSRuntime JS
-@inject NotificationsViewModel NotificationsViewModel
+@inject IAuthService AuthService
 
 <div class="container">
     <h1>User Registration</h1>
@@ -47,48 +44,18 @@
 
 @code {
     private UserRegisterViewModel registerViewModel = new UserRegisterViewModel();
-    private DataContext dbContext = new DataContext();
 
     private async Task HandleRegister()
     {
-        if (await RegisterUser(registerViewModel))
+        var registrationSuccessful = await AuthService.RegisterUser(registerViewModel);
+        if (registrationSuccessful)
         {
             Navigation.NavigateTo("/login");
         }
         else
         {
-            await JS.InvokeVoidAsync("alert", "Registration failed. Please try again.");
+            await JS.InvokeVoidAsync("alert", "Registration failed. Email already exists or other issue.");
         }
-    }
-
-    private async Task<bool> RegisterUser(UserRegisterViewModel viewModel)
-    {
-        var existingUser = await dbContext.Users
-            .FirstOrDefaultAsync(u => u.Email == viewModel.Email);
-        if (existingUser != null)
-        {
-            await JS.InvokeVoidAsync("alert", "Email already exists.");
-            return false;
-        }
-
-        var newUser = new User
-            {
-                FullName = viewModel.FullName,
-                Email = viewModel.Email,
-                Password = HashPassword(viewModel.Password),
-                Color = viewModel.Background,
-                Token = Guid.NewGuid().ToString()
-            };
-
-        dbContext.Users.Add(newUser);
-        await dbContext.SaveChangesAsync();
-        await SecureStorage.SetAsync("authToken", newUser.Token);
-        return true;
-    }
-
-    private string HashPassword(string password)
-    {
-        return BCrypt.Net.BCrypt.HashPassword(password);
     }
 
     private void NavigateToLogin()

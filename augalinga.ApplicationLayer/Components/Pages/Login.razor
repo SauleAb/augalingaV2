@@ -1,9 +1,6 @@
 ﻿@page "/login"
-@using Microsoft.EntityFrameworkCore
 @using augalinga.Backend.Services
 @using augalinga.Backend.ViewModels
-@using augalinga.Data.Access
-@using augalinga.Data.Entities
 @inject NavigationManager Navigation
 @inject IJSRuntime JS
 @inject IAuthService AuthService
@@ -39,7 +36,6 @@
     protected override async Task OnInitializedAsync()
     {
         await AuthService.InitializeAsync();
-
         if (AuthService.IsUserLoggedIn())
         {
             Navigation.NavigateTo("/");
@@ -48,28 +44,15 @@
 
     private async Task HandleLogin()
     {
-        if (await VerifyUser(loginViewModel))
+        var loginSuccessful = await AuthService.Login(loginViewModel.Email, loginViewModel.Password);
+        if (loginSuccessful)
         {
-            await AuthService.Login(loginViewModel.Email, loginViewModel.Password);
             Navigation.NavigateTo("/");
         }
         else
         {
             await JS.InvokeVoidAsync("alert", "Invalid email or password.");
         }
-    }
-
-    private async Task<bool> VerifyUser(UserLoginViewModel viewModel)
-    {
-        var user = await new DataContext().Users
-            .FirstOrDefaultAsync(u => u.Email == viewModel.Email);
-
-        if (user != null)
-        {
-            return BCrypt.Net.BCrypt.Verify(viewModel.Password, user.Password);
-        }
-
-        return false;
     }
 
     private void NavigateToRegister()

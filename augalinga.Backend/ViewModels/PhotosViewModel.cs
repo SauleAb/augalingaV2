@@ -33,12 +33,6 @@ namespace augalinga.Backend.ViewModels
             }
         }
 
-        public void AddPhotoToCollection(Photo photo)
-        {
-            Photos.Add(photo);
-            LoadPhotos(_projectId, _category);
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)
         {
@@ -67,22 +61,6 @@ namespace augalinga.Backend.ViewModels
 
                 Photos = new ObservableCollection<Photo>(photos);
             }
-        }
-
-        public void RemovePhoto(string photoLink)
-        {
-            //local
-            var photoToRemove = Photos.FirstOrDefault(p => p.Link == photoLink);
-            Photos.Remove(photoToRemove);
-
-            //database
-            using (var dbContext = new DataContext())
-            {
-                dbContext.Photos.Remove(photoToRemove);
-                dbContext.SaveChanges();
-            }
-
-            LoadPhotos(_projectId, _category);
         }
     }
 }

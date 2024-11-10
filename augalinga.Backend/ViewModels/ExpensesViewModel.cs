@@ -46,7 +46,6 @@ namespace augalinga.Backend.ViewModels
         }
 
 
-
         public decimal GetIncome()
         {
             var incomeExpenses = Expenses.Where(expense => expense.Type == "+");
@@ -91,12 +90,6 @@ namespace augalinga.Backend.ViewModels
             }
         }
 
-        public void AddExpenseToCollection(Expense expense)
-        {
-            Expenses.Add(expense);
-            LoadExpenses(_projectId);
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)
         {
@@ -115,22 +108,6 @@ namespace augalinga.Backend.ViewModels
             Income = GetIncome();
             Outcome = GetOutcome();
             Total = GetTotal();
-        }
-
-        public void RemoveExpense(int expenseId)
-        {
-            //local
-            var expenseToRemove = Expenses.FirstOrDefault(p => p.Id == expenseId);
-            Expenses.Remove(expenseToRemove);
-
-            //database
-            using (var dbContext = new DataContext())
-            {
-                dbContext.Expenses.Remove(expenseToRemove);
-                dbContext.SaveChanges();
-            }
-
-            LoadExpenses(_projectId);
         }
     }
 }

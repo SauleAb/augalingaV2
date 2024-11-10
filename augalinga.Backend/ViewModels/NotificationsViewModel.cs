@@ -60,7 +60,6 @@ namespace augalinga.Backend.ViewModels
         {
             var currentUser = _authService.GetCurrentUser();
 
-            // Format the message using the template for the given notification type
             string messageTemplate = NotificationTemplates.ContainsKey(type) ? NotificationTemplates[type] : "Notification - {0}";
             string message = string.Format(messageTemplate, entityName, projectName);
 

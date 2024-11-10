@@ -11,6 +11,11 @@ public class CalendarViewModel : INotifyPropertyChanged
     public List<User> Users { get; set; }
     private HashSet<int> _selectedUserIds;
     private readonly NotificationsViewModel _notificationsViewModel;
+    public event PropertyChangedEventHandler PropertyChanged;
+    protected virtual void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
     public ObservableCollection<Meeting> Events
     {
         get => _events;
@@ -74,12 +79,8 @@ public class CalendarViewModel : INotifyPropertyChanged
     {
         using (var dbContext = new DataContext())
         {
-            if ((addedEvent.SelectedUsers == null || !addedEvent.SelectedUsers.Any()) && !addedEvent.IsAssignedToAllUsers)
-            {
-                addedEvent.IsAssignedToAllUsers = true;
-            }
-
-            if (addedEvent.SelectedUsers.Count == Users.Count)
+            if ((addedEvent.SelectedUsers == null || (!addedEvent.SelectedUsers.Any()) && !addedEvent.IsAssignedToAllUsers) ||
+                addedEvent.SelectedUsers.Count == Users.Count)
             {
                 addedEvent.IsAssignedToAllUsers = true;
             }
@@ -97,7 +98,6 @@ public class CalendarViewModel : INotifyPropertyChanged
                     : "#000000"
             };
 
-            // Assign SelectedUsers with context-managed entities
             meeting.SelectedUsers = addedEvent.IsAssignedToAllUsers
                 ? await dbContext.Users.ToListAsync()
                 : await dbContext.Users
@@ -123,7 +123,6 @@ public class CalendarViewModel : INotifyPropertyChanged
             foreach (var user in eventToRemove.SelectedUsers)
             {
                 user.Meetings.Remove(eventToRemove);
-                //NotificationsViewModel.CreateNotification(eventToRemove.EventName, null, NotificationType.MeetingDeleted, user.Id);
             }
 
             dbContext.Meetings.Remove(eventToRemove);
@@ -142,12 +141,8 @@ public class CalendarViewModel : INotifyPropertyChanged
 
             if (existingEvent == null) return;
 
-            if ((editedEvent.SelectedUsers == null || !editedEvent.SelectedUsers.Any()) && !editedEvent.IsAssignedToAllUsers)
-            {
-                editedEvent.IsAssignedToAllUsers = true;
-            }
-
-            if (editedEvent.SelectedUsers.Count == Users.Count)
+            if ((editedEvent.SelectedUsers == null || (!editedEvent.SelectedUsers.Any()) && !editedEvent.IsAssignedToAllUsers) ||
+                (editedEvent.SelectedUsers.Count == Users.Count))
             {
                 editedEvent.IsAssignedToAllUsers = true;
             }
@@ -159,7 +154,6 @@ public class CalendarViewModel : INotifyPropertyChanged
             existingEvent.Notes = editedEvent.Notes;
             existingEvent.IsAssignedToAllUsers = editedEvent.IsAssignedToAllUsers;
 
-            // Reassign SelectedUsers with context-managed entities
             existingEvent.SelectedUsers = editedEvent.IsAssignedToAllUsers
                 ? await dbContext.Users.ToListAsync()
                 : await dbContext.Users
@@ -171,51 +165,9 @@ public class CalendarViewModel : INotifyPropertyChanged
                 : "#000000";
 
             dbContext.Meetings.Update(existingEvent);
-            await Task.Delay(500); // Optional delay
             await dbContext.SaveChangesAsync();
 
             CreateNotifications(existingEvent.EventName, existingEvent.SelectedUsers, NotificationType.MeetingModified);
         }
-    }
-
-    public void ToggleUserSelection(int userId)
-    {
-        if (_selectedUserIds.Contains(userId))
-        {
-            _selectedUserIds.Remove(userId);
-        }
-        else
-        {
-            _selectedUserIds.Add(userId);
-        }
-
-        LoadEvents(_selectedUserIds.ToList());
-    }
-
-    public async Task AssignMeetingToUsers(Meeting meeting)
-    {
-        using (var dbContext = new DataContext())
-        {
-            if (meeting.IsAssignedToAllUsers)
-            {
-                meeting.SelectedUsers = await dbContext.Users.ToListAsync();
-            }
-            else
-            {
-                meeting.SelectedUsers = await dbContext.Users
-                    .Where(u => meeting.SelectedUsers.Select(su => su.Id).Contains(u.Id))
-                    .ToListAsync();
-            }
-
-            dbContext.Meetings.Add(meeting);
-            await dbContext.SaveChangesAsync();
-            Events.Add(meeting);
-        }
-    }
-
-    public event PropertyChangedEventHandler PropertyChanged;
-    protected virtual void OnPropertyChanged(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

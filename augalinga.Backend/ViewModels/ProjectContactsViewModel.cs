@@ -32,22 +32,6 @@ namespace augalinga.Backend.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void AddContactToCollection(Contact contact)
-        {
-            Contacts.Add(contact);
-            LoadContacts(_projectId);
-        }
-
-        public void RemoveContact(Contact contact)
-        {
-            using (var dbContext = new DataContext())
-            {
-                dbContext.Contacts.Remove(contact);
-                dbContext.SaveChanges();
-            }
-            LoadContacts(_projectId);
-        }
-
         private void LoadContacts(int projectId)
         {
             using (var dbContext = new DataContext())

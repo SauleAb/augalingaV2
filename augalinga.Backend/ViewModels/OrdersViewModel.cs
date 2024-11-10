@@ -24,13 +24,6 @@ namespace augalinga.Backend.ViewModels
                 OnPropertyChanged(nameof(Orders));
             }
         }
-
-        public void AddOrderToCollection(Order order)
-        {
-            Orders.Add(order);
-            LoadOrders(_projectId);
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)
         {
@@ -45,22 +38,6 @@ namespace augalinga.Backend.ViewModels
 
                 Orders = new ObservableCollection<Order>(orders);
             }
-        }
-
-        public void RemoveOrder(string orderLink)
-        {
-            //local
-            var orderToRemove = Orders.FirstOrDefault(p => p.Link == orderLink);
-            Orders.Remove(orderToRemove);
-
-            //database
-            using (var dbContext = new DataContext())
-            {
-                dbContext.Orders.Remove(orderToRemove);
-                dbContext.SaveChanges();
-            }
-
-            LoadOrders(_projectId);
         }
     }
 }

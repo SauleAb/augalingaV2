@@ -1,4 +1,5 @@
-﻿using System;
+﻿using augalinga.Backend.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,10 +11,11 @@ namespace augalinga.Backend.Services
     {
         event Action OnChange;
         bool IsUserLoggedIn();
-        Task Login(string email, string password);
+        Task<bool> Login(string email, string password);
         void Logout();
         User GetCurrentUser();
         Task InitializeAsync();
+        Task<bool> RegisterUser(UserRegisterViewModel viewModel);
     };
 
 }
