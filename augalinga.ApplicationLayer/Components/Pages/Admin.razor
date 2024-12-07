@@ -25,7 +25,7 @@
     </div>
 </div>
 
-<SfGrid DataSource="@usersViewModel.Users" AllowPaging="true">
+<SfGrid DataSource="@usersViewModel.Users" AllowPaging="true" CssClass="custom-grid-background">
     <GridColumns>
         <GridColumn Field=@nameof(user.FullName) HeaderText="Name"></GridColumn>
         <GridColumn Field=@nameof(user.Email) HeaderText="Email"></GridColumn>
@@ -290,7 +290,7 @@
         }
     };
 
-    window.hideEditModal = () => {
+    window.hideEditModal = () => { 
         const modal = document.querySelector('.edit-modal');
         if (modal) {
             modal.style.display = 'none';
