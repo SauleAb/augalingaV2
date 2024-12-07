@@ -21,7 +21,11 @@
 
     <div class="status-bar-safe-area"></div>
 
-    <div id="app">Loading...</div>
+    <div id="app">
+        <div id="loading-container">
+            <div class="loading-bar"></div>
+        </div>
+    </div>
 
     <div id="blazor-error-ui">
         An unhandled error has occurred.
@@ -30,7 +34,56 @@
     </div>
 
     <script src="_framework/blazor.webview.js" autostart="false"></script>
+    <script>
+        const loadingBar = document.querySelector('.loading-bar');
+        const loadingContainer = document.querySelector('#loading-container');
+        let loadingProgress = 0;
 
+        function updateLoadingBar(progress) {
+            loadingProgress = progress;
+            loadingBar.style.width = loadingProgress + '%';
+        }
+
+        // Simulate loading process
+        function simulateLoading() {
+            let simulatedProgress = 0;
+            const interval = setInterval(function () {
+                simulatedProgress += 1;
+                updateLoadingBar(simulatedProgress);
+
+                if (simulatedProgress >= 100) {
+                    clearInterval(interval); 
+                    loadingContainer.style.display = 'none';
+                    document.querySelector('#app').style.display = 'block'; 
+                }
+            }, 125);
+        }
+
+        window.onload = simulateLoading;
+    </script>
 </body>
 
 </html>
+
+<style>
+    body {
+        background-color: #F5F1EE; 
+        margin: 0;
+    }
+    #loading-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background-color: #ddd;
+        z-index: 9999;
+    }
+
+    .loading-bar {
+        width: 0;
+        height: 100%;
+        background-color: #4CAF50; /* Green color for the progress */
+        transition: width 0.1s ease-in-out;
+    }
+</style>

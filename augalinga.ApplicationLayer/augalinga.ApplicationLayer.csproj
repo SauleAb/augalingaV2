@@ -86,6 +86,7 @@
         <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.82" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.82" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+        <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.241114004-experimental1" />
         <PackageReference Include="Syncfusion.Blazor.Grid" Version="26.2.13" />
         <PackageReference Include="Syncfusion.Blazor.Navigations" Version="26.2.13" />
         <PackageReference Include="Syncfusion.Blazor.Schedule" Version="26.2.13" />

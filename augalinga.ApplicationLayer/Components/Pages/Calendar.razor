@@ -221,4 +221,100 @@
         flex-direction: row;
         gap: 10px;
     }
+
+    .custom-event-editor {
+    width: 100%;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.custom-event-editor td {
+    padding: 10px;
+    vertical-align: middle;
+}
+
+.custom-event-editor .e-textlabel {
+    font-weight: 600;
+    color: #333;
+}
+
+.custom-event-editor input,
+.custom-event-editor select,
+.custom-event-editor textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.custom-event-editor textarea {
+    height: 100px;
+}
+
+.custom-event-editor .e-checkbox-label {
+    font-size: 14px;
+    color: #333;
+}
+
+.custom-event-editor .e-textlabel {
+    font-size: 14px;
+}
+
+.custom-event-editor tr {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.custom-event-editor tr:last-child {
+    border-bottom: none;
+}
+
+.e-schedule .e-tab.e-selected {
+    color: #CADAD7 !important; /* Change this to your desired color */
+}
+
+.e-schedule .e-selected .e-day,
+.e-schedule .e-current-day {
+    background-color: #CADAD7 !important;
+    color: #333 !important;
+}
+
+/* Change the selected week view background color */
+.e-schedule .e-selected .e-date {
+    background-color: #CADAD7 !important;
+}
+
+/* Change the default color of the save button in the editor template */
+.custom-event-editor button {
+    background-color: #CADAD7 !important;
+    color: #333 !important;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.custom-event-editor button:hover {
+    background-color: #A7B6C2 !important; /* Darker shade of the same color */
+    transform: scale(1.05);
+}
+
+/* Optional: Change focus border color on inputs in the editor template */
+.custom-event-editor input:focus,
+.custom-event-editor select:focus,
+.custom-event-editor textarea:focus {
+    border-color: #CADAD7 !important;
+    outline: none;
+    background-color: #fff;
+}
+
+/* Highlight the currently selected event's background color */
+.e-schedule .e-appointment.e-selected {
+    color: #CADAD7 !important;
+    }
+
 </style>
