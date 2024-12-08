@@ -238,17 +238,6 @@
         color: black !important;
     }
 
-    /* Event styles */
-    .e-schedule .e-appointment {
-        background-color: #518478 !important;
-        color: #f9f9f9 !important;
-    }
-
-    .e-schedule .e-appointment:hover {
-        background-color: #C58C6D !important;
-        color: #f9f9f9 !important;
-    }
-
     /* Selected event styles */
     .e-schedule .e-appointment.e-selected {
         background-color: #C58C6D !important;
@@ -327,8 +316,8 @@
         display: flex;
         flex-direction: row;
         gap: 10px;
-        background-color: #CADAD7;
         border-radius: 8px;
+        flex-wrap: wrap;
         align-items: center;
         padding-top: 3px;
         padding-bottom: 3px;
@@ -355,4 +344,12 @@
     font-weight: bold;
     margin-left: 10px;
 }
+
+    @@media screen and (max-width: 480px) {
+        .user-filter-container {
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+    }
 </style>

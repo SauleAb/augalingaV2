@@ -110,6 +110,7 @@ public class CalendarViewModel : INotifyPropertyChanged
             Events.Add(meeting);
 
             CreateNotifications(meeting.EventName, meeting.SelectedUsers, NotificationType.MeetingAdded);
+            LoadEvents(_selectedUserIds.ToList());
         }
     }
 
@@ -129,6 +130,7 @@ public class CalendarViewModel : INotifyPropertyChanged
             await dbContext.SaveChangesAsync();
             Events.Remove(eventToRemove);
             CreateNotifications(eventToRemove.EventName, eventToRemove.SelectedUsers, NotificationType.MeetingDeleted);
+            LoadEvents(_selectedUserIds.ToList());
         }
     }
 
@@ -168,6 +170,7 @@ public class CalendarViewModel : INotifyPropertyChanged
             await dbContext.SaveChangesAsync();
 
             CreateNotifications(existingEvent.EventName, existingEvent.SelectedUsers, NotificationType.MeetingModified);
+            LoadEvents(_selectedUserIds.ToList());
         }
     }
 
