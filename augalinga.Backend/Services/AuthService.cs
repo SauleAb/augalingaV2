@@ -13,9 +13,15 @@ namespace augalinga.Backend.Services
         private readonly DataContext _dbContext = new DataContext();
         private bool _isLoggedIn;
         private User _currentUser;
+        private readonly IEmailService _emailService;
         public event Action OnChange;
         private void NotifyStateChanged() => OnChange?.Invoke();
         private const string AuthTokenKey = "authToken";
+
+        public AuthService(IEmailService emailService)
+        {
+            _emailService = emailService;
+        }
 
         public async Task InitializeAsync()
         {
@@ -81,6 +87,46 @@ namespace augalinga.Backend.Services
             _dbContext.Users.Add(newUser);
             await _dbContext.SaveChangesAsync();
             await SecureStorage.SetAsync(AuthTokenKey, newUser.Token);
+
+            return true;
+        }
+
+        public async Task<bool> RequestPasswordResetAsync(string email)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+            {
+                return false; 
+            }
+
+            var resetToken = Guid.NewGuid().ToString().Substring(0, 4);
+            user.PasswordResetToken = resetToken; 
+
+            await _dbContext.SaveChangesAsync();
+
+            var subject = "Password Reset Request";
+            var body = $"Your password reset token is: {resetToken}." +
+                $"\n Use it to reset your password in the app.";
+
+            await _emailService.SendEmailAsync(email, subject, body);
+
+            return true;
+        }
+
+        // Method to reset password
+        public async Task<bool> ResetPasswordAsync(string resetToken, string newPassword)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.PasswordResetToken == resetToken);
+            if (user == null)
+            {
+                // If invalid reset token, return false
+                return false;
+            }
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword); // Hash the new password
+            user.PasswordResetToken = null; // Clear the reset token
+
+            await _dbContext.SaveChangesAsync();
 
             return true;
         }

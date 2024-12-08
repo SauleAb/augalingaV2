@@ -16,6 +16,8 @@ namespace augalinga.Backend.Services
         User GetCurrentUser();
         Task InitializeAsync();
         Task<bool> RegisterUser(UserRegisterViewModel viewModel);
+        public Task<bool> RequestPasswordResetAsync(string email);
+        public Task<bool> ResetPasswordAsync(string resetToken, string newPassword);
     };
 
 }

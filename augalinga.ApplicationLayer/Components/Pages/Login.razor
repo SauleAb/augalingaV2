@@ -26,12 +26,73 @@
     </EditForm>
 
     <div class="mt-3">
+        <button class="btn btn-link" @onclick="OpenRequestPasswordModal">Forgot password?</button>
+    </div>
+    <div class="mt-3">
         <button class="btn btn-link" @onclick="NavigateToRegister">Don't have an account? Register here.</button>
+    </div>
+</div>
+
+<!-- Request Password Modal -->
+<div class="modal show" style="display:@(isRequestPasswordModalVisible ? "block" : "none"); background-color: rgba(0, 0, 0, 0.5);">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background-color: black;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="forgotPasswordModalLabel">Forgot Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="HideRequestPasswordModal"></button>
+            </div>
+            <div class="modal-body">
+                <h4>Please enter your email address:</h4>
+                <InputText @bind-Value="resetEmail" class="form-control" placeholder="Email" />
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="alert alert-danger">@errorMessage</div>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="HideRequestPasswordModal">Close</button>
+                <button type="button" class="btn btn-primary" @onclick="RequestPasswordReset">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Enter New Password Modal -->
+<div class="modal show" style="display:@(isEnterNewPasswordModalVisible ? "block" : "none"); background-color: rgba(0, 0, 0, 0.5);">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background-color: black;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="enterNewPasswordModalLabel">Enter New Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="HideEnterNewPasswordModal"></button>
+            </div>
+            <div class="modal-body">
+                <h4>Please enter the received token and your new password:</h4>
+                <InputText @bind-Value="resetToken" class="form-control" placeholder="Token" />
+                <InputText @bind-Value="newPassword" class="form-control mt-2" type="password" placeholder="New Password" />
+                <InputText @bind-Value="confirmPassword" class="form-control mt-2" type="password" placeholder="Confirm Password" />
+                @if (!string.IsNullOrEmpty(resetErrorMessage))
+                {
+                    <div class="alert alert-danger">@resetErrorMessage</div>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="HideEnterNewPasswordModal">Close</button>
+                <button type="button" class="btn btn-primary" @onclick="ResetPassword">Submit</button>
+            </div>
+        </div>
     </div>
 </div>
 
 @code {
     private UserLoginViewModel loginViewModel = new UserLoginViewModel();
+    private string resetEmail;
+    private string resetToken;
+    private string newPassword;
+    private string confirmPassword;
+    private string errorMessage;
+    private string resetErrorMessage;
+    private bool isRequestPasswordModalVisible = false;
+    private bool isEnterNewPasswordModalVisible = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -55,8 +116,87 @@
         }
     }
 
+    private void OpenRequestPasswordModal()
+    {
+        isRequestPasswordModalVisible = true;
+    }
+
+    private void HideRequestPasswordModal()
+    {
+        isRequestPasswordModalVisible = false;
+    }
+
+    private async Task RequestPasswordReset()
+    {
+        try
+        {
+            bool success = await AuthService.RequestPasswordResetAsync(resetEmail);
+            if (success)
+            {
+                isRequestPasswordModalVisible = false;
+                isEnterNewPasswordModalVisible = true;
+            }
+            else
+            {
+                errorMessage = "An error occurred while sending the password reset email.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+    }
+
+    private void HideEnterNewPasswordModal()
+    {
+        isEnterNewPasswordModalVisible = false;
+    }
+
+    private async Task ResetPassword()
+    {
+        try
+        {
+            if (newPassword != confirmPassword)
+            {
+                resetErrorMessage = "Passwords do not match.";
+                return;
+            }
+
+            bool success = await AuthService.ResetPasswordAsync(resetToken, newPassword);
+            if (success)
+            {
+                isEnterNewPasswordModalVisible = false;
+            }
+            else
+            {
+                resetErrorMessage = "Invalid token or an error occurred.";
+            }
+        }
+        catch (Exception ex)
+        {
+            resetErrorMessage = $"Error: {ex.Message}";
+        }
+    }
+
     private void NavigateToRegister()
     {
         Navigation.NavigateTo("/register");
     }
 }
+<script>
+    window.showModal = () => {
+        const modal = document.querySelector('.modal');
+        if (modal) {
+            modal.style.display = 'block';
+            modal.classList.add('show');
+        }
+    };
+
+    window.hideModal = () => {
+        const modal = document.querySelector('.modal');
+        if (modal) {
+            modal.style.display = 'none';
+            modal.classList.remove('show');
+        }
+    };
+</script>

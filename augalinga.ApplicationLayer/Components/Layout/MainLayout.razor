@@ -28,7 +28,7 @@
 @code {
     protected override void OnInitialized()
     {
-        AuthService.OnChange += StateHasChanged; // Subscribe to the event
+        AuthService.OnChange += StateHasChanged; 
         if (!AuthService.IsUserLoggedIn())
         {
             Navigation.NavigateTo("/login");
