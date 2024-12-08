@@ -36,56 +36,57 @@
 
         <ScheduleTemplates>
            <EditorTemplate>
-                <table class="custom-event-editor" width="100%" cellpadding="5">
-                    <tbody>
-                        <tr>
-                            <td class="e-textlabel">Name</td>
-                            <td colspan="4">
-                                <SfTextBox @bind-Value="(context as Meeting).EventName"></SfTextBox>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="e-textlabel">From</td>
-                            <td colspan="4">
-                                <SfDateTimePicker @bind-Value="(context as Meeting).From"></SfDateTimePicker>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="e-textlabel">To</td>
-                            <td colspan="4">
-                                <SfDateTimePicker @bind-Value="(context as Meeting).To"></SfDateTimePicker>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="e-textlabel">All day</td>
-                            <td colspan="4">
-                                <SfCheckBox @bind-Checked="(context as Meeting).IsAllDay"></SfCheckBox>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="e-textlabel">Assign to All Users</td>
-                            <td colspan="4">
-                                <SfCheckBox @bind-Checked="(context as Meeting).IsAssignedToAllUsers" @onchange="() => OnAssignToAllUsersChanged(context as Meeting)"></SfCheckBox>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="e-textlabel">For</td>
-                            <td colspan="4">
-                                <SfMultiSelect TValue="List<User>" TItem="User" Placeholder="User" DataSource="@calendarViewModel.Users" 
-                                    @bind-Value="(context as Meeting).SelectedUsers" Enabled="!(context as Meeting).IsAssignedToAllUsers" @onchange="() => OnSelectedUsersChanged(context as Meeting)">
-                                    <MultiSelectFieldSettings Text="FullName" Value="Id"></MultiSelectFieldSettings>
-                                </SfMultiSelect>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="e-textlabel">Notes</td>
-                            <td colspan="4">
-                                <SfTextBox Multiline="true" @bind-Value="(context as Meeting).Notes"></SfTextBox>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </EditorTemplate>
+    <table class="custom-event-editor" width="100%" cellpadding="5">
+        <tbody>
+            <tr>
+                <td class="e-textlabel">Name</td>
+                <td colspan="4">
+                    <SfTextBox @bind-Value="(context as Meeting).EventName"></SfTextBox>
+                </td>
+            </tr>
+            <tr>
+                <td class="e-textlabel">From</td>
+                <td colspan="4">
+                    <SfDateTimePicker @bind-Value="(context as Meeting).From"></SfDateTimePicker>
+                </td>
+            </tr>
+            <tr>
+                <td class="e-textlabel">To</td>
+                <td colspan="4">
+                    <SfDateTimePicker @bind-Value="(context as Meeting).To"></SfDateTimePicker>
+                </td>
+            </tr>
+            <tr>
+                <td class="e-textlabel">All day</td>
+                <td colspan="4">
+                    <SfSwitch @bind-Checked="(context as Meeting).IsAllDay"></SfSwitch>
+                </td>
+            </tr>
+            <tr>
+                <td class="e-textlabel">Assign to All Users</td>
+                <td colspan="4">
+                    <SfSwitch @bind-Checked="(context as Meeting).IsAssignedToAllUsers" @onchange="() => OnAssignToAllUsersChanged(context as Meeting)">
+                    </SfSwitch>
+                </td>
+            </tr>
+            <tr>
+                <td class="e-textlabel">For</td>
+                <td colspan="4">
+                    <SfMultiSelect TValue="List<User>" TItem="User" Placeholder="User" DataSource="@calendarViewModel.Users" 
+                        @bind-Value="(context as Meeting).SelectedUsers" Enabled="!(context as Meeting).IsAssignedToAllUsers" @onchange="() => OnSelectedUsersChanged(context as Meeting)">
+                        <MultiSelectFieldSettings Text="FullName" Value="Id"></MultiSelectFieldSettings>
+                    </SfMultiSelect>
+                </td>
+            </tr>
+            <tr>
+                <td class="e-textlabel">Notes</td>
+                <td colspan="4">
+                    <SfTextBox Multiline="true" @bind-Value="(context as Meeting).Notes"></SfTextBox>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</EditorTemplate>
         </ScheduleTemplates>
     </SfSchedule>
 </div>
@@ -93,6 +94,7 @@
 <div class="user-filter-container">
     @if (usersViewModel.Users != null && usersViewModel.Users.Any())
     {
+         <div class="filter-text">Filter by:</div>
         @foreach (var user in usersViewModel.Users)
         {
             <SfCheckBox @bind-Checked="@user.IsChecked" @onclick="() => OnUserSelectionChanged(user)" Label="@user.FullName" >
@@ -157,7 +159,6 @@
             {
                 await calendarViewModel.CreateEvent(addedEvent);
                 StateHasChanged();
-                calendarViewModel = new CalendarViewModel(NotificationsViewModel);
             }
         }
 
@@ -167,7 +168,6 @@
             {
                 await calendarViewModel.DeleteEvent(deletedEvent);
                 StateHasChanged();
-                calendarViewModel = new CalendarViewModel(NotificationsViewModel);
             }
         }
 
@@ -177,12 +177,10 @@
             {
                 await calendarViewModel.ModifyEvent(editedEvent);
                 StateHasChanged();
-                calendarViewModel = new CalendarViewModel(NotificationsViewModel);
             }
         }
 
         StateHasChanged();
-        calendarViewModel = new CalendarViewModel(NotificationsViewModel);
     }
 }
 
@@ -201,120 +199,160 @@
         overflow: hidden;
         margin: 10px;
         position: relative;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
+    /* Syncfusion Schedule styles */
     .e-schedule {
         height: 100% !important;
         overflow-y: auto !important;
         overflow-x: hidden;
+        color: #518478;
+    }
+
+    .e-schedule .e-toolbar {
+        background-color: #518478 !important;
+        color: #f9f9f9 !important;
+    }
+
+    .e-schedule .e-toolbar-item.e-tbar-btn {
+        background-color: #518478 !important;
+        color: #f9f9f9 !important;
+        border: none !important;
+    }
+
+    .e-schedule .e-toolbar-item.e-tbar-btn:hover {
+        background-color: #C58C6D !important;
     }
 
     .e-content {
         height: calc(100% - 50px);
         overflow-y: auto;
+        background-color: #f9f9f9;
     }
 
+    .e-current-day {
+        background-color: #CADAD7 !important;
+        color: black !important;
+    }
+
+    /* Event styles */
+    .e-schedule .e-appointment {
+        background-color: #518478 !important;
+        color: #f9f9f9 !important;
+    }
+
+    .e-schedule .e-appointment:hover {
+        background-color: #C58C6D !important;
+        color: #f9f9f9 !important;
+    }
+
+    /* Selected event styles */
+    .e-schedule .e-appointment.e-selected {
+        background-color: #C58C6D !important;
+        border: 2px solid #518478 !important;
+    }
+
+    /* Custom event editor */
+    .custom-event-editor {
+        width: 100%;
+        padding: 15px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-event-editor td {
+        padding: 10px;
+        vertical-align: middle;
+    }
+
+    .custom-event-editor .e-textlabel {
+        font-weight: 600;
+        color: #518478;
+    }
+
+    .custom-event-editor textarea {
+        height: 100px;
+    }
+
+    .custom-event-editor input,
+    .custom-event-editor select,
+    .custom-event-editor textarea {
+        border: 1px solid #CADAD7 !important;
+        background-color: #f9f9f9;
+    }
+
+    .custom-event-editor input:focus,
+    .custom-event-editor select:focus,
+    .custom-event-editor textarea:focus {
+        border-color: #518478 !important;
+        outline: none;
+    }
+
+    /* Dialog footer buttons */
+    .e-schedule-dialog .e-footer-content {
+        background-color: #f9f9f9 !important;
+        border-top: 1px solid #CADAD7 !important;
+        padding-top: 10px !important;
+    }
+
+    .e-schedule-dialog .e-footer-content .e-primary {
+        background-color: #518478 !important;
+        color: #f9f9f9 !important;
+        border: none !important;
+    }
+
+    .e-schedule-dialog .e-footer-content .e-secondary {
+        background-color: #C58C6D !important;
+        color: #f9f9f9 !important;
+        border: none !important;
+    }
+
+    .e-schedule-dialog .e-footer-content .e-primary:hover {
+        background-color: #C58C6D !important;
+    }
+
+    .e-schedule-dialog .e-footer-content .e-secondary:hover {
+        background-color: #518478 !important;
+    }
+
+
+    /* Checkbox container */
     .user-filter-container {
         bottom: 0;
         z-index: 2;
         display: flex;
         flex-direction: row;
         gap: 10px;
+        background-color: #CADAD7;
+        border-radius: 8px;
+        align-items: center;
+        padding-top: 3px;
+        padding-bottom: 3px;
     }
 
-    .custom-event-editor {
-    width: 100%;
-    padding: 15px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+.user-filter-container .e-checkbox-wrapper .e-frame.e-check {
+    background-color: #C58C6D !important; /* Checked state background color */
+    border-color: #C58C6D !important; /* Checked state border color */
 }
 
-.custom-event-editor td {
-    padding: 10px;
-    vertical-align: middle;
-}
-
-.custom-event-editor .e-textlabel {
-    font-weight: 600;
-    color: #333;
-}
-
-.custom-event-editor input,
-.custom-event-editor select,
-.custom-event-editor textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fff;
-    font-size: 14px;
-    transition: border-color 0.3s ease;
-}
-
-.custom-event-editor textarea {
-    height: 100px;
-}
-
-.custom-event-editor .e-checkbox-label {
-    font-size: 14px;
-    color: #333;
-}
-
-.custom-event-editor .e-textlabel {
-    font-size: 14px;
-}
-
-.custom-event-editor tr {
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.custom-event-editor tr:last-child {
-    border-bottom: none;
-}
-
-.e-schedule .e-tab.e-selected {
-    color: #CADAD7 !important; /* Change this to your desired color */
-}
-
-.e-schedule .e-selected .e-day,
-.e-schedule .e-current-day {
-    background-color: #CADAD7 !important;
-    color: #333 !important;
-}
-
-/* Change the selected week view background color */
-.e-schedule .e-selected .e-date {
-    background-color: #CADAD7 !important;
-}
-
-/* Change the default color of the save button in the editor template */
-.custom-event-editor button {
-    background-color: #CADAD7 !important;
-    color: #333 !important;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.custom-event-editor button:hover {
-    background-color: #A7B6C2 !important; /* Darker shade of the same color */
-    transform: scale(1.05);
-}
-
-/* Optional: Change focus border color on inputs in the editor template */
-.custom-event-editor input:focus,
-.custom-event-editor select:focus,
-.custom-event-editor textarea:focus {
-    border-color: #CADAD7 !important;
-    outline: none;
-    background-color: #fff;
-}
-
-/* Highlight the currently selected event's background color */
-.e-schedule .e-appointment.e-selected {
-    color: #CADAD7 !important;
+    .e-checkbox-wrapper {
+        color: #518478 !important;
     }
 
+    /* To specify font color, background color and border color */
+    .e-dialog .e-btn.e-flat, .e-css.e-btn.e-flat {
+        background-color: transparent;
+        border-color: transparent;
+        color: pink;
+    }
+
+    .filter-text {
+    margin-right: 10px; /* Space between the text and checkboxes */
+    font-weight: bold;
+    margin-left: 10px;
+}
 </style>
