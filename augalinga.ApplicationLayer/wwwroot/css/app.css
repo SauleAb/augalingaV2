@@ -1,12 +1,40 @@
-﻿
+﻿@font-face {
+    font-family: 'Meraki';
+    src: url('../fonts/Meraki.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'Traffolight';
+    src: url('../fonts/Traffolight.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Gruppo';
+    src: url('../fonts/Gruppo-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 html, body {
-    font-family: Garamond;
+    font-family: Gruppo;
+}
+
+.e-grid, .e-gridheader, .e-table, .e-columnheader, .e-headercell, .e-headercelldiv,
+.e-gridcontent, .e-altrow, .e-rowcell, .e-groupcaption, .e-selectionbackground,
+.e-pager, .e-pagercontainer, .e-parentmsgbar, .e-gridfooter, .e-summaryrow, .e-summarycell {
+    font-family: Gruppo;
 }
 
 .nav-item .nav-link {
-    font-size: 1.5rem;
+    font-size: 1rem;
     text-decoration: none;
     padding-left: 10px;
+    font-family: Meraki;
 }
 
     .navbar-title {
@@ -89,6 +117,8 @@ h1:focus {
     align-items: center;
     padding: 20px;
     border-bottom: 1px solid black;
+    font-weight: bolder;
+    font-family: Meraki;
 }
 
 h1 {
@@ -183,5 +213,6 @@ h1 {
 
     .flex-column, .navbar-brand {
         padding-left: env(safe-area-inset-left);
+        font-family: Meraki;
     }
 }

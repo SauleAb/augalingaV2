@@ -16,6 +16,7 @@ namespace augalinga.ApplicationLayer
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("Meraki.ttf", "Meraki");
+                    fonts.AddFont("Traffolight.otf", "Traffolight");
                 });
 
             builder.Services.AddMauiBlazorWebView();
