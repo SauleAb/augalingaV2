@@ -63,6 +63,7 @@
       <Content Remove="wwwroot\dotnet_bot.svg" />
       <Content Remove="wwwroot\drafts.png" />
       <Content Remove="wwwroot\finances.png" />
+      <Content Remove="wwwroot\fonts\Traffolight.otf" />
       <Content Remove="wwwroot\ginkmedis.png" />
       <Content Remove="wwwroot\Meraki.ttf" />
       <Content Remove="wwwroot\orders.png" />
@@ -119,9 +120,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <MauiFont Include="wwwroot\Meraki.ttf">
+      <MauiFont Include="wwwroot\fonts\Meraki.ttf">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </MauiFont>
+      <MauiFont Include="wwwroot\fonts\Traffolight.otf" />
     </ItemGroup>
 
     <ItemGroup>

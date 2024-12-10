@@ -9,6 +9,8 @@ public class User
     public string Color { get; set; }
     public string Token { get; set; }
     public List<Meeting> Meetings {  get; set; }
+    public string? PasswordResetToken { get; set; }
+    public DateTime? TokenExpiry { get; set; }
     [NotMapped]
     public bool IsChecked { get; set; } = true;
 }
