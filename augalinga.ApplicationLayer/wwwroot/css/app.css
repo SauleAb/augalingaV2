@@ -30,6 +30,26 @@ html, body {
     font-family: Gruppo;
 }
 
+.e-multiselect .e-delim-values, .e-multiselect .e-multi-select-wrapper .e-chips .e-chipcontent, .e-custom.e-popup-open, .e-custom.e-input-group.e-control-container.e-control-wrapper,.e-dialog, .e-dlg-content, .e-dialog, .e-dlg-header, .e-input-group input.e-input, .e-input-group.e-control-wrapper input.e-input, .e-input:not(:valid), .e-input:valid, .e-float-input.e-control-wrapper input:not(:valid), .e-float-input.e-control-wrapper input:valid, .e-float-input input:not(:valid), .e-float-input input:valid, .e-input-group input:not(:valid), .e-input-group input:valid, .e-input-group.e-control-wrapper input:not(:valid), .e-input-group.e-control-wrapper input:valid, .e-float-input.e-control-wrapper textarea:not(:valid), .e-float-input.e-control-wrapper textarea:valid, .e-float-input textarea:not(:valid), .e-float-input textarea:valid, .e-input-group.e-control-wrapper textarea:not(:valid), .e-input-group.e-control-wrapper textarea:valid, .e-input-group textarea:not(:valid), .e-input-group textarea:valid {
+    font-family: Gruppo;
+}
+
+.e-custom.e-input-group.e-control-container.e-control-wrapper {
+    font-family: Gruppo;
+}
+
+.e-custom.e-popup-open {
+    font-family: Gruppo;
+}
+
+.e-schedule .e-vertical-view .e-work-cells, .e-schedule .e-month-view .e-work-cells, .e-schedule .e-month-view .e-other-month, .e-schedule .e-timeline-view .e-work-cells, .e-schedule .e-timeline-month-view .e-work-cells, .e-schedule .e-timeline-year-view .e-work-cells, .e-schedule .e-timeline-year-view .e-work-cells.e-other-month, .e-schedule .e-month-agenda-view .e-work-cells, e-header-cells, .e-schedule .e-month-agenda-view .e-other-month, .e-schedule .e-year-view .e-calendar-wrapper .e-month-calendar.e-calendar .e-other-month, .e-schedule .e-vertical-view .e-all-day-cells, .e-schedule .e-vertical-view .e-work-hours, .e-schedule .e-month-view .e-work-days, .e-schedule .e-month-agenda-view .e-work-days, .e-schedule .e-timeline-view .e-work-hours, .e-schedule .e-timeline-month-view .e-work-days, .e-schedule .e-timeline-year-view .e-work-cells.e-work-days, .e-schedule .e-vertical-view .e-day-wrapper .e-appointment, .e-schedule .e-vertical-view .e-all-day-appointment-wrapper .e-appointment, .e-schedule .e-month-view .e-appointment, .e-schedule .e-timeline-view .e-appointment, .e-schedule .e-timeline-month-view .e-appointment, .e-schedule .e-timeline-year-view .e-event-table .e-appointment, .e-schedule .e-year-view .e-calendar-wrapper .e-month-calendar.e-calendar .e-appointment, .e-schedule .e-agenda-view .e-appointment, .e-schedule .e-month-agenda-view .e-appointment-indicator, .e-schedule .e-block-appointment, .e-schedule .e-read-only, e-appointment-border, e-selected-cells, e-header-cells, .e-schedule .e-vertical-view .e-resource-cells, .e-schedule .e-month-view .e-resource-cells, .e-schedule .e-timeline-view .e-resource-cells, .e-schedule .e-timeline-month-view .e-resource-cells, e-parent-node, e-child-node {
+    font-family: Gruppo;
+}
+
+.e-checkbox-wrapper .e-frame, .e-checkbox-wrapper:hover .e-frame, .e-checkbox-wrapper .e-label, .e-checkbox-wrapper:hover .e-label, .e-checkbox-wrapper .e-frame.e-check, .e-checkbox-wrapper:hover .e-frame.e-check {
+    font-family: Gruppo;
+}
+
 .nav-item .nav-link {
     font-size: 1rem;
     text-decoration: none;

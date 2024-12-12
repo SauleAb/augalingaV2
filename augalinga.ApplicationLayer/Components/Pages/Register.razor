@@ -6,7 +6,9 @@
 @inject IAuthService AuthService
 
 <div class="container">
+    <div class="header">
     <h1>User Registration</h1>
+</div>
     <EditForm Model="registerViewModel" OnValidSubmit="HandleRegister">
         <DataAnnotationsValidator />
         <ValidationSummary />
@@ -34,7 +36,7 @@
             <InputText id="background" type="color" class="form-control" @bind-Value="registerViewModel.Background" />
         </div>
 
-        <button type="submit" class="btn btn-primary">Register</button>
+        <button type="submit" class="btn btn-primary margin">Register</button>
     </EditForm>
 
     <div class="mt-3">
@@ -63,3 +65,9 @@
         Navigation.NavigateTo("/login");
     }
 }
+
+<style>
+    .margin {
+        margin-top: 20px;
+    }
+</style>

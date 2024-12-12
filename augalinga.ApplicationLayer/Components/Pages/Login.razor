@@ -6,7 +6,9 @@
 @inject IAuthService AuthService
 
 <div class="container">
+    <div class="header">
     <h1>User Login</h1>
+    </div>
     <EditForm Model="loginViewModel" OnValidSubmit="HandleLogin">
         <DataAnnotationsValidator />
         <ValidationSummary />
@@ -22,7 +24,7 @@
             <ValidationMessage For="@(() => loginViewModel.Password)" />
         </div>
 
-        <button type="submit" class="btn btn-primary">Login</button>
+        <button type="submit" class="btn btn-primary margin">Login</button>
     </EditForm>
 
     <div class="mt-3">
@@ -36,7 +38,7 @@
 <!-- Request Password Modal -->
 <div class="modal show" style="display:@(isRequestPasswordModalVisible ? "block" : "none");">
     <div class="modal-dialog">
-        <div class="modal-content" style="background-color: black;">
+        <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="forgotPasswordModalLabel">Forgot Password</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="HideRequestPasswordModal"></button>
@@ -60,7 +62,7 @@
 <!-- Enter New Password Modal -->
 <div class="modal show" style="display:@(isEnterNewPasswordModalVisible ? "block" : "none");">
     <div class="modal-dialog">
-        <div class="modal-content" style="background-color: black;">
+        <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="enterNewPasswordModalLabel">Enter New Password</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="HideEnterNewPasswordModal"></button>
@@ -200,3 +202,9 @@
         }
     };
 </script>
+
+        <style>
+            .margin {
+                margin-top: 20px;
+            }
+        </style>

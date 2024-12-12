@@ -168,7 +168,7 @@
                 NotificationsViewModel.CreateNotification(existingUser.FullName, null, NotificationType.UserModified, null);
 
                 var userMeetings = await dbContext.Meetings
-                    .Where(m => m.SelectedUsers.Contains(existingUser))
+                    .Where(m => m.SelectedUsers.Count == 1 && m.SelectedUsers.Contains(existingUser))
                     .ToListAsync();
 
                 foreach (var meeting in userMeetings)

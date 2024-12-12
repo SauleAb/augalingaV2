@@ -147,7 +147,7 @@
     private void OpenEditDialog()
     {
         updatedProjectName = project.Name;
-        currentPhotoUrl = project.ImageUrl; // Set current photo URL
+        currentPhotoUrl = project.ImageUrl; 
         isEditDialogVisible = true;
     }
 
@@ -165,25 +165,36 @@
     {
         if (project.Name != updatedProjectName)
         {
+            if (!string.IsNullOrEmpty(project.ImageUrl))
+            {
+                // Rename photo in blob storage
+                string previousPhotoKey = $"{project.Name}/cover photo/{Path.GetFileName(project.ImageUrl)}";
+                string newPhotoKey = $"{updatedProjectName}/cover photo/{Path.GetFileName(project.ImageUrl)}";
+
+                await _blobStorage.RenameBlobAsync(previousPhotoKey, newPhotoKey);
+                project.ImageUrl = newPhotoKey;
+            }
             project.Name = updatedProjectName;
             dbContext.Projects.Update(project);
             await dbContext.SaveChangesAsync();
+
             NotificationsViewModel.CreateNotification(project.Name, null, NotificationType.ProjectModified, null);
         }
 
         if (selectedPhoto != null)
         {
-            string previousPhotoKey = $"{project.Name}/cover photo/{Path.GetFileName(project.ImageUrl)}";
-
             if (!string.IsNullOrEmpty(project.ImageUrl))
             {
+                string previousPhotoKey = $"{project.Name}/cover photo/{Path.GetFileName(project.ImageUrl)}";
                 await _blobStorage.DeleteBlobAsync(previousPhotoKey);
             }
 
             await _blobStorage.UploadCoverPhoto(project.Name, selectedPhoto);
             project.ImageUrl = selectedPhoto.Name;
+
             dbContext.Projects.Update(project);
             await dbContext.SaveChangesAsync();
+
             NotificationsViewModel.CreateNotification(project.Name, null, NotificationType.ProjectModified, null);
         }
 

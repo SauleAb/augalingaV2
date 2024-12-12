@@ -97,8 +97,10 @@
          <div class="filter-text">Filter by:</div>
         @foreach (var user in usersViewModel.Users)
         {
-            <SfCheckBox @bind-Checked="@user.IsChecked" @onclick="() => OnUserSelectionChanged(user)" Label="@user.FullName" >
-            </SfCheckBox>
+            <div style="display: flex; flex-direction: row; align-items: center; cursor: pointer;">
+                <SfCheckBox @bind-Checked="@user.IsChecked" @onclick="() => OnUserSelectionChanged(user)" />
+                <label style="color:@user.Color; margin-left: 2px;">@user.FullName</label>
+            </div>
         }
     }
     else

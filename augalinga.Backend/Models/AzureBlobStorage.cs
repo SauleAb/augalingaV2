@@ -100,6 +100,27 @@ namespace augalinga.Backend.Models
             }
         }
 
+        public async Task RenameBlobAsync(string sourceBlobPath, string destinationBlobPath)
+        {
+            var blobContainerClient = _blobServiceClient.GetBlobContainerClient(ContainerName);
+
+            var sourceBlobClient = blobContainerClient.GetBlobClient(sourceBlobPath);
+            var destinationBlobClient = blobContainerClient.GetBlobClient(destinationBlobPath);
+
+            if (await sourceBlobClient.ExistsAsync())
+            {
+                using var downloadStream = await sourceBlobClient.OpenReadAsync();
+
+                await destinationBlobClient.UploadAsync(downloadStream, overwrite: true);
+
+                await sourceBlobClient.DeleteAsync();
+            }
+            else
+            {
+                throw new Exception("Source blob does not exist.");
+            }
+        }
+
         public async Task UploadCoverPhoto(string projectName, IBrowserFile file)
         {
             string blobName = $"{projectName}/cover photo/{file.Name}";

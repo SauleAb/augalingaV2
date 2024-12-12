@@ -81,7 +81,7 @@
                     </div>
                     <div>
                         <label>
-                            <input type="radio" name="expenseType" value="Outcome" @onchange="HandleTypeChange" /> Outcome
+                            <input type="radio" name="expenseType" value="Outcome" @onchange="HandleTypeChange" /> Expense
                         </label>
                     </div>
                 </div>
@@ -130,6 +130,12 @@
 
     private async Task AddFinance()
     {
+        if (expense.Amount == 0)
+        {
+            await JS.InvokeVoidAsync("alert", "Amount cannot be zero. Please enter a valid amount.");
+            return; 
+        }
+
         expense.Date = DateOnly.FromDateTime(DateTime.Today);
         expense.Type = selectedType == "Outcome" ? "-" : "+";
         expense.ProjectId = projectId;
@@ -171,11 +177,7 @@
         display: flex;
         flex-direction: column;
         height: 100%;
-    }
-
-    .title {
-        font-size: 60px;
-        font-family: 'TitleFont';
+        padding: 20px;
     }
 
     .row {
@@ -187,29 +189,87 @@
     }
 
     .card {
-        width: 300px;
-        height: 200px;
+        width: 30%;
+        height: 150px; /* Adjusted for better appearance */
         margin: 10px;
         padding: 20px;
-        border-radius: 40px;
-        background-color: #EFE9DC;
+        border-radius: 10px;
+        background-color: #f7f7f7;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
     }
 
+        /* Hover effect for cards */
+        .card:hover {
+            transform: scale(1.05);
+        }
+
     .label {
-        font-size: 40px;
+        font-size: 25px; /* Adjusted for responsiveness */
         font-family: 'AppFont';
         text-align: center;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
     }
 
     .amount {
-        font-size: 50px;
+        font-size: 25px; /* Adjusted for responsiveness */
         font-family: 'AppFont';
         text-align: center;
+        font-weight: bolder;
+    }
+
+    /* Large screens (min-width: 601px) */
+    @@media only screen and (min-width: 601px) {
+        .row
+
+    {
+        flex-direction: row; /* Cards in a row */
+    }
+
+    .card {
+        width: 30%; /* Keep cards in one row */
+        height: 150px; /* Adjusted card height */
+    }
+
+    .label {
+        font-size: 20px; /* Adjusted font size */
+    }
+
+    .amount {
+        font-size: 20px; /* Adjusted font size */
+    }
+
+    }
+
+    /* Small screens (max-width: 600px) */
+    @@media only screen and (max-width: 600px) {
+        .row
+
+    {
+        flex-direction: column; /* Stack cards vertically */
+        align-items: center; /* Center align */
+    }
+
+    .card {
+        width: 80%; /* Cards take up 80% of the screen width */
+        height: auto; /* Cards height adjusts */
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+
+    .label {
+        font-size: 18px; /* Slightly smaller font size */
+    }
+
+    .amount {
+        font-size: 18px; /* Slightly smaller font size */
+    }
+
     }
 
     .data-grid {
@@ -230,20 +290,6 @@
         flex-direction: row;
         justify-content: space-around;
         margin-top: 20px;
-    }
-
-    @@media only screen and (max-width: 600px) {
-        .card {
-            width: calc(100% - 20px);
-        }
-
-        .label {
-            font-size: 30px;
-        }
-
-        .amount {
-            font-size: 40px;
-        }
     }
 </style>
 
