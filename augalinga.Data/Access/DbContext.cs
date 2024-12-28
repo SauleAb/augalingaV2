@@ -25,7 +25,7 @@ namespace augalinga.Data.Access
         public DbSet<Notification> Notifications {  get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=tcp:augalinga.database.windows.net,1433;Initial Catalog=augalinga;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=\"Active Directory Default\";");
+            optionsBuilder.UseSqlServer("Server=tcp:augalinga.database.windows.net,1433;Initial Catalog=augalingaDb;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=\"Active Directory Default\";");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
