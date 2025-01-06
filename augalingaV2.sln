@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "augalinga.Data", "augalinga
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "augalinga.Backend", "augalinga.Backend\augalinga.Backend.csproj", "{067D439A-3EB8-4B96-97EC-11B051AA3DD0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "augalinga.Tests", "augalinga.Tests\augalinga.Tests.csproj", "{4A9B3CEC-34BC-4033-9A6B-3F6B92359F52}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "augalinga.Tests", "augalinga.Tests\augalinga.Tests.csproj", "{91447782-583F-491B-9CD9-2C36BA67C47E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,10 +31,10 @@ Global
 		{067D439A-3EB8-4B96-97EC-11B051AA3DD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{067D439A-3EB8-4B96-97EC-11B051AA3DD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{067D439A-3EB8-4B96-97EC-11B051AA3DD0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4A9B3CEC-34BC-4033-9A6B-3F6B92359F52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4A9B3CEC-34BC-4033-9A6B-3F6B92359F52}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4A9B3CEC-34BC-4033-9A6B-3F6B92359F52}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4A9B3CEC-34BC-4033-9A6B-3F6B92359F52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91447782-583F-491B-9CD9-2C36BA67C47E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91447782-583F-491B-9CD9-2C36BA67C47E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91447782-583F-491B-9CD9-2C36BA67C47E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91447782-583F-491B-9CD9-2C36BA67C47E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

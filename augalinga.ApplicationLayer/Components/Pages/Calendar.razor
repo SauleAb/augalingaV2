@@ -10,7 +10,8 @@
 @using augalinga.Data.Entities
 @using augalinga.Data.Access
 @using augalinga.Data.Enums
-@inject NotificationsViewModel NotificationsViewModel
+@inject INotificationService NotificationService
+@inject DataContext DataContext
 @inject IAuthService IAuthService
 
 <div class="calendar-container">
@@ -35,58 +36,58 @@
         </ScheduleViews>
 
         <ScheduleTemplates>
-           <EditorTemplate>
-    <table class="custom-event-editor" width="100%" cellpadding="5">
-        <tbody>
-            <tr>
-                <td class="e-textlabel">Name</td>
-                <td colspan="4">
-                    <SfTextBox @bind-Value="(context as Meeting).EventName"></SfTextBox>
-                </td>
-            </tr>
-            <tr>
-                <td class="e-textlabel">From</td>
-                <td colspan="4">
-                    <SfDateTimePicker @bind-Value="(context as Meeting).From"></SfDateTimePicker>
-                </td>
-            </tr>
-            <tr>
-                <td class="e-textlabel">To</td>
-                <td colspan="4">
-                    <SfDateTimePicker @bind-Value="(context as Meeting).To"></SfDateTimePicker>
-                </td>
-            </tr>
-            <tr>
-                <td class="e-textlabel">All day</td>
-                <td colspan="4">
-                    <SfSwitch @bind-Checked="(context as Meeting).IsAllDay"></SfSwitch>
-                </td>
-            </tr>
-            <tr>
-                <td class="e-textlabel">Assign to All Users</td>
-                <td colspan="4">
-                    <SfSwitch @bind-Checked="(context as Meeting).IsAssignedToAllUsers" @onchange="() => OnAssignToAllUsersChanged(context as Meeting)">
-                    </SfSwitch>
-                </td>
-            </tr>
-            <tr>
-                <td class="e-textlabel">For</td>
-                <td colspan="4">
-                    <SfMultiSelect TValue="List<User>" TItem="User" Placeholder="User" DataSource="@calendarViewModel.Users" 
-                        @bind-Value="(context as Meeting).SelectedUsers" Enabled="!(context as Meeting).IsAssignedToAllUsers" @onchange="() => OnSelectedUsersChanged(context as Meeting)">
-                        <MultiSelectFieldSettings Text="FullName" Value="Id"></MultiSelectFieldSettings>
-                    </SfMultiSelect>
-                </td>
-            </tr>
-            <tr>
-                <td class="e-textlabel">Notes</td>
-                <td colspan="4">
-                    <SfTextBox Multiline="true" @bind-Value="(context as Meeting).Notes"></SfTextBox>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</EditorTemplate>
+            <EditorTemplate>
+                <table class="custom-event-editor" width="100%" cellpadding="5">
+                    <tbody>
+                        <tr>
+                            <td class="e-textlabel">Name</td>
+                            <td colspan="4">
+                                <SfTextBox @bind-Value="(context as Meeting).EventName"></SfTextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="e-textlabel">From</td>
+                            <td colspan="4">
+                                <SfDateTimePicker @bind-Value="(context as Meeting).From"></SfDateTimePicker>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="e-textlabel">To</td>
+                            <td colspan="4">
+                                <SfDateTimePicker @bind-Value="(context as Meeting).To"></SfDateTimePicker>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="e-textlabel">All day</td>
+                            <td colspan="4">
+                                <SfSwitch @bind-Checked="(context as Meeting).IsAllDay"></SfSwitch>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="e-textlabel">Assign to All Users</td>
+                            <td colspan="4">
+                                <SfSwitch @bind-Checked="(context as Meeting).IsAssignedToAllUsers" @onchange="() => OnAssignToAllUsersChanged(context as Meeting)">
+                                </SfSwitch>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="e-textlabel">For</td>
+                            <td colspan="4">
+                                <SfMultiSelect TValue="List<User>" TItem="User" Placeholder="User" DataSource="@calendarViewModel.Users" 
+                                @bind-Value="(context as Meeting).SelectedUsers" Enabled="!(context as Meeting).IsAssignedToAllUsers" @onchange="() => OnSelectedUsersChanged(context as Meeting)">
+                                    <MultiSelectFieldSettings Text="FullName" Value="Id"></MultiSelectFieldSettings>
+                                </SfMultiSelect>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="e-textlabel">Notes</td>
+                            <td colspan="4">
+                                <SfTextBox Multiline="true" @bind-Value="(context as Meeting).Notes"></SfTextBox>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </EditorTemplate>
         </ScheduleTemplates>
     </SfSchedule>
 </div>
@@ -94,7 +95,7 @@
 <div class="user-filter-container">
     @if (usersViewModel.Users != null && usersViewModel.Users.Any())
     {
-         <div class="filter-text">Filter by:</div>
+        <div class="filter-text">Filter by:</div>
         @foreach (var user in usersViewModel.Users)
         {
             <div style="display: flex; flex-direction: row; align-items: center; cursor: pointer;">
@@ -118,7 +119,8 @@
 
     protected override void OnInitialized()
     {
-        calendarViewModel = new CalendarViewModel(NotificationsViewModel);
+        calendarViewModel = new CalendarViewModel(NotificationService, DataContext);
+        calendarViewModel.Initialize();
     }
 
     public void OnEventRendered(EventRenderedArgs<Meeting> args)

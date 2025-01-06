@@ -2,6 +2,7 @@
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Grids
 @using augalinga.Backend.ViewModels
+@using augalinga.Backend.Services
 @using augalinga.Data.Entities
 @inject NavigationManager Navigation
 @using Syncfusion.Blazor.Inputs
@@ -11,7 +12,7 @@
 @using augalinga.Data.Access
 @using augalinga.Data.Entities
 @using augalinga.Data.Enums
-@inject NotificationsViewModel NotificationsViewModel
+@inject INotificationService NotificationService
 
 <div class="header">
     <div style="flex: 1">
@@ -108,7 +109,7 @@
         dbContext.Contacts.Remove(contact);
         await dbContext.SaveChangesAsync();
         projectContactsViewModel.Contacts.Remove(contact);
-        NotificationsViewModel.CreateNotification(contact.Name, project.Name, NotificationType.ContactDeleted, null);
+        NotificationService.CreateNotification(contact.Name, project.Name, NotificationType.ContactDeleted, null);
     }
     private async void AddContact()
     {
@@ -124,7 +125,7 @@
         dbContext.Contacts.Add(contact);
         await dbContext.SaveChangesAsync();
         projectContactsViewModel.Contacts.Add(contact);
-        NotificationsViewModel.CreateNotification(contact.Name, project.Name, NotificationType.ContactAdded, null);
+        NotificationService.CreateNotification(contact.Name, project.Name, NotificationType.ContactAdded, null);
         await HideModal();
     }
 

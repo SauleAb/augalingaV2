@@ -9,7 +9,7 @@
 @using augalinga.Data.Enums
 @inject NavigationManager Navigation
 @inject IAuthService IAuthService
-@inject NotificationsViewModel NotificationsViewModel
+@inject INotificationService NotificationService
 @inject IJSRuntime JS
 
 <div class="header">
@@ -108,7 +108,7 @@
 
         dbContext.Projects.Add(project);
         viewModel.Projects.Add(project);
-        NotificationsViewModel.CreateNotification(project.Name, null, NotificationType.ProjectAdded, null);
+        NotificationService.CreateNotification(project.Name, null, NotificationType.ProjectAdded, null);
         await dbContext.SaveChangesAsync();
         await LoadProjectsAsync();
 

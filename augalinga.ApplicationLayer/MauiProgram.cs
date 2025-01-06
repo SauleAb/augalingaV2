@@ -1,5 +1,6 @@
 ﻿using augalinga.Backend.Services;
 using augalinga.Backend.ViewModels;
+using augalinga.Data.Access;
 using Microsoft.Extensions.Logging;
 using Syncfusion.Blazor;
 
@@ -23,7 +24,8 @@ namespace augalinga.ApplicationLayer
             builder.Services.AddSyncfusionBlazor();
             builder.Services.AddSingleton<IAuthService, AuthService>();
             builder.Services.AddSingleton<IEmailService, EmailService>();
-            builder.Services.AddScoped<NotificationsViewModel>();
+            builder.Services.AddSingleton<INotificationService, NotificationService>();
+            builder.Services.AddScoped<DataContext>();
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NCaF5cXmZCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdnWXlfcnRcR2RfUUx2V0s=");
 
 #if DEBUG

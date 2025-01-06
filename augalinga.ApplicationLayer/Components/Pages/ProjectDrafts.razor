@@ -3,6 +3,7 @@
 @using Syncfusion.Blazor.Grids
 @using augalinga.Backend.ViewModels
 @using augalinga.Backend.Models
+@using augalinga.Backend.Services
 @using augalinga.Data.Access
 @using augalinga.Data.Entities
 @using Syncfusion.Blazor.Popups
@@ -13,7 +14,7 @@
 @using System.Text.Json
 @using augalinga.Data.Enums
 @inject IJSRuntime JS
-@inject NotificationsViewModel NotificationsViewModel
+@inject INotificationService NotificationService
 
 <div class="header">
     <div style="flex: 1">
@@ -149,7 +150,7 @@
                 await dbContext.Drafts.AddAsync(draft);
                 await dbContext.SaveChangesAsync();
                 draftsViewModel.Drafts.Add(draft);
-                NotificationsViewModel.CreateNotification(file.Name, project.Name, NotificationType.DraftAdded, null);
+                NotificationService.CreateNotification(file.Name, project.Name, NotificationType.DraftAdded, null);
             }
             await draftsGrid.Refresh();
             StateHasChanged();
@@ -173,7 +174,7 @@
 
         await blobStorage.DeleteBlobAsync(draft.Link);
         draftsViewModel.Drafts.Remove(draft);
-        NotificationsViewModel.CreateNotification(draft.Name, project.Name, NotificationType.DraftDeleted, null);
+        NotificationService.CreateNotification(draft.Name, project.Name, NotificationType.DraftDeleted, null);
     }
 }
 <script>

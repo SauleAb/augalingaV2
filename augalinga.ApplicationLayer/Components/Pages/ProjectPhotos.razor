@@ -9,7 +9,8 @@
 @inject IJSRuntime JS
 @using Syncfusion.Blazor.Navigations
 @using augalinga.Data.Enums
-@inject NotificationsViewModel NotificationsViewModel
+@using augalinga.Backend.Services
+@inject INotificationService NotificationService
 
 <div class="header">
     <div style="flex: 1">
@@ -316,7 +317,7 @@
 
                     await LoadPhotos();
                     await HideUploadModal();
-                    NotificationsViewModel.CreateNotification(selectedFile.Name, project.Name, NotificationType.PhotoAdded, null);
+                    NotificationService.CreateNotification(selectedFile.Name, project.Name, NotificationType.PhotoAdded, null);
                 }
             }
         }

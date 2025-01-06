@@ -3,13 +3,14 @@
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Grids
 @using System.Collections.ObjectModel
+@using augalinga.Backend.Services
 @using augalinga.Backend.ViewModels
 @using augalinga.Data.Entities
 @inject IJSRuntime JS
 @inject NavigationManager Navigation
 @using augalinga.Data.Access
 @using augalinga.Data.Enums
-@inject NotificationsViewModel NotificationsViewModel
+@inject INotificationService NotificationService
 
 <div class="header">
     <div style="flex: 1">
@@ -143,7 +144,7 @@
         await dbContext.SaveChangesAsync();
         expensesViewModel.Expenses.Add(expense);
         CalculateTotals();
-        NotificationsViewModel.CreateNotification(expense.Transaction, project.Name, NotificationType.ExpenseAdded, null);
+        NotificationService.CreateNotification(expense.Transaction, project.Name, NotificationType.ExpenseAdded, null);
 
         expense = new Expense();
         await HideModal();
@@ -168,7 +169,7 @@
         expensesViewModel.Expenses.Remove(expenseToDelete);
         CalculateTotals();
 
-        NotificationsViewModel.CreateNotification(expenseToDelete.Transaction, project.Name, NotificationType.ExpenseDeleted, null);
+        NotificationService.CreateNotification(expenseToDelete.Transaction, project.Name, NotificationType.ExpenseDeleted, null);
     }
 }
 

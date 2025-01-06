@@ -3,6 +3,7 @@
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Grids
 @using augalinga.Backend.Models
+@using augalinga.Backend.Services
 @using augalinga.Backend.ViewModels
 @using augalinga.Data.Access
 @using augalinga.Data.Entities
@@ -16,7 +17,7 @@
 @using Azure.Storage.Blobs.Models;
 @using augalinga.Data.Enums
 @inject IJSRuntime JS
-@inject NotificationsViewModel NotificationsViewModel
+@inject INotificationService NotificationService
 
 <div class="header">
     <div style="flex: 1">
@@ -158,7 +159,7 @@
                 await dbContext.Documents.AddAsync(newDocument);
                 await dbContext.SaveChangesAsync();
                 documentsViewModel.Documents.Add(newDocument);
-                NotificationsViewModel.CreateNotification(file.Name, project.Name, NotificationType.DocumentAdded, null);
+                NotificationService.CreateNotification(file.Name, project.Name, NotificationType.DocumentAdded, null);
             }
             selectedFiles.Clear();
             await HideModal();
@@ -186,7 +187,7 @@
         await blobStorage.DeleteBlobAsync(blobName);
 
         documentsViewModel.Documents.Remove(document);
-        NotificationsViewModel.CreateNotification(document.Name, project.Name, NotificationType.DocumentDeleted, null);
+        NotificationService.CreateNotification(document.Name, project.Name, NotificationType.DocumentDeleted, null);
     }
 }
 

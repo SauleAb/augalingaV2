@@ -1,4 +1,5 @@
 ﻿@page "/contacts"
+@using augalinga.Backend.Services
 @using augalinga.Backend.ViewModels
 @using augalinga.Data.Entities
 @using Syncfusion.Blazor
@@ -7,7 +8,7 @@
 @using augalinga.Data.Enums
 @inject NavigationManager Navigation
 @inject IJSRuntime JS
-@inject NotificationsViewModel NotificationsViewModel
+@inject INotificationService NotificationService
 
 <div class="header">
     <div style="flex: 1">
@@ -134,7 +135,7 @@
         dbContext.Contacts.Remove(contact);
         await dbContext.SaveChangesAsync();
         contactsViewModel.Contacts.Remove(contact);
-        NotificationsViewModel.CreateNotification(contact.Name, null, NotificationType.ContactDeleted, null);
+        NotificationService.CreateNotification(contact.Name, null, NotificationType.ContactDeleted, null);
     }
 
     private async void AddContact()
@@ -151,7 +152,7 @@
         dbContext.Contacts.Add(contact);
         await dbContext.SaveChangesAsync();
         contactsViewModel.Contacts.Add(contact);
-        NotificationsViewModel.CreateNotification(contact.Name, contact.Category, NotificationType.ContactAdded, null);
+        NotificationService.CreateNotification(contact.Name, contact.Category, NotificationType.ContactAdded, null);
         await HideModal();
     }
 

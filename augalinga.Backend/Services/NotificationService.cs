@@ -1,34 +1,26 @@
-﻿using augalinga.Backend.Services;
-using augalinga.Data.Access;
-using augalinga.Data.Entities; // Assuming Notification entity is in this namespace
+﻿using augalinga.Data.Access;
+using augalinga.Data.Entities;
 using augalinga.Data.Enums;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace augalinga.Backend.ViewModels
+namespace augalinga.Backend.Services
 {
-    public class NotificationsViewModel : INotifyPropertyChanged
+    public class NotificationService : INotificationService
     {
         private readonly DataContext _dbContext;
         private readonly IAuthService _authService;
-        public NotificationsViewModel(IAuthService authService)
-        {
-            _dbContext = new DataContext();
-            _authService = authService;
-            LoadNotifications();
-        }
 
         private ObservableCollection<Notification> _notifications;
         public ObservableCollection<Notification> Notifications
         {
             get => _notifications;
-            set
-            {
-                _notifications = value;
-                OnPropertyChanged(nameof(Notifications));
-            }
+            private set => _notifications = value;
         }
 
         private static readonly Dictionary<NotificationType, string> NotificationTemplates = new Dictionary<NotificationType, string>
@@ -56,9 +48,17 @@ namespace augalinga.Backend.ViewModels
             { NotificationType.ExpenseDeleted, "Expense - Deleted from {1} - {0}" }
         };
 
+        public NotificationService(IAuthService authService, DataContext dbContext)
+        {
+            _authService = authService ?? throw new ArgumentNullException(nameof(authService));
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            LoadNotifications();
+        }
+
         public void CreateNotification(string entityName, string? projectName, NotificationType type, int? forUserId)
         {
             var currentUser = _authService.GetCurrentUser();
+            if (currentUser == null) throw new InvalidOperationException("Current user cannot be null.");
 
             string messageTemplate = NotificationTemplates.ContainsKey(type) ? NotificationTemplates[type] : "Notification - {0}";
             string message = string.Format(messageTemplate, entityName, projectName);
@@ -67,15 +67,15 @@ namespace augalinga.Backend.ViewModels
             {
                 Message = message,
                 CreatedAt = DateTime.UtcNow,
-                UserId = currentUser.Id, 
+                UserId = currentUser.Id,
                 ForUserId = forUserId,
                 Type = type
             };
 
-            AddNotificationToCollection(notification);
+            AddNotification(notification);
         }
 
-        public void AddNotificationToCollection(Notification notification)
+        private void AddNotification(Notification notification)
         {
             Notifications.Add(notification);
             SaveNotification(notification);
@@ -86,6 +86,7 @@ namespace augalinga.Backend.ViewModels
             var notifications = _dbContext.Notifications
                 .Include(n => n.User)
                 .ToList();
+
             Notifications = new ObservableCollection<Notification>(notifications);
         }
 
@@ -93,12 +94,6 @@ namespace augalinga.Backend.ViewModels
         {
             _dbContext.Notifications.Add(notification);
             _dbContext.SaveChanges();
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

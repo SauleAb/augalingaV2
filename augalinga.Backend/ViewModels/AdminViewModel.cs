@@ -13,15 +13,15 @@ namespace augalinga.Backend.ViewModels
     public class AdminViewModel
     {
         private readonly DataContext _dbContext;
-        private readonly NotificationsViewModel _notificationsViewModel;
+        private readonly INotificationService _notificationService;
         private readonly IAuthService _authService;
         private readonly UsersViewModel _usersViewModel;
 
 
-        public AdminViewModel(UsersViewModel usersViewModel, NotificationsViewModel notificationsViewModel, IAuthService authService)
+        public AdminViewModel(UsersViewModel usersViewModel, INotificationService notificationViewModel, IAuthService authService)
         {
             _dbContext = new DataContext();
-            _notificationsViewModel = notificationsViewModel;
+            _notificationService = notificationViewModel;
             _authService = authService;
             _usersViewModel = usersViewModel;
         }
@@ -37,19 +37,19 @@ namespace augalinga.Backend.ViewModels
             if (selectedUser.FullName != existingUser.FullName)
             {
                 existingUser.FullName = selectedUser.FullName;
-                _notificationsViewModel.CreateNotification(existingUser.FullName, null, NotificationType.UserModified, null);
+                _notificationService.CreateNotification(existingUser.FullName, null, NotificationType.UserModified, null);
             }
 
             if (selectedUser.Email != existingUser.Email)
             {
                 existingUser.Email = selectedUser.Email;
-                _notificationsViewModel.CreateNotification(existingUser.FullName, null, NotificationType.UserModified, null);
+                _notificationService.CreateNotification(existingUser.FullName, null, NotificationType.UserModified, null);
             }
 
             if (selectedUser.Color != existingUser.Color)
             {
                 existingUser.Color = selectedUser.Color;
-                _notificationsViewModel.CreateNotification(existingUser.FullName, null, NotificationType.UserModified, null);
+                _notificationService.CreateNotification(existingUser.FullName, null, NotificationType.UserModified, null);
 
                 var userMeetings = await _dbContext.Meetings
                     .Where(m => m.SelectedUsers.Contains(existingUser))

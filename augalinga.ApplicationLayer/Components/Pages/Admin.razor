@@ -12,7 +12,7 @@
 @using augalinga.Data.Access
 @using Microsoft.EntityFrameworkCore;
 @using augalinga.Data.Enums
-@inject NotificationsViewModel NotificationsViewModel
+@inject INotificationService NotificationService
 @inject IAuthService IAuthService
 
 <div class="header">
@@ -153,19 +153,19 @@
             if (selectedUser.FullName != existingUser.FullName)
             {
                 existingUser.FullName = selectedUser.FullName;
-                NotificationsViewModel.CreateNotification(existingUser.FullName, null, NotificationType.UserModified, null);
+                NotificationService.CreateNotification(existingUser.FullName, null, NotificationType.UserModified, null);
             }
 
             if (selectedUser.Email != existingUser.Email)
             {
                 existingUser.Email = selectedUser.Email;
-                NotificationsViewModel.CreateNotification(existingUser.FullName, null, NotificationType.UserModified, null);
+                NotificationService.CreateNotification(existingUser.FullName, null, NotificationType.UserModified, null);
             }
 
             if (selectedUser.Color != existingUser.Color)
             {
                 existingUser.Color = selectedUser.Color;
-                NotificationsViewModel.CreateNotification(existingUser.FullName, null, NotificationType.UserModified, null);
+                NotificationService.CreateNotification(existingUser.FullName, null, NotificationType.UserModified, null);
 
                 var userMeetings = await dbContext.Meetings
                     .Where(m => m.SelectedUsers.Count == 1 && m.SelectedUsers.Contains(existingUser))

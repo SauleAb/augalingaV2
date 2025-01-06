@@ -3,6 +3,7 @@
 @using Syncfusion.Blazor.Grids
 @using augalinga.Backend.Models
 @using augalinga.Backend.ViewModels
+@using augalinga.Backend.Services
 @using augalinga.Data.Access
 @using augalinga.Data.Entities
 @using Syncfusion.Blazor.Popups
@@ -13,7 +14,7 @@
 @using System.Text.Json
 @using augalinga.Data.Enums
 @inject IJSRuntime JS
-@inject NotificationsViewModel NotificationsViewModel
+@inject INotificationService NotificationService
 
 
 <div class="header">
@@ -149,7 +150,7 @@
                 await dbContext.Orders.AddAsync(order);
                 await dbContext.SaveChangesAsync();
                 ordersViewModel.Orders.Add(order);
-                NotificationsViewModel.CreateNotification(order.Name, project.Name, NotificationType.OrderAdded, null);
+                NotificationService.CreateNotification(order.Name, project.Name, NotificationType.OrderAdded, null);
             }
 
             await Task.Delay(800);
@@ -176,7 +177,7 @@
 
         await blobStorage.DeleteBlobAsync(order.Link);
         ordersViewModel.Orders.Remove(order);
-        NotificationsViewModel.CreateNotification(order.Name, project.Name, NotificationType.OrderDeleted, null);
+        NotificationService.CreateNotification(order.Name, project.Name, NotificationType.OrderDeleted, null);
     }
 }
 <script>

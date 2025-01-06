@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using augalinga.Data.Entities;
 using augalinga.Data.Enums;
+using Azure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Configuration;
 using Contact = augalinga.Data.Entities.Contact;
 
 namespace augalinga.Data.Access
@@ -24,11 +26,34 @@ namespace augalinga.Data.Access
         public DbSet<Expense> Expenses {  get; set; }
         public DbSet<Notification> Notifications {  get; set; }
 
+        public DataContext(DbContextOptions<DataContext> options) : base(options) { }
+
+        public DataContext() { }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=tcp:augalinga.database.windows.net,1433;Initial Catalog=augalingaDb;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=\"Active Directory Default\";");
+                try
+                {
+                    var configuration = new ConfigurationBuilder()
+                        .AddAzureKeyVault(new Uri("https://augalingakv.vault.azure.net/"), new DefaultAzureCredential())
+                        .Build();
+
+                    var connectionString = configuration["DefaultConnection"];
+
+                    if (string.IsNullOrEmpty(connectionString))
+                    {
+                        throw new Exception("Connection string 'DefaultConnection' was not found in Azure Key Vault.");
+                    }
+
+                    optionsBuilder.UseSqlServer(connectionString);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error configuring DbContext: {ex.Message}");
+                    throw;
+                }
             }
         }
 
@@ -40,13 +65,13 @@ namespace augalinga.Data.Access
 
             modelBuilder.Entity<Notification>()
                 .HasOne(n => n.User)
-                .WithMany() // Assuming User has many Notifications
+                .WithMany() 
                 .HasForeignKey(n => n.UserId)
-                .OnDelete(DeleteBehavior.Cascade); // This enables cascade delete
+                .OnDelete(DeleteBehavior.Cascade); 
 
             modelBuilder.Entity<Notification>()
                 .HasOne(n => n.ForUser)
-                .WithMany() // Assuming User has many Notifications as ForUser
+                .WithMany() 
                 .HasForeignKey(n => n.ForUserId)
                 .OnDelete(DeleteBehavior.Restrict);
 

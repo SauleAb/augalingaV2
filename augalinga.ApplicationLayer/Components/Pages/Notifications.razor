@@ -2,14 +2,15 @@
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Grids
 @using augalinga.Backend.ViewModels
+@using augalinga.Backend.Services
 @using augalinga.Data.Entities
-@inject NotificationsViewModel NotificationsViewModel
+@inject INotificationService NotificationService
 
 <div class="header">
     <h1>Notifications</h1>
 </div>
 
-<SfGrid DataSource="@NotificationsViewModel.Notifications" AllowFiltering="true" AllowPaging="true" AllowSorting="true">
+<SfGrid DataSource="@NotificationService.Notifications" AllowFiltering="true" AllowPaging="true" AllowSorting="true">
     <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
     <GridSortSettings>
         <GridSortColumns>
