@@ -210,39 +210,30 @@
     {
         try
         {
-            // First, find all notifications for the user
             var notifications = await dbContext.Notifications
-                .Where(n => n.UserId == user.Id || n.ForUserId == user.Id) // Check both UserId and ForUserId
+                .Where(n => n.UserId == user.Id || n.ForUserId == user.Id)
                 .ToListAsync();
 
-            // Remove notifications
             dbContext.Notifications.RemoveRange(notifications);
 
-            // Now find meetings
             var meetings = await dbContext.Meetings
                 .Where(m => m.SelectedUsers.Contains(user))
                 .ToListAsync();
 
-            // Remove meetings
             foreach (var meeting in meetings)
             {
-                // Remove the user from SelectedUsers
                 meeting.SelectedUsers.Remove(user);
 
-                // If no users remain in SelectedUsers, remove the meeting
                 if (!meeting.SelectedUsers.Any())
                 {
                     dbContext.Meetings.Remove(meeting);
                 }
             }
 
-            // Finally, remove the user
             dbContext.Users.Remove(user);
 
-            // Save changes to the database
             await dbContext.SaveChangesAsync();
 
-            // Update the UI
             usersViewModel.Users.Remove(user);
             StateHasChanged();
         }
@@ -297,7 +288,3 @@
         }
     };
 </script>
-
-<style>
-    
-</style>

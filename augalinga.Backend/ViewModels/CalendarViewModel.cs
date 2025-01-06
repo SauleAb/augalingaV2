@@ -60,7 +60,7 @@ public class CalendarViewModel : INotifyPropertyChanged
             }
             else
             {
-                var meetings = dbContext.Meetings.Include(m => m.SelectedUsers).ToList();
+                var meetings = dbContext.Meetings.ToList();
                 Events = new ObservableCollection<Meeting>(meetings);
             }
         }
@@ -180,11 +180,11 @@ public class CalendarViewModel : INotifyPropertyChanged
         {
             if (meeting.IsAssignedToAllUsers)
             {
-                meeting.SelectedUsers = Users.ToList(); // Assign all users
+                meeting.SelectedUsers = Users.ToList();
             }
             else
             {
-                meeting.SelectedUsers.Clear(); // Clear selected users
+                meeting.SelectedUsers.Clear();
             }
         }
     }
