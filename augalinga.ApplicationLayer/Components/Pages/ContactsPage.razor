@@ -8,6 +8,7 @@
 @using augalinga.Data.Enums
 @inject NavigationManager Navigation
 @inject IJSRuntime JS
+@inject DataContext DataContext
 @inject INotificationService NotificationService
 
 <div class="header">
@@ -89,7 +90,7 @@
     Contact contact = new Contact();
     protected override void OnInitialized()
     {
-        contactsViewModel = new ContactsViewModel(contactsCategory);
+        contactsViewModel = new ContactsViewModel(contactsCategory, DataContext);
         contact.Number = "+370";
     }
 

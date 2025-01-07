@@ -8,6 +8,7 @@
 @using augalinga.Data.Enums
 @inject NavigationManager Navigation
 @inject IJSRuntime JS
+@inject DataContext DataContext
 @inject INotificationService NotificationService
 
 <div class="header">
@@ -117,13 +118,13 @@
 
 
 @code {
-    ContactsViewModel contactsViewModel { get; set; } = new ContactsViewModel();
-    private DataContext dbContext { get; set; } = new DataContext();
+    ContactsViewModel contactsViewModel;
     Contact contact = new Contact();
 
     protected override void OnInitialized()
     {
         contact.Number = "+370";
+        contactsViewModel = new ContactsViewModel(DataContext);
     }
 
     private void GoBack()
@@ -132,8 +133,8 @@
     }
     private async Task DeleteContact(Contact contact)
     {
-        dbContext.Contacts.Remove(contact);
-        await dbContext.SaveChangesAsync();
+        DataContext.Contacts.Remove(contact);
+        await DataContext.SaveChangesAsync();
         contactsViewModel.Contacts.Remove(contact);
         NotificationService.CreateNotification(contact.Name, null, NotificationType.ContactDeleted, null);
     }
@@ -149,8 +150,8 @@
         {
             contact.Address = "";
         }
-        dbContext.Contacts.Add(contact);
-        await dbContext.SaveChangesAsync();
+        DataContext.Contacts.Add(contact);
+        await DataContext.SaveChangesAsync();
         contactsViewModel.Contacts.Add(contact);
         NotificationService.CreateNotification(contact.Name, contact.Category, NotificationType.ContactAdded, null);
         await HideModal();

@@ -1,4 +1,5 @@
 ﻿using augalinga.Data.Access;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Contact = augalinga.Data.Entities.Contact;
@@ -8,14 +9,17 @@ namespace augalinga.Backend.ViewModels
     public class ContactsViewModel : INotifyPropertyChanged
     {
         string _category;
-        public ContactsViewModel(string category)
+        private readonly DataContext _dbContext;
+        public ContactsViewModel(string category, DataContext dbContext)
         {
             _category = category;
+            _dbContext = dbContext;
             LoadContacts(_category);
         }
 
-        public ContactsViewModel()
+        public ContactsViewModel(DataContext dbContext)
         {
+            _dbContext = dbContext;
             LoadContacts();
         }
 
@@ -44,34 +48,27 @@ namespace augalinga.Backend.ViewModels
 
         public void RemoveContact(Contact contact)
         {
-            using (var dbContext = new DataContext())
-            {
-                dbContext.Contacts.Remove(contact);
-                dbContext.SaveChanges();
-            }
+            _dbContext.Contacts.Remove(contact);
+            _dbContext.SaveChanges();
             LoadContacts(_category);
         }
 
-        private void LoadContacts(string category)
+        public void LoadContacts(string category)
         {
-            using (var dbContext = new DataContext())
-            {
-                var contacts = dbContext.Contacts
+                var contacts = _dbContext.Contacts
                     .Where(c => c.Category == category)
                     .ToList();
 
                 Contacts = new ObservableCollection<Contact>(contacts);
-            }
+            
         }
 
-        private void LoadContacts()
+        public void LoadContacts()
         {
-            using (var dbContext = new DataContext())
-            {
-                var contacts = dbContext.Contacts.ToList();
+                var contacts = _dbContext.Contacts.ToList();
 
                 Contacts = new ObservableCollection<Contact>(contacts);
-            }
+            
         }
     }
 }
