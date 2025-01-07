@@ -9,6 +9,7 @@
 @inject IJSRuntime JS
 @inject NavigationManager Navigation
 @using augalinga.Data.Access
+@inject DataContext DataContext
 @using augalinga.Data.Enums
 @inject INotificationService NotificationService
 
@@ -115,7 +116,7 @@
     protected override void OnInitialized()
     {
         project = dbContext.Projects.FirstOrDefault(w => w.Id == projectId);
-        expensesViewModel = new ExpensesViewModel(projectId);
+        expensesViewModel = new ExpensesViewModel(projectId, DataContext);
         CalculateTotals();
     }
 

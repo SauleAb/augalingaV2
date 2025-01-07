@@ -8,9 +8,12 @@ namespace augalinga.Backend.ViewModels
     public class ExpensesViewModel
     {
         private int _projectId;
-        public ExpensesViewModel(int projectId)
+        private readonly DataContext _dbContext;
+
+        public ExpensesViewModel(int projectId, DataContext dbContext)
         {
             _projectId = projectId;
+            _dbContext = dbContext;
             LoadExpenses(_projectId);
         }
 
@@ -70,7 +73,7 @@ namespace augalinga.Backend.ViewModels
             return outcomeExpenses.Sum(expense => expense.Amount);
         }
 
-        public decimal GetTotal() //add to project entity
+        public decimal GetTotal() 
         {
             if (Expenses.Count == 0)
             {
@@ -98,12 +101,10 @@ namespace augalinga.Backend.ViewModels
 
         private void LoadExpenses(int projectId)
         {
-            using (var context = new DataContext())
-            {
-                var expenses = context.Expenses.Where(expense => expense.ProjectId == projectId).OrderByDescending(expense => expense.Date).ToList();
+            var expenses = _dbContext.Expenses.Where(expense => expense.ProjectId == projectId).OrderByDescending(expense => expense.Date).ToList();
 
-                Expenses = new ObservableCollection<Expense>(expenses);
-            }
+            Expenses = new ObservableCollection<Expense>(expenses);
+            
 
             Income = GetIncome();
             Outcome = GetOutcome();
