@@ -11,6 +11,7 @@
 @using augalinga.Data.Enums
 @using augalinga.Backend.Services
 @inject INotificationService NotificationService
+@inject DataContext DataContext
 
 <div class="header">
     <div style="flex: 1">
@@ -182,7 +183,6 @@
     private List<IBrowserFile> selectedFiles = new List<IBrowserFile>();
     string folder = "photos";
     string category = "before";
-    public DataContext dbContext { get; set; } = new DataContext();
     private string errorMessage;
     private bool isBeforeTabActive = true;
     private bool isAfterTabActive = false;
@@ -197,13 +197,13 @@
     {
         try
         {
-            project = dbContext.Projects.FirstOrDefault(w => w.Id == projectId);
+            project = DataContext.Projects.FirstOrDefault(w => w.Id == projectId);
             _blobStorage = new AzureBlobStorage();
             if (project == null)
             {
                 throw new Exception($"Project with ID {projectId} not found.");
             }
-            photosViewModel = new PhotosViewModel(projectId);
+            photosViewModel = new PhotosViewModel(projectId, DataContext);
             await LoadPhotos();
         }
         catch (Exception ex)

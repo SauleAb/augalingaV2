@@ -9,16 +9,19 @@ namespace augalinga.Backend.ViewModels
     {
         int _projectId;
         string _category;
-        public PhotosViewModel(int projectId, string category)
+        private readonly DataContext _dbContext;
+        public PhotosViewModel(int projectId, string category, DataContext dbContext)
         {
             _projectId = projectId;
             _category = category;
+            _dbContext = dbContext;
             LoadPhotos(_projectId, _category);
         }
 
-        public PhotosViewModel(int projectId)
+        public PhotosViewModel(int projectId, DataContext dbContext)
         {
             _projectId = projectId;
+            _dbContext = dbContext;
             LoadAllPhotos(_projectId);
         }
 
@@ -41,26 +44,21 @@ namespace augalinga.Backend.ViewModels
 
         private void LoadPhotos(int projectId, string category)
         {
-            using (var context = new DataContext())
-            {
-                var photos = context.Photos
+                var photos = _dbContext.Photos
                     .Where(photo => photo.ProjectId == projectId && photo.Category == category)
                     .ToList();
 
                 Photos = new ObservableCollection<Photo>(photos);
-            }
         }
 
         private void LoadAllPhotos(int projectId)
         {
-            using (var context = new DataContext())
-            {
-                var photos = context.Photos
+                var photos = _dbContext.Photos
                     .Where(photo => photo.ProjectId == projectId)
                     .ToList();
 
                 Photos = new ObservableCollection<Photo>(photos);
-            }
+            
         }
     }
 }

@@ -100,7 +100,6 @@
     public int projectId { get; set; }
 
     private Expense expense = new Expense();
-    private DataContext dbContext { get; set; } = new DataContext();
     private ExpensesViewModel expensesViewModel;
     Project project = new Project();
     private decimal income;
@@ -115,7 +114,7 @@
 
     protected override void OnInitialized()
     {
-        project = dbContext.Projects.FirstOrDefault(w => w.Id == projectId);
+        project = DataContext.Projects.FirstOrDefault(w => w.Id == projectId);
         expensesViewModel = new ExpensesViewModel(projectId, DataContext);
         CalculateTotals();
     }
@@ -141,8 +140,8 @@
         expense.Date = DateOnly.FromDateTime(DateTime.Today);
         expense.Type = selectedType == "Outcome" ? "-" : "+";
         expense.ProjectId = projectId;
-        dbContext.Expenses.Add(expense);
-        await dbContext.SaveChangesAsync();
+        DataContext.Expenses.Add(expense);
+        await DataContext.SaveChangesAsync();
         expensesViewModel.Expenses.Add(expense);
         CalculateTotals();
         NotificationService.CreateNotification(expense.Transaction, project.Name, NotificationType.ExpenseAdded, null);
@@ -165,8 +164,8 @@
 
     private async Task DeleteExpense(Expense expenseToDelete)
     {
-        dbContext.Expenses.Remove(expenseToDelete);
-        await dbContext.SaveChangesAsync();
+        DataContext.Expenses.Remove(expenseToDelete);
+        await DataContext.SaveChangesAsync();
         expensesViewModel.Expenses.Remove(expenseToDelete);
         CalculateTotals();
 
