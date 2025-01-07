@@ -13,6 +13,7 @@
 @using Microsoft.Maui.Controls
 @using System.Text.Json
 @using augalinga.Data.Enums
+@inject DataContext DataContext
 @inject IJSRuntime JS
 @inject INotificationService NotificationService
 
@@ -82,7 +83,6 @@
     public int projectId { get; set; }
 
     DraftsViewModel draftsViewModel;
-    public DataContext dbContext { get; set; } = new DataContext();
     private List<IBrowserFile> selectedFiles = new List<IBrowserFile>();
     private string errorMessage;
     private AzureBlobStorage blobStorage;
@@ -92,8 +92,8 @@
 
     protected async override void OnInitialized()
     {
-        draftsViewModel = new DraftsViewModel(projectId);
-        project = await dbContext.Projects.FindAsync(projectId);
+        draftsViewModel = new DraftsViewModel(projectId, DataContext);
+        project = await DataContext.Projects.FindAsync(projectId);
         blobStorage = new AzureBlobStorage();
     }
 
@@ -147,8 +147,8 @@
                         Name = file.Name
                     };
 
-                await dbContext.Drafts.AddAsync(draft);
-                await dbContext.SaveChangesAsync();
+                await DataContext.Drafts.AddAsync(draft);
+                await DataContext.SaveChangesAsync();
                 draftsViewModel.Drafts.Add(draft);
                 NotificationService.CreateNotification(file.Name, project.Name, NotificationType.DraftAdded, null);
             }
@@ -166,8 +166,8 @@
 
     private async Task DeleteDraft(Draft draft)
     {
-        dbContext.Drafts.Remove(draft);
-        await dbContext.SaveChangesAsync();
+        DataContext.Drafts.Remove(draft);
+        await DataContext.SaveChangesAsync();
 
         string blobName = $"{project.Name}/{folder}/{draft.Name}";
         await blobStorage.DeleteBlobAsync(blobName);

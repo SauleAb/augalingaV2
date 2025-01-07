@@ -18,9 +18,9 @@ namespace augalinga.Backend.ViewModels
         private readonly UsersViewModel _usersViewModel;
 
 
-        public AdminViewModel(UsersViewModel usersViewModel, INotificationService notificationViewModel, IAuthService authService)
+        public AdminViewModel(UsersViewModel usersViewModel, INotificationService notificationViewModel, IAuthService authService, DataContext dbContext)
         {
-            _dbContext = new DataContext();
+            _dbContext = dbContext;
             _notificationService = notificationViewModel;
             _authService = authService;
             _usersViewModel = usersViewModel;

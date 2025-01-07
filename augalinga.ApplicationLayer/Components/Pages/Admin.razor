@@ -14,6 +14,7 @@
 @using augalinga.Data.Enums
 @inject INotificationService NotificationService
 @inject IAuthService IAuthService
+@inject DataContext DataContext
 
 <div class="header">
     <div style="flex: 1">
@@ -125,7 +126,7 @@
 
     protected override void OnInitialized()
     {
-        usersViewModel = new UsersViewModel();
+        usersViewModel = new UsersViewModel(DataContext);
     }
 
     private void GoBack()
@@ -196,7 +197,7 @@
             currentPassword = string.Empty;
             newPassword = string.Empty;
 
-            usersViewModel = new UsersViewModel();
+            usersViewModel = new UsersViewModel(DataContext);
             StateHasChanged();
             await HideEditModal();
         }

@@ -10,7 +10,7 @@ using Xunit;
 
 namespace augalinga.Tests
 {
-    public class DocumentsViewModelTests
+    public class DocumentsTests
     {
         private DataContext CreateDbContext()
         {

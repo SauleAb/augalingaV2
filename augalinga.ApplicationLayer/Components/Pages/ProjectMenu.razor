@@ -9,6 +9,7 @@
 @using augalinga.Data.Entities
 @using augalinga.Data.Enums
 @inject NavigationManager Navigation
+@inject DataContext DataContext
 @inject INotificationService NotificationService
 
 <div class="header">
@@ -94,7 +95,6 @@
     [Parameter]
     public int projectId { get; set; }
 
-    private DataContext dbContext { get; set; } = new DataContext();
     private Project project = new Project();
     private SfDialog deleteConfirmationDialog;
     private SfDialog editDialog;
@@ -112,7 +112,7 @@
     {
         _blobStorage = new AzureBlobStorage();
 
-        project = await dbContext.Projects.FindAsync(projectId);
+        project = await DataContext.Projects.FindAsync(projectId);
 
         if (project == null)
         {
@@ -176,8 +176,8 @@
                 project.ImageUrl = newPhotoKey;
             }
             project.Name = updatedProjectName;
-            dbContext.Projects.Update(project);
-            await dbContext.SaveChangesAsync();
+            DataContext.Projects.Update(project);
+            await DataContext.SaveChangesAsync();
 
             NotificationService.CreateNotification(project.Name, null, NotificationType.ProjectModified, null);
         }
@@ -193,8 +193,8 @@
             await _blobStorage.UploadCoverPhoto(project.Name, selectedPhoto);
             project.ImageUrl = selectedPhoto.Name;
 
-            dbContext.Projects.Update(project);
-            await dbContext.SaveChangesAsync();
+            DataContext.Projects.Update(project);
+            await DataContext.SaveChangesAsync();
 
             NotificationService.CreateNotification(project.Name, null, NotificationType.ProjectModified, null);
         }
@@ -204,8 +204,8 @@
 
     private async Task ConfirmDelete()
     {
-        dbContext.Projects.Remove(project);
-        await dbContext.SaveChangesAsync();
+        DataContext.Projects.Remove(project);
+        await DataContext.SaveChangesAsync();
 
         // Delete project blobs if necessary
         await _blobStorage.DeleteBlobAsync($"{project.Name}/cover photo/{Path.GetFileName(project.ImageUrl)}");

@@ -8,9 +8,11 @@ namespace augalinga.Backend.ViewModels
     public class DraftsViewModel
     {
         int _projectId;
-        public DraftsViewModel(int projectId)
+        private readonly DataContext _dbContext;
+        public DraftsViewModel(int projectId, DataContext dbContext)
         {
             _projectId = projectId;
+            _dbContext = dbContext;
             LoadDrafts(_projectId);
         }
 
@@ -33,12 +35,9 @@ namespace augalinga.Backend.ViewModels
 
         private void LoadDrafts(int projectId)
         {
-            using (var context = new DataContext())
-            {
-                var drafts = context.Drafts.Where(draft => draft.ProjectId == _projectId).ToList();
+            var drafts = _dbContext.Drafts.Where(draft => draft.ProjectId == _projectId).ToList();
 
-                Drafts = new ObservableCollection<Draft>(drafts);
-            }
+            Drafts = new ObservableCollection<Draft>(drafts);
         }
     }
 }

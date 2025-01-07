@@ -89,7 +89,6 @@
     string containerName = "augalinga";
     string folder = "documents";
     BlobContainerClient containerClient;
-    public DataContext dbContext { get; set; } = new DataContext();
     private List<IBrowserFile> selectedFiles = new List<IBrowserFile>();
     private string errorMessage;
     private SfGrid<Document> documentsGrid;
@@ -99,7 +98,7 @@
     protected async override void OnInitialized()
     {
         documentsViewModel = new DocumentsViewModel(projectId, DataContext);
-        project = await dbContext.Projects.FindAsync(projectId);
+        project = await DataContext.Projects.FindAsync(projectId);
         blobStorage = new AzureBlobStorage();
     }
 
@@ -157,8 +156,8 @@
                         Link = fileUrl,
                         Name = file.Name
                     };
-                await dbContext.Documents.AddAsync(newDocument);
-                await dbContext.SaveChangesAsync();
+                await DataContext.Documents.AddAsync(newDocument);
+                await DataContext.SaveChangesAsync();
                 documentsViewModel.Documents.Add(newDocument);
                 NotificationService.CreateNotification(file.Name, project.Name, NotificationType.DocumentAdded, null);
             }
@@ -181,8 +180,8 @@
 
     private async Task DeleteDocument(Document document)
     {
-        dbContext.Documents.Remove(document);
-        await dbContext.SaveChangesAsync();
+        DataContext.Documents.Remove(document);
+        await DataContext.SaveChangesAsync();
 
         string blobName = $"{project.Name}/{folder}/{document.Name}";
         await blobStorage.DeleteBlobAsync(blobName);

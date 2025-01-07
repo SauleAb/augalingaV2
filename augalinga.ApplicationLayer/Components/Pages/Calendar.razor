@@ -112,7 +112,7 @@
 
 @code {
     CalendarViewModel calendarViewModel;
-    UsersViewModel usersViewModel { get; set; } = new UsersViewModel();
+    UsersViewModel usersViewModel;
     public List<string> CustomClass { get; set; } = new List<string>();
     Meeting meeting;
 
@@ -120,6 +120,7 @@
     {
         calendarViewModel = new CalendarViewModel(NotificationService, DataContext);
         calendarViewModel.Initialize();
+        usersViewModel = new UsersViewModel(DataContext);
     }
 
     public void OnEventRendered(EventRenderedArgs<Meeting> args)

@@ -12,7 +12,7 @@ namespace augalinga.Backend.ViewModels
         private readonly DataContext _dbContext;
         public ContactsViewModel(string category, DataContext dbContext)
         {
-            _category = category;
+            _category = category; 
             _dbContext = dbContext;
             LoadContacts(_category);
         }

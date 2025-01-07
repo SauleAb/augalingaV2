@@ -8,10 +8,12 @@ namespace augalinga.Backend.ViewModels
     public class OrdersViewModel
     {
         int _projectId;
-        public OrdersViewModel(int projectId)
+        private readonly DataContext _dbContext;
+        public OrdersViewModel(int projectId, DataContext dbContext)
         {
             _projectId = projectId;
             LoadOrders(_projectId);
+            _dbContext = dbContext;
         }
 
         private ObservableCollection<Order> _orders;
@@ -32,12 +34,9 @@ namespace augalinga.Backend.ViewModels
 
         private void LoadOrders(int projectId)
         {
-            using (var context = new DataContext())
-            {
-                var orders = context.Orders.Where(order => order.ProjectId == _projectId).ToList();
+            var orders = _dbContext.Orders.Where(order => order.ProjectId == _projectId).ToList();
 
-                Orders = new ObservableCollection<Order>(orders);
-            }
+            Orders = new ObservableCollection<Order>(orders);
         }
     }
 }

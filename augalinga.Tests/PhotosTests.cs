@@ -10,7 +10,7 @@ using Xunit;
 
 namespace augalinga.Tests
 {
-    public class PhotosViewModelTests
+    public class PhotosTests
     {
         private DataContext CreateDbContext()
         {

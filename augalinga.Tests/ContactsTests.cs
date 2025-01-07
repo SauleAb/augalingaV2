@@ -12,7 +12,7 @@ using Contact = augalinga.Data.Entities.Contact;
 
 namespace augalinga.Tests
 {
-    public class ContactsViewModelTests
+    public class ContactsTests
     {
         private DataContext CreateDbContext()
         {

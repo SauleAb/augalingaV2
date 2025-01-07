@@ -8,9 +8,12 @@ namespace augalinga.Backend.ViewModels
     public class ProjectContactsViewModel : INotifyPropertyChanged
     {
         int _projectId;
-        public ProjectContactsViewModel(int projectId)
+        private readonly DataContext _dbContext;
+
+        public ProjectContactsViewModel(int projectId, DataContext dbContext)
         {
             _projectId = projectId;
+            _dbContext = dbContext;
             LoadContacts(_projectId);
         }
 
@@ -34,14 +37,11 @@ namespace augalinga.Backend.ViewModels
 
         private void LoadContacts(int projectId)
         {
-            using (var dbContext = new DataContext())
-            {
-                var contacts = dbContext.Contacts
-                    .Where(c => c.ProjectId == projectId)
-                    .ToList();
+            var contacts = _dbContext.Contacts
+                .Where(c => c.ProjectId == projectId)
+                .ToList();
 
-                Contacts = new ObservableCollection<Contact>(contacts);
-            }
+            Contacts = new ObservableCollection<Contact>(contacts);
         }
     }
 }

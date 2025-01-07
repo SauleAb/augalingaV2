@@ -1,4 +1,5 @@
 ﻿using augalinga.Data.Access;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
@@ -6,8 +7,10 @@ namespace augalinga.Backend.ViewModels
 {
     public class UsersViewModel : INotifyPropertyChanged
     {
-        public UsersViewModel()
+        private readonly DataContext _dbContext;
+        public UsersViewModel(DataContext dbContext)
         {
+            _dbContext = dbContext;
             LoadUsers();
         }
 
@@ -30,11 +33,8 @@ namespace augalinga.Backend.ViewModels
 
         private void LoadUsers()
         {
-            using (var dbContext = new DataContext())
-            {
-                var users = dbContext.Users.ToList();
-                Users = new ObservableCollection<User>(users);
-            }
+            var users = _dbContext.Users.ToList();
+            Users = new ObservableCollection<User>(users);
         }
     }
 }

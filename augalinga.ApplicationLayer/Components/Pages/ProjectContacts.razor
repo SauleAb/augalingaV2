@@ -12,6 +12,7 @@
 @using augalinga.Data.Access
 @using augalinga.Data.Entities
 @using augalinga.Data.Enums
+@inject DataContext DataContext
 @inject INotificationService NotificationService
 
 <div class="header">
@@ -87,7 +88,6 @@
 @code {
     [Parameter]
     public int projectId { get; set; }
-    private DataContext dbContext { get; set; } = new DataContext();
     Contact contact = new Contact();
     Project project = new Project();
 
@@ -95,8 +95,8 @@
 
     protected override void OnInitialized()
     {
-        project = dbContext.Projects.FirstOrDefault(w => w.Id == projectId);
-        projectContactsViewModel = new ProjectContactsViewModel(projectId);
+        project = DataContext.Projects.FirstOrDefault(w => w.Id == projectId);
+        projectContactsViewModel = new ProjectContactsViewModel(projectId, DataContext);
         contact.Number = "+370";
     }
 
@@ -106,8 +106,8 @@
     }
     private async Task DeleteContact(Contact contact)
     {
-        dbContext.Contacts.Remove(contact);
-        await dbContext.SaveChangesAsync();
+        DataContext.Contacts.Remove(contact);
+        await DataContext.SaveChangesAsync();
         projectContactsViewModel.Contacts.Remove(contact);
         NotificationService.CreateNotification(contact.Name, project.Name, NotificationType.ContactDeleted, null);
     }
@@ -122,8 +122,8 @@
         {
             contact.Address = "";
         }
-        dbContext.Contacts.Add(contact);
-        await dbContext.SaveChangesAsync();
+        DataContext.Contacts.Add(contact);
+        await DataContext.SaveChangesAsync();
         projectContactsViewModel.Contacts.Add(contact);
         NotificationService.CreateNotification(contact.Name, project.Name, NotificationType.ContactAdded, null);
         await HideModal();

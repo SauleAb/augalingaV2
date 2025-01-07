@@ -8,6 +8,7 @@
 @using augalinga.Data.Entities
 @using augalinga.Data.Enums
 @inject NavigationManager Navigation
+@inject DataContext DataContext
 @inject IAuthService IAuthService
 @inject INotificationService NotificationService
 @inject IJSRuntime JS
@@ -73,7 +74,6 @@
 
     ProjectsViewModel viewModel;
     Project project = new Project();
-    private DataContext dbContext { get; set; } = new DataContext();
     private IBrowserFile selectedFile;
 
     protected override async Task OnInitializedAsync()
@@ -90,7 +90,7 @@
 
     private async Task LoadProjectsAsync()
     {
-        viewModel.Projects = new ObservableCollection<Project>(await dbContext.Projects.ToListAsync());
+        viewModel.Projects = new ObservableCollection<Project>(await DataContext.Projects.ToListAsync());
     }
 
     private async Task AddProject()
@@ -106,10 +106,10 @@
             project.ImageUrl = selectedFile.Name;
         }
 
-        dbContext.Projects.Add(project);
+        DataContext.Projects.Add(project);
         viewModel.Projects.Add(project);
         NotificationService.CreateNotification(project.Name, null, NotificationType.ProjectAdded, null);
-        await dbContext.SaveChangesAsync();
+        await DataContext.SaveChangesAsync();
         await LoadProjectsAsync();
 
         project = new Project();

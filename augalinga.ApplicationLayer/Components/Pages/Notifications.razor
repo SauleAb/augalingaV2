@@ -3,8 +3,10 @@
 @using Syncfusion.Blazor.Grids
 @using augalinga.Backend.ViewModels
 @using augalinga.Backend.Services
+@using augalinga.Data.Access
 @using augalinga.Data.Entities
 @inject INotificationService NotificationService
+@inject DataContext DataContext
 
 <div class="header">
     <h1>Notifications</h1>
@@ -29,6 +31,6 @@
     UsersViewModel usersViewModel;
     protected override void OnInitialized()
     {
-        usersViewModel = new UsersViewModel();
+        usersViewModel = new UsersViewModel(DataContext);
     }
 }
