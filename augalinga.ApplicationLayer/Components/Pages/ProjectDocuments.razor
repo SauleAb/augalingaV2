@@ -17,6 +17,7 @@
 @using Azure.Storage.Blobs.Models;
 @using augalinga.Data.Enums
 @inject IJSRuntime JS
+@inject DataContext DataContext
 @inject INotificationService NotificationService
 
 <div class="header">
@@ -97,7 +98,7 @@
 
     protected async override void OnInitialized()
     {
-        documentsViewModel = new DocumentsViewModel(projectId);
+        documentsViewModel = new DocumentsViewModel(projectId, DataContext);
         project = await dbContext.Projects.FindAsync(projectId);
         blobStorage = new AzureBlobStorage();
     }

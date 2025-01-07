@@ -1,5 +1,6 @@
 ﻿using augalinga.Data.Access;
 using augalinga.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
@@ -8,14 +9,17 @@ namespace augalinga.Backend.ViewModels
     public class DocumentsViewModel
     {
         int _projectId;
+        private readonly DataContext _dbContext;
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        public DocumentsViewModel(int projectId)
+        public DocumentsViewModel(int projectId, DataContext dbContext)
         {
             _projectId = projectId;
+            _dbContext = dbContext;
             LoadDocuments(_projectId);
         }
 
@@ -30,30 +34,23 @@ namespace augalinga.Backend.ViewModels
             }
         }
 
-        
-
-        private void LoadDocuments(int projectId)
+        public void LoadDocuments(int projectId)
         {
-            using (var context = new DataContext())
-            {
-                var documents = context.Documents.Where(document => document.ProjectId == _projectId).ToList();
+                var documents = _dbContext.Documents.Where(document => document.ProjectId == _projectId).ToList();
 
                 Documents = new ObservableCollection<Document>(documents);
-            }
         }
 
         public void RemoveDocument(string documentLink)
         {
             var documentToRemove = Documents.FirstOrDefault(p => p.Link == documentLink);
-            //database
-            using (var dbContext = new DataContext())
+            if (documentToRemove != null)
             {
-                dbContext.Documents.Remove(documentToRemove);
-                dbContext.SaveChanges();
-            }
-            //local
-            Documents.Remove(documentToRemove);
+                _dbContext.Documents.Remove(documentToRemove);
+                _dbContext.SaveChanges();
 
+                Documents.Remove(documentToRemove);
+            }
 
             LoadDocuments(_projectId);
         }
