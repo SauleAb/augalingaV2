@@ -19,6 +19,11 @@ namespace augalinga.Backend.Models
             _blobServiceClient = new BlobServiceClient(connectionString);
         }
 
+        public AzureBlobStorage(BlobServiceClient blobServiceClient)
+        {
+            _blobServiceClient = blobServiceClient;
+        }
+
         public async Task<string> GetBlobUrlAsync(string projectName, string folder, string fileName)
         {
             var blobClient = _blobServiceClient.GetBlobContainerClient(ContainerName)

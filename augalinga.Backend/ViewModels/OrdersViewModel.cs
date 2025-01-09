@@ -12,8 +12,8 @@ namespace augalinga.Backend.ViewModels
         public OrdersViewModel(int projectId, DataContext dbContext)
         {
             _projectId = projectId;
-            LoadOrders(_projectId);
             _dbContext = dbContext;
+            LoadOrders(_projectId);
         }
 
         private ObservableCollection<Order> _orders;

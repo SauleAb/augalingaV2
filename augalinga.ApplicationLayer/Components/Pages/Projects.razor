@@ -79,7 +79,7 @@
     protected override async Task OnInitializedAsync()
     {
         _blobStorage = new AzureBlobStorage();
-        viewModel = new ProjectsViewModel();
+        viewModel = new ProjectsViewModel(DataContext);
         await LoadProjectsAsync();
     }
 

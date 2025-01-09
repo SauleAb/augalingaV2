@@ -10,7 +10,7 @@ namespace augalinga.Backend.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly DataContext _dbContext = new DataContext();
+        private readonly DataContext _dbContext;
         private bool _isLoggedIn;
         private User _currentUser;
         private readonly IEmailService _emailService;
@@ -18,8 +18,9 @@ namespace augalinga.Backend.Services
         private void NotifyStateChanged() => OnChange?.Invoke();
         private const string AuthTokenKey = "authToken";
 
-        public AuthService(IEmailService emailService)
+        public AuthService(IEmailService emailService, DataContext dbContext)
         {
+            _dbContext = dbContext;
             _emailService = emailService;
         }
 

@@ -21,11 +21,10 @@ namespace augalinga.Backend.Services
                 From = new MailAddress(SenderEmail),
                 Subject = subject,
                 Body = body,
-                IsBodyHtml = false, // Set to true if you're using HTML in the body
+                IsBodyHtml = false,
             };
             mailMessage.To.Add(recipientEmail);
 
-            // Set up SMTP client
             var smtpClient = new SmtpClient
             {
                 Host = SmtpHost,

@@ -7,8 +7,10 @@ namespace augalinga.Backend.ViewModels
 {
     public class ProjectsViewModel : INotifyPropertyChanged
     {
-        public ProjectsViewModel()
+        private readonly DataContext _dbContext;
+        public ProjectsViewModel(DataContext dbContext)
         {
+            _dbContext = dbContext;
             LoadProjects();
         }
 
@@ -31,7 +33,7 @@ namespace augalinga.Backend.ViewModels
 
         private void LoadProjects()
         {
-            var projects = new DataContext().Projects.ToList();
+            var projects = _dbContext.Projects.ToList();
             Projects = new ObservableCollection<Project>(projects);
         }
     }
