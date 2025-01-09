@@ -133,26 +133,14 @@
     }
     private async Task DeleteContact(Contact contact)
     {
-        DataContext.Contacts.Remove(contact);
-        await DataContext.SaveChangesAsync();
-        contactsViewModel.Contacts.Remove(contact);
+        contactsViewModel.RemoveContact(contact);
         NotificationService.CreateNotification(contact.Name, null, NotificationType.ContactDeleted, null);
     }
 
     private async void AddContact()
     {
-        contact.Category = contact.Category;
-        if (contact.Notes == null)
-        {
-            contact.Notes = "";
-        }
-        if (contact.Address == null)
-        {
-            contact.Address = "";
-        }
-        DataContext.Contacts.Add(contact);
-        await DataContext.SaveChangesAsync();
-        contactsViewModel.Contacts.Add(contact);
+        contactsViewModel.SetDefaultValues(contact);
+        contactsViewModel.AddContact(contact);
         NotificationService.CreateNotification(contact.Name, contact.Category, NotificationType.ContactAdded, null);
         await HideModal();
     }

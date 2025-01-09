@@ -34,9 +34,10 @@ namespace augalinga.Backend.ViewModels
             }
         }
 
-        public void AddContactToCollection(Contact contact)
+        public async void AddContact(Contact contact)
         {
-            Contacts.Add(contact);
+            _dbContext.Contacts.Add(contact);
+            await _dbContext.SaveChangesAsync();
             LoadContacts(_category);
         }
 
@@ -46,29 +47,39 @@ namespace augalinga.Backend.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void RemoveContact(Contact contact)
+        public async void RemoveContact(Contact contact)
         {
             _dbContext.Contacts.Remove(contact);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
             LoadContacts(_category);
+        }
+
+        public void SetDefaultValues(Contact contact)
+        {
+            if (contact.Notes == null)
+            {
+                contact.Notes = "";
+            }
+            if (contact.Address == null)
+            {
+                contact.Address = "";
+            }
         }
 
         public void LoadContacts(string category)
         {
-                var contacts = _dbContext.Contacts
-                    .Where(c => c.Category == category)
-                    .ToList();
+            var contacts = _dbContext.Contacts
+                .Where(c => c.Category == category)
+                .ToList();
 
-                Contacts = new ObservableCollection<Contact>(contacts);
-            
+            Contacts = new ObservableCollection<Contact>(contacts);
         }
 
         public void LoadContacts()
         {
-                var contacts = _dbContext.Contacts.ToList();
+            var contacts = _dbContext.Contacts.ToList();
 
-                Contacts = new ObservableCollection<Contact>(contacts);
-            
+            Contacts = new ObservableCollection<Contact>(contacts);
         }
     }
 }
