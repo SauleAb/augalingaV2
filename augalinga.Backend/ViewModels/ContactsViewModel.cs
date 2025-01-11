@@ -53,19 +53,6 @@ namespace augalinga.Backend.ViewModels
             await _dbContext.SaveChangesAsync();
             LoadContacts(_category);
         }
-
-        public void SetDefaultValues(Contact contact)
-        {
-            if (contact.Notes == null)
-            {
-                contact.Notes = "";
-            }
-            if (contact.Address == null)
-            {
-                contact.Address = "";
-            }
-        }
-
         public void LoadContacts(string category)
         {
             var contacts = _dbContext.Contacts

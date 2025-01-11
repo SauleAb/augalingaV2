@@ -106,25 +106,12 @@
     }
     private async Task DeleteContact(Contact contact)
     {
-        DataContext.Contacts.Remove(contact);
-        await DataContext.SaveChangesAsync();
-        projectContactsViewModel.Contacts.Remove(contact);
+        projectContactsViewModel.RemoveContact(contact);
         NotificationService.CreateNotification(contact.Name, project.Name, NotificationType.ContactDeleted, null);
     }
     private async void AddContact()
     {
-        contact.ProjectId = projectId;
-        if (contact.Notes == null)
-        {
-            contact.Notes = "";
-        }
-        if (contact.Address == null)
-        {
-            contact.Address = "";
-        }
-        DataContext.Contacts.Add(contact);
-        await DataContext.SaveChangesAsync();
-        projectContactsViewModel.Contacts.Add(contact);
+        projectContactsViewModel.AddContact(contact);
         NotificationService.CreateNotification(contact.Name, project.Name, NotificationType.ContactAdded, null);
         await HideModal();
     }

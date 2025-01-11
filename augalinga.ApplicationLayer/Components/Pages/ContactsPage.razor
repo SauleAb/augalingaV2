@@ -106,7 +106,6 @@
 
     private async void AddContact()
     {
-        contactsViewModel.SetDefaultValues(contact);
         contactsViewModel.AddContact(contact);
         NotificationService.CreateNotification(contact.Name, contact.Category, NotificationType.ContactAdded, null);
         await HideModal();

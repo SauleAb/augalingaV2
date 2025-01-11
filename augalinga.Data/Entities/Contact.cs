@@ -14,8 +14,8 @@ namespace augalinga.Data.Entities
         public int? ProjectId {  get; set; }
         public string Name { get; set; }
         public string Number { get; set; }
-        public string Address { get; set; }
-        public string Notes {  get; set; }
+        public string? Address { get; set; }
+        public string? Notes {  get; set; }
         public string? Category { get; set; }
     }
 }

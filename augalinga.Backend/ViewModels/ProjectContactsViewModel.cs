@@ -43,5 +43,19 @@ namespace augalinga.Backend.ViewModels
 
             Contacts = new ObservableCollection<Contact>(contacts);
         }
+
+        public async void AddContact(Contact contact)
+        {
+            _dbContext.Contacts.Add(contact);
+            await _dbContext.SaveChangesAsync();
+            LoadContacts(_projectId);
+        }
+
+        public async void RemoveContact(Contact contact)
+        {
+            _dbContext.Contacts.Remove(contact);
+            await _dbContext.SaveChangesAsync();
+            LoadContacts(_projectId);
+        }
     }
 }

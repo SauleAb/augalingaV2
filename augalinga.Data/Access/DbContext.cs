@@ -47,7 +47,14 @@ namespace augalinga.Data.Access
                         throw new Exception("Connection string 'DefaultConnection' was not found in Azure Key Vault.");
                     }
 
-                    optionsBuilder.UseSqlServer(connectionString);
+                    optionsBuilder.UseSqlServer(connectionString, options =>
+                    {
+                        options.EnableRetryOnFailure(
+                            maxRetryCount: 5, 
+                            maxRetryDelay: TimeSpan.FromSeconds(10), 
+                            errorNumbersToAdd: null 
+                        );
+                    });
                 }
                 catch (Exception ex)
                 {
@@ -56,6 +63,7 @@ namespace augalinga.Data.Access
                 }
             }
         }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
