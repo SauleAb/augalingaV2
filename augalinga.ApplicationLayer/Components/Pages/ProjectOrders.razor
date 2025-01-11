@@ -70,10 +70,6 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" @onclick="UploadFiles">Submit</button>
                 </div>
-                @if (!string.IsNullOrEmpty(errorMessage))
-                {
-                    <div class="alert alert-danger">@errorMessage</div>
-                }
             </div>
         </div>
     </div>
@@ -85,17 +81,13 @@
 
     OrdersViewModel ordersViewModel;
     private List<IBrowserFile> selectedFiles = new List<IBrowserFile>();
-    private string errorMessage;
-    private AzureBlobStorage blobStorage;
     private SfGrid<Order> ordersGrid;
     Project project = new Project();
-    string folder = "orders";
 
     protected async override void OnInitialized()
     {
         project = DataContext.Projects.FirstOrDefault(w => w.Id == projectId);
         ordersViewModel = new OrdersViewModel(projectId, DataContext);
-        blobStorage = new AzureBlobStorage();
     }
     private async Task DownloadOrder(Order order)
     {
@@ -131,53 +123,16 @@
 
     private async Task UploadFiles()
     {
-        errorMessage = string.Empty;
-        try
-        {
-            foreach (var file in selectedFiles)
-            {
-                await blobStorage.UploadFile(project.Name, folder, file);
-
-                string fileUrl = await blobStorage.GetBlobUrlAsync(project.Name, folder, file.Name);
-
-                var order = new Order
-                    {
-                        ProjectId = projectId,
-                        Link = fileUrl,
-                        Name = file.Name
-                    };
-
-                await DataContext.Orders.AddAsync(order);
-                await DataContext.SaveChangesAsync();
-                ordersViewModel.Orders.Add(order);
-                NotificationService.CreateNotification(order.Name, project.Name, NotificationType.OrderAdded, null);
-            }
-
-            await Task.Delay(800);
-            await ordersGrid.Refresh();
-            StateHasChanged();
-
-            selectedFiles.Clear();
-            await HideModal();
-        }
-        catch (Exception ex)
-        {
-            errorMessage = $"An error occurred: {ex.Message}";
-            Console.WriteLine($"Error: {ex}");
-        }
+        await ordersViewModel.UploadOrdersAsync(selectedFiles, project, NotificationService);
+        selectedFiles.Clear();
+        await ordersGrid.Refresh();
+        await HideModal();
     }
 
     private async Task DeleteOrder(Order order)
     {
-        DataContext.Orders.Remove(order);
-        await DataContext.SaveChangesAsync();
-
-        string blobName = $"{project.Name}/{folder}/{order.Name}";
-        await blobStorage.DeleteBlobAsync(blobName);
-
-        await blobStorage.DeleteBlobAsync(order.Link);
-        ordersViewModel.Orders.Remove(order);
-        NotificationService.CreateNotification(order.Name, project.Name, NotificationType.OrderDeleted, null);
+        await ordersViewModel.DeleteOrderAsync(order, project, NotificationService);
+        await ordersGrid.Refresh();
     }
 }
 <script>

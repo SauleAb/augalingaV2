@@ -1,5 +1,10 @@
-﻿using augalinga.Data.Access;
+﻿using augalinga.Backend.Models;
+using augalinga.Backend.Services;
+using augalinga.Data.Access;
 using augalinga.Data.Entities;
+using augalinga.Data.Enums;
+using Azure;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -10,6 +15,9 @@ namespace augalinga.Backend.ViewModels
     {
         int _projectId;
         private readonly DataContext _dbContext;
+        string containerName = "augalinga";
+        string folder = "documents";
+        private AzureBlobStorage blobStorage;
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)
@@ -20,6 +28,7 @@ namespace augalinga.Backend.ViewModels
         {
             _projectId = projectId;
             _dbContext = dbContext;
+            blobStorage = new AzureBlobStorage();
             LoadDocuments(_projectId);
         }
 
@@ -53,6 +62,51 @@ namespace augalinga.Backend.ViewModels
             }
 
             LoadDocuments(_projectId);
+        }
+
+        public async Task UploadFilesAsync(IEnumerable<IBrowserFile> selectedFiles, Project project, INotificationService notificationService)
+        {
+            try
+            {
+                foreach (var file in selectedFiles)
+                {
+                    await blobStorage.UploadFile(project.Name, folder, file);
+
+                    string fileUrl = await blobStorage.GetBlobUrlAsync(project.Name, folder, file.Name);
+
+                    var newDocument = new Document
+                    {
+                        ProjectId = _projectId,
+                        Link = fileUrl,
+                        Name = file.Name
+                    };
+                    await _dbContext.Documents.AddAsync(newDocument);
+                    await _dbContext.SaveChangesAsync();
+                    Documents.Add(newDocument);
+                    notificationService.CreateNotification(file.Name, project.Name, NotificationType.DocumentAdded, null);
+                    LoadDocuments(_projectId);
+                }
+
+            }
+            catch (RequestFailedException ex)
+            {
+                Console.WriteLine($"Azure Storage Error: {ex}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"General Error: {ex}");
+            }
+        }
+        public async Task DeleteDocument(Document document, string projectName)
+        {
+            _dbContext.Documents.Remove(document);
+            await _dbContext.SaveChangesAsync();
+
+            string blobName = $"{projectName}/{folder}/{document.Name}";
+            await blobStorage.DeleteBlobAsync(blobName);
+
+            LoadDocuments(_projectId);
+
         }
     }
 }
