@@ -100,34 +100,24 @@
     private SfDialog editDialog;
     private bool isDeleteConfirmationVisible = false;
     private bool isEditDialogVisible = false;
-
+    ProjectMenuViewModel viewModel;
     private string updatedProjectName;
     private IBrowserFile selectedPhoto;
     private string currentPhotoUrl;
 
-    private AzureBlobStorage _blobStorage;
-    private const string ContainerName = "augalinga";
-
     protected override async Task OnInitializedAsync()
     {
-        _blobStorage = new AzureBlobStorage();
+        viewModel = new ProjectMenuViewModel(DataContext);
 
-        project = await DataContext.Projects.FindAsync(projectId);
-
-        if (project == null)
+        try
+        {
+            await viewModel.LoadProjectAsync(projectId);
+            currentPhotoUrl = viewModel.GetBlobUrl(viewModel.Project.Name, viewModel.Project.ImageUrl);
+        }
+        catch
         {
             Navigation.NavigateTo("/projects");
         }
-
-        if (!string.IsNullOrEmpty(project.ImageUrl))
-        {
-            currentPhotoUrl = GetBlobUrl(project.Name, project.ImageUrl);
-        }
-    }
-
-    private string GetBlobUrl(string projectName, string imageName)
-    {
-        return $"{_blobStorage.GetBlobBaseUrl()}/{projectName}/cover photo/{imageName}";
     }
 
     private void GoBack()
@@ -164,64 +154,20 @@
 
     private async Task SaveChanges()
     {
-        if (project.Name != updatedProjectName)
-        {
-            if (!string.IsNullOrEmpty(project.ImageUrl))
-            {
-                // Rename photo in blob storage
-                string previousPhotoKey = $"{project.Name}/cover photo/{Path.GetFileName(project.ImageUrl)}";
-                string newPhotoKey = $"{updatedProjectName}/cover photo/{Path.GetFileName(project.ImageUrl)}";
-
-                await _blobStorage.RenameBlobAsync(previousPhotoKey, newPhotoKey);
-                project.ImageUrl = newPhotoKey;
-            }
-            project.Name = updatedProjectName;
-            DataContext.Projects.Update(project);
-            await DataContext.SaveChangesAsync();
-
-            NotificationService.CreateNotification(project.Name, null, NotificationType.ProjectModified, null);
-        }
-
-        if (selectedPhoto != null)
-        {
-            if (!string.IsNullOrEmpty(project.ImageUrl))
-            {
-                string previousPhotoKey = $"{project.Name}/cover photo/{Path.GetFileName(project.ImageUrl)}";
-                await _blobStorage.DeleteBlobAsync(previousPhotoKey);
-            }
-
-            await _blobStorage.UploadCoverPhoto(project.Name, selectedPhoto);
-            project.ImageUrl = selectedPhoto.Name;
-
-            DataContext.Projects.Update(project);
-            await DataContext.SaveChangesAsync();
-
-            NotificationService.CreateNotification(project.Name, null, NotificationType.ProjectModified, null);
-        }
-
+        await viewModel.SaveProjectChangesAsync(updatedProjectName, selectedPhoto, NotificationService);
+        currentPhotoUrl = viewModel.GetBlobUrl(viewModel.Project.Name, viewModel.Project.ImageUrl);
         CloseEditDialog();
     }
 
     private async Task ConfirmDelete()
     {
-        DataContext.Projects.Remove(project);
-        await DataContext.SaveChangesAsync();
-
-        // Delete project blobs if necessary
-        await _blobStorage.DeleteBlobAsync($"{project.Name}/cover photo/{Path.GetFileName(project.ImageUrl)}");
-        NotificationService.CreateNotification(project.Name, null, NotificationType.ProjectDeleted, null);
-
+        await viewModel.DeleteProjectAsync(NotificationService);
         GoBack();
     }
 
     private string GetFileNameFromUrl(string url)
     {
-        int lastSlashIndex = url.LastIndexOf('/');
-        if (lastSlashIndex >= 0)
-        {
-            return url.Substring(lastSlashIndex + 1);
-        }
-        return url;
+        return url?.Substring(url.LastIndexOf('/') + 1);
     }
 }
 

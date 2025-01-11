@@ -70,17 +70,13 @@
 </div>
 
 @code {
-    private AzureBlobStorage _blobStorage;
-
     ProjectsViewModel viewModel;
     Project project = new Project();
     private IBrowserFile selectedFile;
 
     protected override async Task OnInitializedAsync()
     {
-        _blobStorage = new AzureBlobStorage();
         viewModel = new ProjectsViewModel(DataContext);
-        await LoadProjectsAsync();
     }
 
     private void HandleFileSelect(InputFileChangeEventArgs e)
@@ -88,29 +84,9 @@
         selectedFile = e.File;
     }
 
-    private async Task LoadProjectsAsync()
-    {
-        viewModel.Projects = new ObservableCollection<Project>(await DataContext.Projects.ToListAsync());
-    }
-
     private async Task AddProject()
     {
-        if (string.IsNullOrWhiteSpace(project.Name))
-        {
-            return;
-        }
-
-        if (selectedFile != null)
-        {
-            await _blobStorage.UploadCoverPhoto(project.Name, selectedFile);
-            project.ImageUrl = selectedFile.Name;
-        }
-
-        DataContext.Projects.Add(project);
-        viewModel.Projects.Add(project);
-        NotificationService.CreateNotification(project.Name, null, NotificationType.ProjectAdded, null);
-        await DataContext.SaveChangesAsync();
-        await LoadProjectsAsync();
+        await viewModel.AddProjectAsync(project, selectedFile, NotificationService);
 
         project = new Project();
         selectedFile = null;
@@ -120,11 +96,7 @@
 
     private string GetBlobUrl(string projectName, string imageName)
     {
-        if (string.IsNullOrEmpty(imageName))
-        {
-            return "/images/calendar_background.png";
-        }
-        return $"{_blobStorage.GetBlobBaseUrl()}/{projectName}/cover photo/{imageName}";
+        return viewModel.GetBlobUrl(projectName, imageName);
     }
 
     private void GoBack()
@@ -149,11 +121,11 @@
         flex-wrap: wrap;
         justify-content: center;
         padding: 20px;
-        gap: 20px; /* Add spacing between cards */
+        gap: 20px;
     }
 
     .card {
-        width: 250px; 
+        width: 250px;
         text-decoration: none;
         border: 1px solid #ccc;
         border-radius: 10px;
@@ -178,7 +150,7 @@
     .card-body {
         padding: 10px;
         text-align: center;
-        flex-grow: 1; 
+        flex-grow: 1;
     }
 
     .card-title {
@@ -186,11 +158,10 @@
         font-size: 1.25rem;
         color: #333;
         overflow: hidden;
-        text-overflow: ellipsis; 
+        text-overflow: ellipsis;
         white-space: nowrap;
     }
 
-    /* Remove text decoration and ensure consistency on hover */
     .card a {
         text-decoration: none;
         color: black;
