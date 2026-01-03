@@ -25,7 +25,7 @@ namespace augalinga.Data.Access
         public DbSet<Notification> Notifications {  get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=tcp:augalinga.database.windows.net,1433;Initial Catalog=augalingaDb;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=\"Active Directory Default\";");
+            optionsBuilder.UseSqlServer("");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -36,13 +36,13 @@ namespace augalinga.Data.Access
 
             modelBuilder.Entity<Notification>()
                 .HasOne(n => n.User)
-                .WithMany() // Assuming User has many Notifications
+                .WithMany() 
                 .HasForeignKey(n => n.UserId)
-                .OnDelete(DeleteBehavior.Cascade); // This enables cascade delete
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Notification>()
                 .HasOne(n => n.ForUser)
-                .WithMany() // Assuming User has many Notifications as ForUser
+                .WithMany()
                 .HasForeignKey(n => n.ForUserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
